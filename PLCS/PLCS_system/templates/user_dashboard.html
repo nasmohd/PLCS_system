@@ -1,0 +1,302 @@
+  {% load static %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Projects
+        <small>Control panel</small>
+      </h1>
+      <!-- <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Projects</li>
+      </ol> -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <!-- Small boxes (Stat box) -->
+      <div class="row">
+        <!-- RECOMMEND BASED ON USER INTERESTS -->
+        <div class="col-md-8 col-8">
+          <div class="row">
+
+            <div class="col-md-12 col-12" style="margin-bottom: 3rem;">
+              <form action="#" method="get" class="">
+                <div class="input-group">
+                  <input type="text" name="q" class="form-control" placeholder="Search...">
+                  <span class="input-group-btn">
+                    <button type="submit" name="search" id="search-btn" class="btn btn-flat btn-info"><i class="fa fa-search"></i>
+                    </button>
+                  </span>
+                </div>
+              </form>
+            </div>
+
+            
+            <!-- ./col -->
+
+            {% for i in get_all_projects %}
+              <div class="col-md-12 col-12" style="margin-top: 0rem;">
+                <div class="box box-solid">
+                  <div class="box-header with-border">
+                    <i class="fa fa-file"></i>
+
+                    <h3 class="box-title"> {{ i.project_title }} </h3>
+
+                    <div class="box-tools pull-right">
+                      <button type="button" class="btn btn-box-tool" data-toggle="dropdown">
+                        <i class="fa fa-ellipsis-v"></i>
+                      </button>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Edit</a></li>
+                        <li><a href="#">Delete</a></li>
+                      </ul>
+                    </div>
+
+                    <!-- <i class="fa fa-file "></i> -->
+                  </div>
+
+
+                  <!-- /.box-header -->
+                  <div class="box-body">
+                    <div class="col-md-5 col-5" style="height: 200px;">
+                      <!-- {{ i.project_images }} -->
+                      <!-- <i class="fa fa-file-text-o"></i> -->
+
+                      <img src="{% static 'project_imgs/PLCS6#img1.jpg' %}" style="height: 100%; background-color: red;"/>
+                      <!-- <img src="{% static 'profile_imgs/{{ i.project_images.0 }}' %}"/> -->
+                      
+                    </div>
+
+                    <div class="col-md-7 col-7">
+                      <div class="col-md-12 col-12">
+                        <dt>Description</dt>
+                        <dd>{{ i.project_description }} <a href="#"> Read more </a> </dd>
+                      </div>
+
+                      <div class="project_view_style2">
+                        <div class="col-md-4 col-4">
+                          <dt>Budget</dt>
+                          <dd>{{ i.project_budget }} </dd>
+                        </div>
+                        
+                        <div class="col-md-4 col-4">
+                          <dt>Collaborators</dt>
+                          <dd> {{ i.project_collaborators }} </dd>
+                        </div>
+
+                        <div class="col-md-4 col-4">
+                          <dt>Deadline</dt>
+                          <dd>{{ i.project_deadline }} </dd>
+                        </div>
+                      </div>
+                      
+
+                      <div class="project_view_style1">
+                        <div class="col-md-12 col-12">
+                          <dt>Skills required</dt>
+                          <dd>
+                            {% for j in i.project_skills %}
+
+                              <span class="badge bg-green"> {{ j }} </span>
+
+                            {% endfor %}
+                            <!-- <span class="badge bg-red">Adobe XD</span>
+                            <span class="badge bg-blue">UI/UX design</span>
+                            <span class="badge bg-yellow">Wireframing</span> -->
+                          </dd>
+                        </div>
+                      </div>
+
+                      <div class="col-md-12" style="margin-top: 2rem;">
+                        <a class="btn btn-primary btn-sm">More details</a>
+                        <a class="btn btn-success btn-sm"> Apply Now </a>
+
+                        <div class="pull-right">
+                          <button class="btn btn-sm btn-link likeButton" data-project-id="{{ i.id }}">
+                            <i class="fa fa-fw fa-thumbs-o-up"></i> Like
+                         </button>
+                          <button class="btn btn-sm btn-link" id="dislikeButton">
+                            <i class="fa fa-fw fa-thumbs-o-down"></i> Dislike
+                          </button>
+                        </div>
+
+                        <script type="text/javascript">
+                          document.addEventListener('DOMContentLoaded', function() {
+                            var likeButtons = document.getElementsByClassName('likeButton');
+                            
+                            for (var i = 0; i < likeButtons.length; i++) {
+                              likeButtons[i].addEventListener('click', function() {
+                                var projectId = this.getAttribute('data-project-id');
+                                var icon = this.querySelector('i');
+                                if (icon.classList.contains('fa fa-fw fa-thumbs-up')) {
+                                  icon.classList.remove('fa fa-fw fa-thumbs-up');
+                                  icon.classList.add('fa fa-fw fa-thumbs-o-up');
+                                  // Make an AJAX request to update the like status for the project with the given projectId
+                                  // Example:
+                                  // updateLikeStatus(projectId, false);
+                                } else {
+                                  icon.classList.remove('fa fa-fw fa-thumbs-o-up');
+                                  icon.classList.add('fa fa-fw fa-thumbs-up');
+                                  // Make an AJAX request to update the like status for the project with the given projectId
+                                  // Example:
+                                  // updateLikeStatus(projectId, true);
+                                }
+                              });
+                            }
+                          });
+                        </script>
+
+
+                        {% if i.user_project.id == current_user %}
+                          <a class="btn btn-danger btn-sm">Delete</a> {{ i.user_project.id }}
+                        {% endif %}
+                      </div>
+
+                    </div>
+
+                    <style type="text/css">
+                      @media screen and (min-width: 993px){
+                        .project_view_style1{
+                          margin-top:12rem;
+                        }
+
+                        .project_view_style2{
+                          margin-top:7rem;
+                        }
+                      }
+
+                      @media screen and (max-width: 993px){
+                        .project_view_style1{
+                          margin-top:2rem;
+                        }
+
+                        .project_view_style2{
+                          margin-top:2rem;
+                        }
+                      }
+                      
+                    </style>
+
+                  </div>
+                  <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+              </div>
+
+            {% endfor %}
+
+          </div>
+
+        </div>
+
+        <!-- RECOMMEND BASED ON USER ACTIVITY -->
+        <div class="col-md-4 col-4">
+          <div class="row">
+
+            <div class="col-md-12" style="margin-top: 0rem;">
+              <div class="box box-solid">
+                <div class="box-header with-border">
+                  <i class="fa fa-file"></i>
+
+                  <h4 class="box-title"> Recommended Projects </h4>
+
+                  <!-- <i class="fa fa-file "></i> -->
+                </div>
+
+
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <div class="col-md-12">
+                    <dt>Web Development</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                  <div class="col-md-12 mt">
+                    <dt>Mobile App Development</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                  <div class="col-md-12 mt">
+                    <dt>UI/UX Design</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                  <div class="col-md-12 mt">
+                    <dt>UI/UX Design</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                  <div class="col-md-12 mt">
+                    <dt>Web Development</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                </div>
+                <!-- /.box-body -->
+              </div>
+              <!-- /.box -->
+            </div>
+
+            <div class="col-md-12" style="margin-top: 0rem;">
+              <div class="box box-solid">
+                <div class="box-header with-border">
+                  <div class="box-title" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <i class="fa fa-file"></i>
+                    <h4 style="margin-top: -0.5rem;"> Recommended Projects <br/> based on your Activity </h4>
+                  </div>
+
+                  <!-- <i class="fa fa-file "></i> -->
+                </div>
+
+
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <div class="col-md-12">
+                    <dt>Web Development</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                  <div class="col-md-12 mt">
+                    <dt>Mobile App Development</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                  <div class="col-md-12 mt">
+                    <dt>UI/UX Design</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                  <div class="col-md-12 mt">
+                    <dt>Web Development</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                  <div class="col-md-12 mt">
+                    <dt>Mobile App Development</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                </div>
+                <!-- /.box-body -->
+              </div>
+              <!-- /.box -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <style type="text/css">
+        .mt {
+          margin-top: 2rem;
+        }
+      </style>
+
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->

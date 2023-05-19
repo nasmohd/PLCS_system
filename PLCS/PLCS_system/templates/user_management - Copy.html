@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% load static %}
+  {% load custom_filters %}
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> PLC System </title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'bower_components/font-awesome/css/font-awesome.min.css' %}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="{% static 'bower_components/Ionicons/css/ionicons.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
+  <!-- Morris chart -->
+  <link rel="stylesheet" href="{% static 'bower_components/morris.js/morris.css' %}">
+  <!-- jvectormap -->
+  <link rel="stylesheet" href="{% static 'bower_components/jvectormap/jquery-jvectormap.css' %}">
+  <!-- Date Picker -->
+  <link rel="stylesheet" href="{% static 'bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="{% static 'bower_components/bootstrap-daterangepicker/daterangepicker.css' %}">
+  <!-- bootstrap wysihtml5 - text editor -->
+  <link rel="stylesheet" href="{% static 'plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css' %}">
+
+  <link rel="stylesheet" href="{% static 'bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css' %}">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+  <!-- Google Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+  {% include 'header.html' %}
+
+  <!-- Content Wrapper. Contains page content -->
+  {% if 'User' in roles_n_permissions.0 %}
+
+    {% include 'user_dashboard.html' %}
+
+  {% endif %}
+
+
+  {% if 'Administrator' in roles_n_permissions.0 %}
+
+    <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <h1>
+          Dashboard
+          <small>Control panel</small>
+        </h1>
+        <ol class="breadcrumb">
+          <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+          <li class="active">Dashboard</li>
+        </ol>
+      </section>
+
+      <!-- Main content -->
+      <section class="content">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <!-- ./col -->
+          <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-light-blue">
+              <div class="inner">
+                <h3>{{ user_summary.0 }}</h3>
+
+                <p> Total Registered Users </p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-person"></i>
+              </div>
+              <a href="#" class="small-box-footer" onclick="project_view('registered_users')">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+
+          <!-- <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-aqua">
+              <div class="inner">
+                <h3>150</h3>
+
+                <p>New Projects</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-bag"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div> -->
+
+          <!-- ./col -->
+          <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-green">
+              <div class="inner">
+                <h3> {{ user_summary.1 }} </h3>
+
+                <p>Active Users</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-person"></i>
+              </div>
+              <a href="#" class="small-box-footer" onclick="project_view('active_users')">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          
+          <!-- ./col -->
+          <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-yellow">
+              <div class="inner">
+                <h3>{{ user_summary.2 }}</h3>
+
+                <p> Disabled Users</p>
+              </div>
+              <div class="icon" style="margin-top: -0.5rem; margin-right: -1.2rem;">
+                <i class="fa fa-fw fa-times-circle-o" style="font-size: 80%"></i>
+              </div>
+              <a href="#" class="small-box-footer" onclick="project_view('disabled_users')">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-red">
+              <div class="inner">
+                <h3>{{ user_summary.3 }}</h3>
+
+                <p> Deleted Users</p>
+              </div>
+              <div class="icon" style="margin-top: -0.9rem; margin-right: 0.8rem;">
+                <i class="fa fa-trash" style="font-size: 70%"></i>
+              </div>
+              <a href="#" class="small-box-footer" onclick="project_view('deleted_users')">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+
+          <script type="text/javascript">
+            function project_view(v){
+              if (v == 'registered_users'){
+                var txt_project_type = document.getElementById('type_of_user_view');
+                txt_project_type.innerHTML = 'Showing all Registered Projects to date';
+                txt_project_type.style.color = '#3C8DBC';
+
+                // Get the input element
+                var search_table = document.querySelector('#example1_filter input');
+
+                // Set the value of the input element
+                // search_table.value = "";
+                // search_table.dispatchEvent(new Event('input'));
+
+                var dataTable = $('#example1').DataTable();
+                dataTable.columns(4).search("").draw();
+
+                search_table.value = "";
+              }
+
+              if (v == 'disabled_users'){
+                var txt_project_type = document.getElementById('type_of_user_view');
+                txt_project_type.innerHTML = 'Showing all Active Projects';
+                txt_project_type.style.color = '#F39C12';
+
+                // Get the input element
+                var search_table = document.querySelector('#example1_filter input');
+
+                // Set the value of the input element
+                // search_table.value = "Disabled";
+                // search_table.dispatchEvent(new Event('input'));
+
+                var dataTable = $('#example1').DataTable();
+                dataTable.columns(4).search("Disabled").draw();
+
+                search_table.value = "Disabled";
+              }
+
+              if (v == 'active_users'){
+                var txt_project_type = document.getElementById('type_of_user_view');
+                txt_project_type.innerHTML = 'Showing all Active Users';
+                txt_project_type.style.color = '#00A65A';
+
+                // Get the input element
+                var search_table = document.querySelector('#example1_filter input');
+
+                // Set the value of the input element
+                // search_table.value = "Active";
+                // search_table.dispatchEvent(new Event('input'));
+
+                var dataTable = $('#example1').DataTable();
+                dataTable.columns(4).search("Active").draw();
+
+                search_table.value = "Active";
+              }
+
+              if (v == 'deleted_users'){
+                var txt_project_type = document.getElementById('type_of_user_view');
+                txt_project_type.innerHTML = 'Showing all Deleted Users';
+                txt_project_type.style.color = '#DD4B39';
+
+                // Get the input element
+                var search_table = document.querySelector('#example1_filter input');
+
+                // Set the value of the input element
+                // search_table.value = "Deleted";
+                // search_table.dispatchEvent(new Event('input'));
+
+                var dataTable = $('#example1').DataTable();
+                dataTable.columns(4).search("Deleted").draw();
+
+                search_table.value = "Deleted";
+              }
+              
+            }
+          </script>
+          <!-- ./col -->
+        </div>
+
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+          <div class="col-xs-12">
+
+            <!-- /.box -->
+
+            <div class="box">
+              <div class="box-header">
+                <h3 class="box-title" style="color: #306FA0;">
+                <i class="ion ion-person-add"></i>
+                <strong> User Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC;"> Showing all Registered Projects to date </span> </h3>
+                <!-- label label-success -->
+
+                <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addUser"> Register New User </button>
+              </div>
+              <!-- /.box-header -->
+
+
+              <div class="modal fade" id="modal-addUser" style="display: none;">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                      <h4 class="modal-title"> Add New User </h4>
+                    </div>
+                    <form role="form" action="/admin_add_user/" method="POST" id="addUser">
+                      {% csrf_token %}
+
+                    <div class="modal-body">
+                      <p>Please fill in details for the user</p>
+
+                      <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                          <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">User Details <span class="optional_entry"> * </span></a></li>
+                          <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false"> Roles/Permissions <span class="optional_entry"> * </span></a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="tab_1">
+                            
+                      <!-- form start -->
+                      
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">First Name <span class="optional_entry"> * </span></label>
+                              <input type="text" class="form-control" placeholder="Enter First Name" name="first_name" required value="James">
+                            </div>
+
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Last Name <span class="optional_entry"> * </span></label>
+                              <input type="text" class="form-control" placeholder="Enter Last Name" name="last_name" required value="Bond">
+                            </div>
+
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Email address <span class="optional_entry"> * </span></label>
+                              <input type="email" class="form-control" placeholder="Enter email" name="email" autocomplete="off" required value="jbond@gmail.com">
+                            </div>
+
+                            <div class="form-group password-wrapper">
+                              <label for="exampleInputPassword1">Password <span class="optional_entry"> * </span></label>
+                              <input type="password" class="form-control" placeholder="Password" name="password" autocomplete="off" required id="password_input2" value="jbond">
+                              <button id="toggle-password" type="button" aria-label="Toggle password visibility">
+                                <i class="fa fa-fw fa-eye"></i>
+                              </button>
+                            </div>
+
+                            <!-- <div class="form-group">
+                              <label for="exampleInputPassword1">Confirm Password <span class="optional_entry"> * </span></label>
+                              <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" required>
+                            </div> -->
+
+                            <style type="text/css">
+                              .optional_entry {
+                                color: red;
+                              }
+                            </style>
+                        <!-- <div class="form-group">
+                          <label for="exampleInputFile"> Profile Picture </label>
+                          <input type="file" id="user_profile_picture">
+                        </div> -->
+                          </div>
+
+
+                          <!-- /.tab-pane -->
+                          <div class="tab-pane" id="tab_2">
+                            <div class="row" style="padding-left: 10px"">
+                              <div class="col-lg-6" style="border-left: 3px solid #DD4B39;">
+                                
+                                <div class="form-group pb-5">
+
+                                  {% for i in user_roles %}
+                                    <!-- <div class="col-lg-12 col-12"> -->
+                                      <div class="checkbox">
+                                        <label>
+                                          <input type="checkbox" name="{{ i.role_name }}">
+                                          {{ i.role_name }}
+                                        </label>
+                                      </div>
+                                  {% endfor %}
+                                  
+                                </div>
+                              </div>
+
+                              <div class="col-lg-6" style="border-left: 3px solid #DD4B39;">
+                                
+                                <div class="form-group pb-5">
+                                  {% for i in user_permissions %}
+                                    <!-- <div class="col-lg-12 col-12"> -->
+                                      <div class="checkbox">
+                                        <label>
+                                          <input type="checkbox" name="{{ i.permission_action }}">
+                                          {{ i.permission_action }}
+                                        </label>
+                                      </div>
+                                    <!-- </div> -->
+                                  {% endfor %}
+                                  
+                                </div>
+                              </div>
+                            </div>
+
+                            <style type="text/css">
+                              .optional_entry {
+                                color: red;
+                              }
+                            </style>
+                          </div>
+
+                          <script type="text/javascript">
+                            const form = document.getElementById("addUser");
+
+                            form.addEventListener("submit", function(event) {
+                              const checkboxes = form.querySelectorAll("input[type=checkbox]:checked");
+                              if (checkboxes.length === 0) {
+                                alert("Please add Roles/Permissions");
+                                event.preventDefault();
+                              }
+                            });
+                          </script>
+
+
+                        </div>
+                        <!-- /.tab-content -->
+                      </div>
+
+                      
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Add User</button>
+                    </div>
+
+                    </form>
+                  </div>
+                  <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+              </div>
+
+
+
+              <div class="box-body table-responsive">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th> SN </th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Date Registered</th>
+                    <th>Status</th>
+                    <th class="text-center"> Change details </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+
+                  {% for i in all_users %}
+                    <tr>
+                      <td> {{ forloop.counter }}  </td>
+                      <td> {{ i.first_name }} {{ i.last_name }} </td>
+                      <td> {{ i.email }} </td>
+                      <td> {{ i.date_of_registration }} </td>
+                      <td> 
+                        {% if i.status == 1 %}
+                          <span class="btn-round btn btn-success btn-xs"> Active </span>
+                        {% endif %}
+
+                        {% if i.status == 0 %}
+                          <span class="btn-round btn btn-warning btn-xs"> Disabled </span>
+                        {% endif %}
+
+                        {% if i.status == 2 %}
+                          <span class="btn-round btn btn-danger btn-xs"> Deleted </span>
+                        {% endif %}
+
+                        <style type="text/css">
+                          .btn-round{
+                            border-radius: 100px;
+                          }
+                        </style>
+                      </td>
+
+                      <td class="text-center"> 
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-fw fa-pencil-square-o"></i>
+                          </button>
+                          <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                          </button>
+
+                          <ul class="dropdown-menu pull-right" role="menu">
+                            <li><a href="#" data-toggle="modal" data-target="#modal-editUser{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li>
+                            <li><a data-toggle="modal" data-target="#modal-disableUser{{ i.id }}"><i class="fa fa-ban"></i> Enable/Disable </a></li>
+                            <li><a data-toggle="modal" data-target="#modal-permissions{{ i.id }}"><i class="fa fa-lock"></i> Roles/Permissions </a></li>
+
+                            {% if i.status == 2 %}
+                              <li><a data-toggle="modal" data-target="#modal-deleteUser{{ i.id }}"><i class="fa fa-fw fa-refresh" style="width:10%;"></i> Re-Activate </a></li>
+                            {% endif %}
+
+                            {% if i.status != 2 %}
+                              <li><a data-toggle="modal" data-target="#modal-deleteUser{{ i.id }}"><i class="fa fa-trash"></i> Delete </a></li>
+                            {% endif %}
+
+                            <!-- <li class="divider"></li>
+                            <li><a href="#">Separated link</a></li> -->
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- Modal Edit User Details  -->
+                    <div class="modal fade" id="modal-editUser{{ i.id }}" style="display: none;">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title"><i class="ion ion-person"></i> Edit User Details </h4>
+                          </div>
+
+                          <form role="form" action="/update_user/{{ i.id }}/" method="POST">
+                            {% csrf_token %}
+                          <div class="modal-body">
+                            <p>Change user details as required </p>
+
+                      <!-- form start -->
+                      
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">First Name <span class="optional_entry"> * </span></label>
+                              <input type="text" class="form-control" placeholder="Enter First Name" name="first_name" value="{{ i.first_name }}">
+                            </div>
+
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Last Name <span class="optional_entry"> * </span></label>
+                              <input type="text" class="form-control" placeholder="Enter Last Name" name="last_name" value="{{ i.last_name }}">
+                            </div>
+
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Email address <span class="optional_entry"> * </span></label>
+                              <input type="email" class="form-control" placeholder="Enter email" name="email" value="{{ i.email }}">
+                            </div>
+
+                            <div class="form-group password-wrapper">
+                              <label for="exampleInputPassword1">Password <span class="optional_entry"> * </span></label>
+                              <input type="password" class="form-control" placeholder="Password" name="password" value="{{ i.password }}" id="password_input">
+                              <button id="toggle-password" type="button" aria-label="Toggle password visibility">
+                                <i class="fa fa-fw fa-eye"></i>
+                              </button>
+                            </div>
+
+                            <!-- <div class="form-group">
+                              <label for="exampleInputPassword1">Confirm Password <span class="optional_entry"> * </span></label>
+                              <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" value="">
+                            </div> -->
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                          </div>
+
+                          <style type="text/css">
+                            .optional_entry {
+                              color: red;
+                            }
+
+                            .password-wrapper {
+                              position: relative;
+                            }
+
+                            #toggle-password {
+                              position: absolute;
+                              top: 70%;
+                              right: 10px;
+                              transform: translateY(-50%);
+                              background-color: transparent;
+                              border: none;
+                              cursor: pointer;
+                            }
+
+                            #toggle-password:focus {
+                              outline: none;
+                            }
+
+                            #toggle-password i {
+                              color: #999;
+                            }
+
+                            #password:focus + #toggle-password i {
+                              color: #000;
+                            }
+
+                            }
+                          </style>
+
+                          <script type="text/javascript">
+                            const passwordInput = document.getElementById('password_input');
+                            const passwordInput2 = document.getElementById('password_input2');
+                            const togglePasswordButton = document.getElementById('toggle-password');
+
+                            togglePasswordButton.addEventListener('click', () => {
+                              const passwordType = passwordInput.getAttribute('type');
+                              passwordInput.setAttribute('type', passwordType === 'password' ? 'text' : 'password');
+                              
+                              const icon = togglePasswordButton.querySelector('i');
+                              icon.classList.toggle('fa-eye-slash');
+                            });
+
+                          </script>
+
+                          </form>
+                        </div>
+                        <!-- /.modal-content -->
+                      </div>
+                      <!-- /.modal-dialog -->
+                    </div>
+
+
+                    <!-- Modal Delete User  -->
+                    {% if i.status != 2 %}
+                      <div class="modal modal-danger fade" id="modal-deleteUser{{ i.id }}" style="display: none;">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+                              <h4 class="modal-title">Delete User </h4>
+                            </div>
+                            <div class="modal-body">
+                              <p> Are you sure you want to delete this user? </p>
+                              <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                              <a href="/delete_user/{{ i.id }}" class="btn btn-outline">Confirm</a>
+                            </div>
+                          </div>
+                          <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    {% endif %}
+
+                    {% if i.status == 2 %}
+                      <div class="modal modal-success fade" id="modal-deleteUser{{ i.id }}" style="display: none;">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+                              <h4 class="modal-title">Re-Active User </h4>
+                            </div>
+                            <div class="modal-body">
+                              <p> Are you sure you want to Re-Activate this user? </p>
+                              <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                              <a href="/delete_user/{{ i.id }}" class="btn btn-outline">Confirm</a>
+                            </div>
+                          </div>
+                          <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                      </div>
+                      
+                    {% endif %}
+
+                    <!-- Modal Disable User -->
+                    <div class="modal modal-warning fade" id="modal-disableUser{{ i.id }}" style="display: none;">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title">Enable/Disable User </h4>
+                          </div>
+                          <div class="modal-body">
+                            <p> Are you sure you want to enable/disable this user? </p>
+                            <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                            <a href="/disable_user/{{ i.id }}" class="btn btn-outline">Confirm</a>
+                          </div>
+                        </div>
+                        <!-- /.modal-content -->
+                      </div>
+                      <!-- /.modal-dialog -->
+                    </div>
+
+
+                    <!-- Modal Permissions -->
+                    <div class="modal fade" id="modal-permissions{{ i.id }}" style="display: none;">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title"> Edit User Permissions </h4>
+                          </div>
+                          <div class="modal-body">
+                            <div class="row" style="padding-left: 10px"">
+                              <div class="col-lg-6" style="border-left: 3px solid #DD4B39;">
+                                <p> Roles for user: <span class="btn-round btn btn-danger btn-xs"> {{ i.first_name }} {{ i.last_name }} </span></p>
+                                <div class="form-group pb-5">
+
+                                  <!-- {{ roles_for_each_user|get_item:forloop.counter0 }}
+                                  {{ forloop.counter0 }} -->
+
+                                  {% for i in user_roles %}
+                                    <!-- <div class="col-lg-12 col-12"> -->
+                                      {% if i.role_name in roles_for_each_user|get_item:forloop.parentloop.counter0 %}
+                                        <div class="checkbox">
+                                          <label>
+                                            <input type="checkbox" checked>
+                                            {{ i.role_name }}
+                                          </label>
+                                        </div>
+                                      {% endif %}
+
+                                      {% if i.role_name not in roles_for_each_user|get_item:forloop.parentloop.counter0 %}
+                                        <div class="checkbox">
+                                          <label>
+                                            <input type="checkbox">
+                                            {{ i.role_name }}
+                                          </label>
+                                        </div>
+                                      {% endif %}
+
+                                      
+                                    <!-- </div> -->
+                                  {% endfor %}
+                                  
+                                </div>
+                              </div>
+
+                              <div class="col-lg-6" style="border-left: 3px solid #DD4B39;">
+                                <p> Permissions for user: <span class="btn-round btn btn-danger btn-xs"> {{ i.first_name }} {{ i.last_name }} </span></p>
+                                <div class="form-group pb-5">
+                                  {% for i in user_permissions %}
+                                    <!-- <div class="col-lg-12 col-12"> -->
+
+                                      <div class="checkbox">
+                                        <label>
+                                          <input type="checkbox">
+                                          {{ i.permission_action }}
+                                        </label>
+                                      </div>
+                                    <!-- </div> -->
+                                  {% endfor %}
+                                  
+                                </div>
+                              </div>
+                            </div>
+                            
+                          </div>
+
+                          <div>
+                            <br/>
+                          </div>
+                          <div class="modal-footer" style="margin-top: 30px;">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                          </div>
+                        </div>
+                        <!-- /.modal-content -->
+                      </div>
+                      <!-- /.modal-dialog -->
+                    </div>
+
+                  {% endfor %}
+                  
+                  </tbody>
+
+                  <tfoot>
+                  <tr>
+                    <th>SN</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Date Registered</th>
+                    <th>Status</th>
+                    <th>Change details </th>
+                  </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row (main row) -->
+
+      </section>
+      <!-- /.content -->
+    </div>
+
+  {% endif %}
+  <!-- /.content-wrapper -->
+  {% include 'footer.html' %}
+
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="{% static 'bower_components/jquery-ui/jquery-ui.min.js' %}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+<!-- Morris.js charts -->
+<script src="{% static 'bower_components/raphael/raphael.min.js' %}"></script>
+<script src="{% static 'bower_components/morris.js/morris.min.js' %}"></script>
+<!-- Sparkline -->
+<script src="{% static 'bower_components/jquery-sparkline/dist/jquery.sparkline.min.js' %}"></script>
+<!-- jvectormap -->
+<script src="{% static 'plugins/jvectormap/jquery-jvectormap-1.2.2.min.js' %}"></script>
+<script src="{% static 'plugins/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+<!-- jQuery Knob Chart -->
+<script src="{% static 'bower_components/jquery-knob/dist/jquery.knob.min.js' %}"></script>
+<!-- daterangepicker -->
+<script src="{% static 'bower_components/moment/min/moment.min.js' %}"></script>
+<script src="{% static 'bower_components/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+<!-- datepicker -->
+<script src="{% static 'bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="{% static 'plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js' %}"></script>
+<!-- Slimscroll -->
+<script src="{% static 'bower_components/jquery-slimscroll/jquery.slimscroll.min.js' %}"></script>
+<!-- FastClick -->
+<script src="{% static 'bower_components/fastclick/lib/fastclick.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="{% static 'dist/js/pages/dashboard.js' %}"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="{% static 'dist/js/demo.js' %}"></script>
+
+<script src="{% static 'bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
+<!-- SlimScroll -->
+<script src="{% static 'bower_components/jquery-slimscroll/jquery.slimscroll.min.js' %}"></script>
+<!-- FastClick -->
+<script src="{% static 'bower_components/fastclick/lib/fastclick.js' %}"></script>
+
+<script>
+  $(function () {
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+  })
+</script>
+</body>
+</html>
