@@ -302,8 +302,6 @@ def add_project(request):
 
 	# return HttpResponse (skills_list[2])
 
-
-
 	if request.method == "POST":
 		current_user = request.session['user_id']
 
@@ -376,8 +374,8 @@ def add_project(request):
 		project = Project()
 		project.project_id = 'PLCS' + num
 
-		if (project_images[0] != 'x.pdf'):
-			return HttpResponse ('t')
+		# if (project_images[0] != 'x.pdf'):
+		# 	return HttpResponse ('t')
 
 
 		#COPY THE IMAGE TO THE PROJECT DIRECTORY 'static/project_imgs'
@@ -386,41 +384,38 @@ def add_project(request):
 
 			# Construct the full destination path
 			destination_fullpath = os.path.join(destination_path, i)
-
-			pj = ['x', 'x', 'x']
+			
 
 			# Copy the uploaded image to the destination directory
 			with open(destination_fullpath, 'wb') as destination_file:
-				
-				if ((index == 0) and project_images[0] != 'x.pdf'):
+
+				#Checks to see which images have been selected/added by the user
+				if ((project_images[0] != 'x.pdf')):
 					source_file = uploaded_image1.file
-					pj[0] = 'y'
 
-				if ((index == 1) and (project_images[1] != 'x.pdf')):
+				if ((project_images[1] != 'x.pdf')):
 					source_file = uploaded_image2.file
-					pj[1] = 'y'
-
-				if ((index == 2) and (project_images[2] != 'x.pdf')):
+					
+				if ((project_images[2] != 'x.pdf')):
 					source_file = uploaded_image3.file
-					pj[2] = 'y'
 
+				#copy the image from the source to the destination
 				copyfileobj(source_file, destination_file)
 				destination_file.close()
 
-			img_extension = os.path.splitext(i)[1]
+				img_extension = os.path.splitext(i)[1]
 
-			# Rename the file
-			img_count = index+1
-			new_name = 'PLCS' + num + "#img" + str(img_count) + img_extension
+				# Rename the file
+				img_count = index+1
+				new_name = 'PLCS' + num + "#img" + str(img_count) + img_extension
 
-			project_images[index] = new_name
-			
-			# Construct the full path to the file
-			full_path = os.path.join(destination_path, i)
+				project_images[index] = new_name
+				
+				# Construct the full path to the file
+				full_path = os.path.join(destination_path, i)
 
-			# Rename the file
-			os.rename(full_path, os.path.join(destination_path, new_name))
-
+				# Rename the file
+				os.rename(full_path, os.path.join(destination_path, new_name))
 
 
 
@@ -433,6 +428,7 @@ def add_project(request):
 
 			# Copy the uploaded image to the destination directory
 			with open(destination_fullpath, 'wb') as destination_file:
+				#Checks to s
 				
 				if ((index == 0) and (project_files[0] != 'x.jpg')):
 					source_file = uploaded_file1.file
@@ -913,3 +909,37 @@ def view_module (request, module_id):
 	# 		module_to_edit.save()
 
 	return render (request, 'learning_content_management.html')
+
+
+from django.http import JsonResponse
+
+def like_project(request):
+	if request.method == 'POST':
+		# Retrieve the data from the request
+		project_id = request.POST.get('projectId')
+		is_liked = request.POST.get('isLiked')
+
+		project_liked = Notification()
+		project_liked.notification_title = 'testing AJAX'
+		project_liked.notification_content = 'testing AJAX'
+		project_liked.notification_status = '1'
+		project_liked.notification_link_to = 'testing AJAX'
+		project_liked.notification_date = datetime.today()
+
+
+		user_x = User.objects.all()
+
+		project_liked.notification_recipient = user_x[0]
+		project_liked.save()
+
+		# Perform the necessary actions based on the data
+		# Update the like status of the project with the given project_id
+
+		# Return a JSON response indicating the success or failure of the request
+		response_data = {'status': 'success'}
+		return JsonResponse(response_data)
+
+	else:
+		# Handle invalid or non-AJAX requests
+		response_data = {'status': 'failure'}
+		return JsonResponse(response_data, status=400)

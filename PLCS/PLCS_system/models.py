@@ -93,3 +93,17 @@ class Learning_Module (models.Model):
 	
 	def __str__(self):
 		return "title = {}, User = {}".format(self.module_title, self.module_creator)
+
+
+class Notification (models.Model):
+	notification_title = models.CharField (max_length=50, default='')
+	notification_content = models.TextField(default='')
+
+	notification_status = models.IntegerField (default=1)
+	notification_link_to = models.CharField (max_length=50, default='')
+	notification_date = models.DateTimeField(default  = datetime.today())
+	
+	notification_recipient = models.ForeignKey(User, on_delete=models.CASCADE)
+	
+	def __str__(self):
+		return "id = {}, content = {}".format(self.id, self.notification_content)
