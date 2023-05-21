@@ -301,9 +301,6 @@ def add_project(request):
 	# skills_list = skills.split(", ")
 
 	# return HttpResponse (skills_list[2])
-	uploaded_image1 = None
-	uploaded_image2 = None
-	uploaded_image3 = None
 
 	if request.method == "POST":
 		current_user = request.session['user_id']
@@ -377,6 +374,9 @@ def add_project(request):
 		project = Project()
 		project.project_id = 'PLCS' + num
 
+		# if (project_images[0] != 'x.pdf'):
+		# 	return HttpResponse ('t')
+
 
 		#COPY THE IMAGE TO THE PROJECT DIRECTORY 'static/project_imgs'
 		for index, i in enumerate(project_images):
@@ -384,41 +384,38 @@ def add_project(request):
 
 			# Construct the full destination path
 			destination_fullpath = os.path.join(destination_path, i)
-
-			pj = ['x', 'x', 'x']
+			
 
 			# Copy the uploaded image to the destination directory
 			with open(destination_fullpath, 'wb') as destination_file:
-				
-				if ((index == 0) and project_images[0] != 'x.pdf'):
+
+				#Checks to see which images have been selected/added by the user
+				if ((project_images[0] != 'x.pdf')):
 					source_file = uploaded_image1.file
-					pj[0] = 'y'
 
-				if ((index == 1) and (project_images[1] != 'x.pdf')):
+				if ((project_images[1] != 'x.pdf')):
 					source_file = uploaded_image2.file
-					pj[1] = 'y'
-
-				if ((index == 2) and (project_images[2] != 'x.pdf')):
+					
+				if ((project_images[2] != 'x.pdf')):
 					source_file = uploaded_image3.file
-					pj[2] = 'y'
 
+				#copy the image from the source to the destination
 				copyfileobj(source_file, destination_file)
 				destination_file.close()
 
-			img_extension = os.path.splitext(i)[1]
+				img_extension = os.path.splitext(i)[1]
 
-			# Rename the file
-			img_count = index+1
-			new_name = 'PLCS' + num + "#img" + str(img_count) + img_extension
+				# Rename the file
+				img_count = index+1
+				new_name = 'PLCS' + num + "#img" + str(img_count) + img_extension
 
-			project_images[index] = new_name
-			
-			# Construct the full path to the file
-			full_path = os.path.join(destination_path, i)
+				project_images[index] = new_name
+				
+				# Construct the full path to the file
+				full_path = os.path.join(destination_path, i)
 
-			# Rename the file
-			os.rename(full_path, os.path.join(destination_path, new_name))
-
+				# Rename the file
+				os.rename(full_path, os.path.join(destination_path, new_name))
 
 
 
@@ -431,6 +428,7 @@ def add_project(request):
 
 			# Copy the uploaded image to the destination directory
 			with open(destination_fullpath, 'wb') as destination_file:
+				#Checks to s
 				
 				if ((index == 0) and (project_files[0] != 'x.jpg')):
 					source_file = uploaded_file1.file
@@ -495,7 +493,6 @@ def add_project(request):
 		project_added_success_msg = "Project has been added"
 
 		return redirect ('/view_projects', project_added_msg = project_added_success_msg)
-
 
 
 
@@ -633,8 +630,7 @@ def user_management(request):
 		return render (request, "user_management.html", {'all_users': get_all_users, 
 			'user_summary': [all_user_accounts_count, active_user_count, disabled_user_count, deleted_user_count],
 			'user_permissions': user_permissions, 'user_roles': user_roles, 'roles_for_each_user': roles_for_each_user,
-			'roles_n_permissions': roles_n_permissions, 'get_all_projects': get_all_projects, 'user_names': user_names, 
-			'current_user': current_user})
+			'roles_n_permissions': roles_n_permissions, 'get_all_projects': get_all_projects, 'user_names': user_names})
 		# return render (request, "dashboard.html")
 
 	else:
@@ -951,13 +947,6 @@ def like_project(request):
 
 def project_details(request, project_id):
 	get_project_details = Project.objects.get (id = project_id)
-
-	# for obj in get_project_details:
-	column_value = get_project_details.project_skills
-	if column_value:
-		list_value = literal_eval(column_value)
-		get_project_details.project_skills = list_value
-		get_project_details.save()
 
 
 	return render(request, "project_details.html", {'get_project_details': get_project_details})

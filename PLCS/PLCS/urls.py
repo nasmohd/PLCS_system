@@ -64,4 +64,6 @@ urlpatterns = [
     path("view_module/<int:module_id>/", views.view_module),
 
     path("like_project/", views.like_project),
+
+    path("project_details/<int:project_id>/", views.project_details),
 ]

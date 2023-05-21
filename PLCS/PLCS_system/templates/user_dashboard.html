@@ -50,8 +50,13 @@
                         <i class="fa fa-ellipsis-v"></i>
                       </button>
                       <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Edit</a></li>
-                        <li><a href="#">Delete</a></li>
+                        <!-- <li><a href="#">Edit</a></li> -->
+                        <li><a href="#"><i class="fa fa-fw fa-bookmark"></i> Bookmark</a></li>
+
+                        {% if i.user_project.id == current_user %}
+                          <li><a href="#"><i class="fa fa-fw fa-trash" style="color: black;"></i> Delete</a></li>
+                        {% endif %}
+
                       </ul>
                     </div>
 
@@ -129,8 +134,12 @@
                       </script>
 
                       <div class="col-md-12" style="margin-top: 2rem;">
-                        <a class="btn btn-primary btn-sm">More details</a>
-                        <a class="btn btn-info btn-sm" id="applyButton{{ i.id }}"> Apply Now </a>
+                        <a class="btn btn-primary btn-sm" href="project_details/{{ i.id }}/">More details</a>
+
+                        {% if i.user_project.id != current_user %}
+                          <a class="btn btn-info btn-sm" id="applyButton{{ i.id }}"> Apply Now </a>
+                        {% endif %}
+                        
 
                         <div class="pull-right">
                           <button class="btn btn-sm btn-link likeButton" data-project-id="{{ i.id }}" id="like{{ i.id }}" style="text-decoration: none;">
@@ -208,11 +217,6 @@
 
                           //For Dislike Button
                         </script>
-
-
-                        {% if i.user_project.id == current_user %}
-                          <a class="btn btn-danger btn-sm">Delete</a> {{ i.user_project.id }}
-                        {% endif %}
                       </div>
 
                       <script>
