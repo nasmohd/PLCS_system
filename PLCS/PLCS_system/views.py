@@ -582,6 +582,14 @@ def user_management(request):
 	user_names = request.session['user_names']
 
 
+	get_all_project_collabs = User_Project_Collab.objects.filter(user = user_x)
+
+
+	user_x_collab = []
+	for collab in get_all_project_collabs:
+		user_x_collab.append(collab.project.id)
+
+
 	for obj in get_all_projects:
 		column_value = obj.project_skills
 		if column_value:
@@ -634,7 +642,7 @@ def user_management(request):
 			'user_summary': [all_user_accounts_count, active_user_count, disabled_user_count, deleted_user_count],
 			'user_permissions': user_permissions, 'user_roles': user_roles, 'roles_for_each_user': roles_for_each_user,
 			'roles_n_permissions': roles_n_permissions, 'get_all_projects': get_all_projects, 'user_names': user_names, 
-			'current_user': current_user})
+			'current_user': current_user, 'get_all_project_collabs': user_x_collab})
 		# return render (request, "dashboard.html")
 
 	else:
@@ -961,3 +969,75 @@ def project_details(request, project_id):
 
 
 	return render(request, "project_details.html", {'get_project_details': get_project_details})
+
+
+# def user_project_likes (request, user_id, project_id):
+# 	User_Project_Like
+
+
+def apply_to_project(request, project_id):
+	if request.method == 'POST':
+		current_user = request.session['user_id']
+
+		#Get user
+		user_apply = User.objects.get (id = current_user)
+
+		#Get project
+		project_apply = Project.objects.get (id = project_id)
+
+
+		#Check for the user's id and project id exist
+		check_project_collabs = User_Project_Collab.objects.filter(user = user_apply).filter (project = project_apply)
+
+		#If exists, remove it
+		if (check_project_collabs.exists()):
+			check_project_collab = User_Project_Collab.objects.filter(user = user_apply).get(project = project_apply)
+			check_project_collab.delete()
+
+
+		else:
+			user_project_collab = User_Project_Collab()
+			user_project_collab.user = user_apply
+			user_project_collab.project = project_apply
+
+			#0 = pending approval, 1 = approved, collaborating
+			user_project_collab.status = 0
+			user_project_collab.save()
+
+		return redirect('/dashboard')
+
+
+
+def view_projects_collaborations(request):
+	current_user = request.session['user_id']
+
+	project_collab_status = [0, 0, 0]
+
+	#Get user
+	user_collabs = User.objects.get (id = current_user)
+
+	user_project_collabs = User_Project_Collab.objects.filter(user = user_collabs)
+
+	for obj in user_project_collabs:
+		column_value = obj.project.project_skills
+		if column_value:
+			list_value = literal_eval(column_value)
+			obj.project.project_skills = list_value
+			obj.save()
+
+
+	#Get Pending collabs
+	get_pending_project_collabs = User_Project_Collab.objects.filter(user = user_collabs).filter (status = 0)
+	get_pending_project_collab_count = get_pending_project_collabs.count()
+
+
+	#Get Active collabs
+	get_active_project_collabs = User_Project_Collab.objects.filter(user = user_collabs).filter (status = 1)
+	get_active_project_collab_count = get_active_project_collabs.count()
+
+
+	project_collab_status[0] = get_pending_project_collab_count
+	project_collab_status[1] = get_active_project_collab_count
+
+
+	return render (request, "project_collab_page.html", {'user_project_collabs': user_project_collabs, 'project_collab_status': project_collab_status})

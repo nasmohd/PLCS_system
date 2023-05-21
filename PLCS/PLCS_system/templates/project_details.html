@@ -360,10 +360,36 @@
                       </script>
 
 
-                      {% if i.user_project.id == current_user %}
+                      {% if i.user_project.id != current_user %}
                         <a class="btn btn-danger btn-sm">Delete</a> {{ i.user_project.id }}
                       {% endif %}
                     </div>
+                  </div>
+
+                  <div class="col-md-12 col-12">
+                    <div class="nav-tabs-custom">
+                      <ul class="nav nav-tabs">
+                        <li class="active"><a href="#tab_5" data-toggle="tab" aria-expanded="true">Project Images </a></li>
+                        <li ><a href="#tab_6" data-toggle="tab" aria-expanded="false"> Project Files </a></li>
+
+                      </ul>
+
+                      <div class="tab-content">
+                        <div class="tab-pane active" id="tab_5">
+                          <p> Images Here </p>
+                          
+                        </div>
+
+
+                        <!-- /.tab-pane -->
+                        <div class="tab-pane" id="tab_6">
+                          <p> Files Here </p>
+                        </div>
+
+                      </div>
+                      <!-- /.tab-content -->
+                    </div>
+
                   </div>
 
                   <style type="text/css">

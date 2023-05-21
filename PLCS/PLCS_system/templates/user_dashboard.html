@@ -43,7 +43,11 @@
                   <div class="box-header with-border">
                     <i class="fa fa-file"></i>
 
-                    <h3 class="box-title"> {{ i.project_title }} </h3>
+                    <h3 class="box-title"> {{ i.project_title }} 
+                      {% if i.user_project.id == current_user %}
+                        <span style="color: red; font-size: 13px;"> (Submitted by you!) </span>
+                      {% endif %}
+                    </h3>
 
                     <div class="box-tools pull-right">
                       <button type="button" class="btn btn-box-tool" data-toggle="dropdown">
@@ -134,11 +138,98 @@
                       </script>
 
                       <div class="col-md-12" style="margin-top: 2rem;">
-                        <a class="btn btn-primary btn-sm" href="project_details/{{ i.id }}/">More details</a>
+                        <a class="btn btn-primary btn-sm" href="project_details/{{ i.id }}/">{{ i.id }}More details</a>
 
                         {% if i.user_project.id != current_user %}
-                          <a class="btn btn-info btn-sm" id="applyButton{{ i.id }}"> Apply Now </a>
+                          {% if i.id in get_all_project_collabs %}
+                            <a class="btn btn-success btn-sm" id="applyButton{{ i.id }}" data-project-id="{{ i.id }}" data-toggle="modal" data-target="#remove_applyModal{{ i.id }}"><i class="fa fa-fw fa-check" style="color:white;"> </i>Applied </a>
+                          {% endif %}
                         {% endif %}
+
+                        {% if i.user_project.id != current_user %}
+                          {% if i.id not in get_all_project_collabs %}
+                            <a class="btn btn-info btn-sm" id="applyButton{{ i.id }}" data-project-id="{{ i.id }}" data-toggle="modal" data-target="#applyModal{{ i.id }}"> Apply Now </a>
+                          {% endif %}
+                        {% endif %}
+
+                        
+                        <!-- {{ i.id }} -->
+
+                        <!-- If not my project, then apply -->
+                        <!-- {% if i.user_project.id != current_user %}
+                          {% for collab in get_all_project_collabs %}
+                              {% if collab.user.id == 7 and collab.project.id == i.id %}
+                                  <a class="btn btn-success btn-sm" id="applyButton{{ i.id }}" data-project-id="{{ i.id }}" data-toggle="modal" data-target="#applyModal{{ i.id }}"><i class="fa fa-fw fa-check" style="color:white;"> </i>Applied </a>
+
+                              {% else %}
+                                  <a class="btn btn-info btn-sm" id="applyButton{{ i.id }}" data-project-id="{{ i.id }}" data-toggle="modal" data-target="#applyModal{{ i.id }}"> Apply Now </a>
+                              {% endif %}
+                          {% endfor %}
+                        {% endif %} -->
+
+                        <div class="modal fade" id="applyModal{{ i.id }}" style="display: none;">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <form method="POST" action="apply_to_project/{{ i.id }}">
+                                {% csrf_token %}
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">×</span></button>
+                                <h4 class="modal-title">Apply as Collaborator to this project</h4>
+                              </div>
+                              <div class="modal-body">
+                                <p> Are you sure you want to apply as a collaborator? </p>
+
+                                <div class="form-group">
+                                  <label for="exampleInputEmail1">Send a message with your application <span class="optional_entry"> (optional) </span></label>
+                                  <textarea class="form-control" id="exampleInputEmail1" placeholder="Message (Optional)" rows="10" style="resize: none;" name="msg_project_application" required>Programming PLC and HMI using Ladder Diagrams</textarea>
+                                </div>
+
+                                <style type="text/css">
+                                  .optional_entry {
+                                    color: red;
+                                  }
+                                </style>
+
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-info">Apply Now</button>
+                              </div>
+
+                              </form>
+                            </div>
+                            <!-- /.modal-content -->
+                          </div>
+                          <!-- /.modal-dialog -->
+                        </div>
+
+                        <div class="modal modal-danger fade" id="remove_applyModal{{ i.id }}" style="display: none;">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <form method="POST" action="apply_to_project/{{ i.id }}">
+                                {% csrf_token %}
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">×</span></button>
+                                <h4 class="modal-title">Remove application as Collaborator to this project</h4>
+                              </div>
+                              <div class="modal-body">
+                                <p> Are you sure you want to remove your application as a collaborator? </p>
+
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-outline">Confirm</button>
+                              </div>
+
+                              </form>
+                            </div>
+                            <!-- /.modal-content -->
+                          </div>
+                          <!-- /.modal-dialog -->
+                        </div>
+
                         
 
                         <div class="pull-right">
@@ -219,9 +310,11 @@
                         </script>
                       </div>
 
-                      <script>
+                      <!-- <script>
                         document.addEventListener('DOMContentLoaded', function() {
                           var applyButton = document.getElementById('applyButton{{ i.id }}');
+                          var projectId = applyButton.getAttribute('data-project-id');
+
                           
                           applyButton.addEventListener('click', function() {
                               this.classList.toggle('btn-success');
@@ -237,10 +330,44 @@
                                 this.innerHTML = '';
                                 this.appendChild(newIcon);
                                 this.innerHTML += ' Applied';
+
+                                function getCookie(name) {
+                                  var cookieValue = null;
+                                  if (document.cookie && document.cookie !== '') {
+                                    var cookies = document.cookie.split(';');
+                                    for (var i = 0; i < cookies.length; i++) {
+                                      var cookie = cookies[i].trim();
+                                      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                      }
+                                    }
+                                  }
+                                  return cookieValue;
+                                }
+
+
+                                var csrftoken = getCookie('csrftoken');
+                                //Apply to the project
+                                var xhr = new XMLHttpRequest();
+                                xhr.open('POST', '/like_project/');
+                                xhr.setRequestHeader('Content-Type', 'application/json');
+                                xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                                xhr.onload = function() {
+                                  if (xhr.status === 200) {
+                                    // Handle the success response
+                                    console.log('Request successful!');
+                                  } else {
+                                    // Handle the error response
+                                    console.log('Request failed!');
+                                  }
+                                };
+                                var data = JSON.stringify({ projectId: projectId, isLiked: "isLiked" });
+                                xhr.send(data);
                               }
                           });
                         });
-                      </script>
+                      </script> -->
 
                     </div>
 

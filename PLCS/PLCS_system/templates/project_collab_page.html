@@ -52,13 +52,9 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Project Management
+        Project Collaborations
         <small>Control panel</small>
       </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Project Management</li>
-      </ol>
     </section>
 
     <!-- Main content -->
@@ -72,7 +68,7 @@
             <div class="inner">
               <h3>{{ projects_summary.0 }}</h3>
 
-              <p> Registered Projects to date </p>
+              <p> Project Collaborations to date </p>
             </div>
             <div class="icon" style="margin-top: -0.9rem;">
               <i class="fa fa-file-text-o" style="font-size: 60%;"></i>
@@ -85,7 +81,7 @@
           <!-- small box -->
           <div class="small-box bg-aqua">
             <div class="inner">
-              <h3>{{ projects_summary.1 }}</h3>
+              <h3>{{ project_collab_status.0 }}</h3>
 
               <p> Pending Approval </p>
             </div>
@@ -97,7 +93,7 @@
           <!-- small box -->
           <div class="small-box bg-yellow">
             <div class="inner">
-              <h3>{{ projects_summary.1 }}</h3>
+              <h3>{{ project_collab_status.1 }}</h3>
 
               <p> Active Projects </p>
             </div>
@@ -139,7 +135,7 @@
           function project_view(v){
             if (v == 'registered_projects'){
               var txt_project_type = document.getElementById('type_of_project_view');
-              txt_project_type.innerHTML = 'Showing all Registered Projects to date';
+              txt_project_type.innerHTML = 'Showing all Collaborations to date';
               txt_project_type.style.color = '#3C8DBC';
 
               // Get the input element
@@ -241,11 +237,7 @@
             <div class="box-header">
               <h3 class="box-title" style="color: #306FA0;">
               <i class="fa fa-file-text-o"></i>
-              <strong> Project Management </strong><br/> <span class="type_of_project_view" id="type_of_project_view" style="font-size:13px; font-weight: normal"> Showing all Registered Projects to date </span></h3>
-
-              <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addUser"> Add New Project </button>
-
-              <button class="btn btn-danger" style="margin-left: 1rem;" id="delete_Btn" title="Delete Project(s) &#10;(must select at least one checkbox)" disabled> <i class="fa fa-fw fa-trash" style="color: white;"></i>  </button>
+              <strong> Project Collaborations </strong><br/> <span class="type_of_project_view" id="type_of_project_view" style="font-size:13px; font-weight: normal"> Showing all Collaborations to date </span></h3>
             </div>
 
             <div class="modal fade" id="modal-addUser" style="display: none;">
@@ -667,43 +659,40 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <td> <input type="checkbox" class="check-all"> </td>
                   <th style="width: 5%;">SN</th>
                   <th style="width: 10%;">Project ID</th>
-                  <th style="width: 10%;">Title</th>
-                  <th style="width: 20%;">Description</th>
-                  <th style="width: 30%;">Required Skills</th>
+                  <th style="width: 15%;">Title</th>
+                  <th style="width: 35%">Description</th>
+                  <th style="width: 25%;">Required Skills</th>
                   <th style="width: 10%;">Status</th>
-                  <th class="text-center" style="width: 15%;"> Change details </th>
                 </tr>
                 </thead>
                 <tbody>
 
 
-                {% for i in all_projects %}
+                {% for i in user_project_collabs %}
                   <tr>
-                    <td> <input type="checkbox" class="table-checkbox" name="email[]" value="{{ i.id }}"> </td>
                     <td> {{ forloop.counter }} </td>
-                    <td> {{ i.project_id }} </td>
-                    <td> {{ i.project_title }} </td>
-                    <td class="description_column"> {{ i.project_description }} </td>
+                    <td> {{ i.project.project_id }} </td>
+                    <td> {{ i.project.project_title }} </td>
+                    <td class="description_column"> {{ i.project.project_description }} </td>
 
                     <td id="tagContainer"> 
-                      {% for j in i.project_skills %}
+                      {% for j in i.project.project_skills %}
                         <span class="label random-label" style="margin-right: 5px;">{{ j }} </span> 
                       {% endfor %}
                     </td>
                     
                     <td> 
+                      {% if i.status == 0 %}
+                        <span class="btn-round btn btn-info btn-xs"> Pending Approval </span>
+                      {% endif %}
+
                       {% if i.status == 1 %}
-                        <span class="btn-round btn btn-warning btn-xs"> In Progress </span>
+                        <span class="btn-round btn btn-warning btn-xs"> Active </span>
                       {% endif %}
 
                       {% if i.status == 2 %}
-                        <span class="btn-round btn btn-danger btn-xs"> Deleted </span>
-                      {% endif %}
-
-                      {% if i.status == 3 %}
                         <span class="btn-round btn btn-success btn-xs"> Completed </span>
                       {% endif %}
 
@@ -718,7 +707,7 @@
                       </style>
                     </td>
 
-                    <td class="text-center"> 
+                    <!-- <td class="text-center"> 
                       <div class="btn-group">
                         <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
                           <i class="fa fa-fw fa-pencil-square-o"></i>
@@ -733,7 +722,7 @@
                           <li><a data-toggle="modal" data-target="#modal-deleteProject{{ i.id }}"><i class="fa fa-trash"></i> Delete </a></li>
                         </ul>
                       </div>
-                    </td>
+                    </td> -->
                   </tr>
 
                   <!-- Modal Edit User Details  -->
@@ -1058,14 +1047,12 @@
 
                 <tfoot>
                 <tr>
-                  <td> </td>
                   <th>SN</th>
                   <th>Project ID</th>
                   <th>Title</th>
                   <th>Description</th>
                   <th>Required Skills</th>
                   <th>Status</th>
-                  <th class="text-center"> Change details </th>
                 </tr>
                 </tfoot>
               </table>
@@ -1078,7 +1065,7 @@
                   console.log (desc_columnElement);
 
                   // Define the maximum number of characters to display
-                  const maxLength = 25;
+                  const maxLength = 50;
 
                   // Iterate over the column elements
                   for (let i = 0; i < desc_columnElement.length; i++) {

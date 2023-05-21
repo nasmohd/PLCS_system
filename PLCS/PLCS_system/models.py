@@ -102,8 +102,25 @@ class Notification (models.Model):
 	notification_status = models.IntegerField (default=1)
 	notification_link_to = models.CharField (max_length=50, default='')
 	notification_date = models.DateTimeField(default  = datetime.today())
-	
+
 	notification_recipient = models.ForeignKey(User, on_delete=models.CASCADE)
 	
 	def __str__(self):
 		return "id = {}, content = {}".format(self.id, self.notification_content)
+
+
+class User_Project_Like (models.Model):	
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	project = models.ForeignKey(Project, on_delete=models.CASCADE)
+	
+	def __str__(self):
+		return "id = {}, user = {}".format(self.id, self.user)
+
+
+class User_Project_Collab (models.Model):	
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	project = models.ForeignKey(Project, on_delete=models.CASCADE)
+	status = models.IntegerField(default=1)
+	
+	def __str__(self):
+		return "id = {}, user = {}, project = {}".format(self.id, self.user, self.project)

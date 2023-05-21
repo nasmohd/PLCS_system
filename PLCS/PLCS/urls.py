@@ -66,4 +66,8 @@ urlpatterns = [
     path("like_project/", views.like_project),
 
     path("project_details/<int:project_id>/", views.project_details),
+
+    path("apply_to_project/<int:project_id>", views.apply_to_project),
+
+    path("view_projects_collaborations/", views.view_projects_collaborations)
 ]
