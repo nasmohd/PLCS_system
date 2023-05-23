@@ -66,9 +66,9 @@
           <!-- small box -->
           <div class="small-box bg-light-blue">
             <div class="inner">
-              <h3>{{ projects_summary.0 }}</h3>
+              <h3>{{ project_collab_status.0 }}</h3>
 
-              <p> Project Collaborations to date </p>
+              <p> Collaborations to date </p>
             </div>
             <div class="icon" style="margin-top: -0.9rem;">
               <i class="fa fa-file-text-o" style="font-size: 60%;"></i>
@@ -81,11 +81,11 @@
           <!-- small box -->
           <div class="small-box bg-aqua">
             <div class="inner">
-              <h3>{{ project_collab_status.0 }}</h3>
+              <h3>{{ project_collab_status.1 }}</h3>
 
               <p> Pending Approval </p>
             </div>
-            <a href="#" class="small-box-footer" onclick="project_view('active_projects')">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="#" class="small-box-footer" onclick="project_view('pending_approval')">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
 
@@ -93,7 +93,7 @@
           <!-- small box -->
           <div class="small-box bg-yellow">
             <div class="inner">
-              <h3>{{ project_collab_status.1 }}</h3>
+              <h3>{{ project_collab_status.2 }}</h3>
 
               <p> Active Projects </p>
             </div>
@@ -105,7 +105,7 @@
           <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
-              <h3> {{ projects_summary.3 }} </h3>
+              <h3> {{ project_collab_status.3 }} </h3>
               <!-- <h3>53<sup style="font-size: 20px">%</sup></h3> -->
 
               <p>Completed</p>
@@ -120,7 +120,7 @@
         <div class="col-lg-2 col-xs-6">
           <div class="small-box bg-red">
             <div class="inner">
-              <h3> {{ projects_summary.2 }} </h3>
+              <h3> {{ project_collab_status.4 }} </h3>
 
               <p> Deleted </p>
             </div>
@@ -138,15 +138,46 @@
               txt_project_type.innerHTML = 'Showing all Collaborations to date';
               txt_project_type.style.color = '#3C8DBC';
 
+              const elements = document.querySelectorAll('.project_color');
+
+              // Change the text color of each element
+              elements.forEach(element => {
+                element.style.color = '#3C8DBC'; // Change the color to your desired value
+              });
+
               // Get the input element
               var search_table = document.querySelector('#example1_filter input');
 
               // Set the value of the input element
-              search_table.value = "";
+              // search_table.value = "";
               // search_table.dispatchEvent(new Event('input'));
 
               var dataTable = $('#example1').DataTable();
-              dataTable.columns(6).search("").draw();
+              dataTable.columns(5).search("").draw();
+            }
+
+            if (v == 'pending_approval'){
+              var txt_project_type = document.getElementById('type_of_project_view');
+              txt_project_type.innerHTML = 'Showing all Projects Pending Approval';
+              txt_project_type.style.color = '#00C0EF';
+
+              const elements = document.querySelectorAll('.project_color');
+
+              // Change the text color of each element
+              elements.forEach(element => {
+                element.style.color = '#00C0EF'; // Change the color to your desired value
+              });
+
+              // Get the input element
+              var search_table = document.querySelector('#example1_filter input');
+
+              // Set the value of the input element
+              // search_table.dispatchEvent(new Event('input'));
+
+              var dataTable = $('#example1').DataTable();
+              dataTable.columns(5).search("Pending Approval").draw();
+
+              // search_table.value = "In Progress";
             }
 
             if (v == 'active_projects'){
@@ -154,6 +185,13 @@
               txt_project_type.innerHTML = 'Showing all Active Projects';
               txt_project_type.style.color = '#F39C12';
 
+              const elements = document.querySelectorAll('.project_color');
+
+              // Change the text color of each element
+              elements.forEach(element => {
+                element.style.color = '#F39C12'; // Change the color to your desired value
+              });
+
               // Get the input element
               var search_table = document.querySelector('#example1_filter input');
 
@@ -161,9 +199,9 @@
               // search_table.dispatchEvent(new Event('input'));
 
               var dataTable = $('#example1').DataTable();
-              dataTable.columns(6).search("In Progress").draw();
+              dataTable.columns(5).search("In Progress").draw();
 
-              search_table.value = "In Progress";
+              // search_table.value = "In Progress";
             }
 
             if (v == 'completed_projects'){
@@ -171,6 +209,13 @@
               txt_project_type.innerHTML = 'Showing all Completed Projects';
               txt_project_type.style.color = '#00A65A';
 
+              const elements = document.querySelectorAll('.project_color');
+
+              // Change the text color of each element
+              elements.forEach(element => {
+                element.style.color = '#00A65A'; // Change the color to your desired value
+              });
+
               // Get the input element
               var search_table = document.querySelector('#example1_filter input');
 
@@ -178,15 +223,22 @@
               // search_table.dispatchEvent(new Event('input'));
 
               var dataTable = $('#example1').DataTable();
-              dataTable.columns(6).search("Completed").draw();
+              dataTable.columns(5).search("Completed").draw();
 
-              search_table.value = "Completed";
+              // search_table.value = "Completed";
             }
 
             if (v == 'deleted_projects'){
               var txt_project_type = document.getElementById('type_of_project_view');
               txt_project_type.innerHTML = 'Showing all Deleted Projects';
               txt_project_type.style.color = '#DD4B39';
+
+              const elements = document.querySelectorAll('.project_color');
+
+              // Change the text color of each element
+              elements.forEach(element => {
+                element.style.color = '#DD4B39'; // Change the color to your desired value
+              });
 
               // Get the input element
               var search_table = document.querySelector('#example1_filter input');
@@ -196,9 +248,9 @@
               // search_table.dispatchEvent(new Event('input'));
 
               var dataTable = $('#example1').DataTable();
-              dataTable.columns(6).search("Deleted").draw();
+              dataTable.columns(5).search("Deleted").draw();
 
-              search_table.value = "Deleted";
+              // search_table.value = "Deleted";
             }
             
           }
@@ -236,8 +288,8 @@
           <div class="box">
             <div class="box-header">
               <h3 class="box-title" style="color: #306FA0;">
-              <i class="fa fa-file-text-o"></i>
-              <strong> Project Collaborations </strong><br/> <span class="type_of_project_view" id="type_of_project_view" style="font-size:13px; font-weight: normal"> Showing all Collaborations to date </span></h3>
+              <i class="fa fa-file-text-o project_color"></i>
+              <strong class="project_color"> Project Collaborations </strong><br/> <span class="type_of_project_view" id="type_of_project_view" style="font-size:13px; font-weight: normal"> Showing all Collaborations to date </span></h3>
             </div>
 
             <div class="modal fade" id="modal-addUser" style="display: none;">
@@ -1403,19 +1455,14 @@
 <script>
   $(function () {
     $('#example1').DataTable({
-      columnDefs: [
-        { targets: [0], orderable: false } // Disable sorting for the third column (index 2)
-      ],
 
       columns: [
         null, // First column (index 0) - searchable
         null,
         null,
         null,
-        null,
         { searchable: false }, // Second column (index 1) - not searchable
         null, // Third column (index 2) - searchable
-        null,
         // ... and so on
       ]
     })

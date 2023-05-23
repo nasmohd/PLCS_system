@@ -98,6 +98,7 @@ class Learning_Module (models.Model):
 class Notification (models.Model):
 	notification_title = models.CharField (max_length=50, default='')
 	notification_content = models.TextField(default='')
+	notification_type = models.CharField (max_length=50, default='')
 
 	notification_status = models.IntegerField (default=1)
 	notification_link_to = models.CharField (max_length=50, default='')

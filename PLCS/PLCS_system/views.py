@@ -960,6 +960,18 @@ def like_project(request):
 def project_details(request, project_id):
 	get_project_details = Project.objects.get (id = project_id)
 
+	#Get permissions in database
+	user_permissions = Permission.objects.all()
+
+	#Get roles in database
+	user_roles = Role.objects.all()
+	current_user = request.session['user_id']
+
+
+	roles_n_permissions = request.session['roles_n_permissions']
+	user_names = request.session['user_names']
+
+
 	# for obj in get_project_details:
 	column_value = get_project_details.project_skills
 	if column_value:
@@ -968,7 +980,7 @@ def project_details(request, project_id):
 		get_project_details.save()
 
 
-	return render(request, "project_details.html", {'get_project_details': get_project_details})
+	return render(request, "project_details.html", {'get_project_details': get_project_details, 'roles_n_permissions': roles_n_permissions, 'user_names': user_names})
 
 
 # def user_project_likes (request, user_id, project_id):
@@ -995,6 +1007,7 @@ def apply_to_project(request, project_id):
 			check_project_collab.delete()
 
 
+		#If collab entry does not exist, add it
 		else:
 			user_project_collab = User_Project_Collab()
 			user_project_collab.user = user_apply
@@ -1004,14 +1017,25 @@ def apply_to_project(request, project_id):
 			user_project_collab.status = 0
 			user_project_collab.save()
 
+
+			#Save notification for the collaboration to the project poster
+			collab_notif = Notification()
+			collab_notif.notification_title = "Project collaboration request"
+			collab_notif.notification_content = "{} {} has applied to collaborate in a project you posted".format(user_apply.first_name, user_apply.last_name)
+			collab_notif.notification_status = 0
+			collab_notif.notification_link_to = "Take to user Page"
+			collab_notif.notification_date = datetime.today()
+			# collab_notif.notification_recipient = 
+
+
 		return redirect('/dashboard')
 
 
-
+#Project Collaborations, Track project progresses
 def view_projects_collaborations(request):
 	current_user = request.session['user_id']
 
-	project_collab_status = [0, 0, 0]
+	project_collab_status = [0, 0, 0, 0, 0]
 
 	#Get user
 	user_collabs = User.objects.get (id = current_user)
@@ -1026,6 +1050,11 @@ def view_projects_collaborations(request):
 			obj.save()
 
 
+	#Get All collabs
+	get_project_collabs = User_Project_Collab.objects.filter(user = user_collabs).filter (status = 0)
+	get_project_collab_count = get_project_collabs.count()
+
+
 	#Get Pending collabs
 	get_pending_project_collabs = User_Project_Collab.objects.filter(user = user_collabs).filter (status = 0)
 	get_pending_project_collab_count = get_pending_project_collabs.count()
@@ -1036,8 +1065,21 @@ def view_projects_collaborations(request):
 	get_active_project_collab_count = get_active_project_collabs.count()
 
 
-	project_collab_status[0] = get_pending_project_collab_count
-	project_collab_status[1] = get_active_project_collab_count
+	#Get Completed collabs
+	get_completed_project_collabs = User_Project_Collab.objects.filter(user = user_collabs).filter (status = 2)
+	get_completed_project_collab_count = get_completed_project_collabs.count()
+
+
+	#Get Deleted collabs
+	get_deleted_project_collabs = User_Project_Collab.objects.filter(user = user_collabs).filter (status = 3)
+	get_deleted_project_collab_count = get_deleted_project_collabs.count()
+
+
+	project_collab_status[0] = get_project_collab_count
+	project_collab_status[1] = get_pending_project_collab_count
+	project_collab_status[2] = get_active_project_collab_count
+	project_collab_status[3] = get_completed_project_collab_count
+	project_collab_status[4] = get_deleted_project_collab_count
 
 
 	return render (request, "project_collab_page.html", {'user_project_collabs': user_project_collabs, 'project_collab_status': project_collab_status})
