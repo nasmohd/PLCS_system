@@ -18,7 +18,6 @@ from django.contrib import messages #import messages
 from ast import literal_eval
 
 from django.core.paginator import Paginator
-from django.db.models import Q
 
 
 # Create your views here.
@@ -53,43 +52,35 @@ def login_user(request):
 
 			check_DB_user_details = User.objects.filter(email = email_input)
 			if (check_DB_user_details.exists()):
-				if (check_DB_user_details[0].status != 0):
-					if (check_DB_user_details[0].password == password_input):
+				if (check_DB_user_details[0].password == password_input):
 
-						#Create Session for User
-						request.session['email'] = check_DB_user_details[0].email
-						request.session['roles_n_permissions'] = get_roles_permissions(request, check_DB_user_details[0].id)
-						request.session['user_id'] = check_DB_user_details[0].id
-						request.session['user_names'] = [check_DB_user_details[0].first_name, check_DB_user_details[0].last_name]
-						# request.session['roles'] = request.session['roles_n_permissions'][0]
-						# request.session['permissions'] = request.session['roles_n_permissions'][1]
+					#Create Session for User
+					request.session['email'] = check_DB_user_details[0].email
+					request.session['roles_n_permissions'] = get_roles_permissions(request, check_DB_user_details[0].id)
+					request.session['user_id'] = check_DB_user_details[0].id
+					request.session['user_names'] = [check_DB_user_details[0].first_name, check_DB_user_details[0].last_name]
+					# request.session['roles'] = request.session['roles_n_permissions'][0]
+					# request.session['permissions'] = request.session['roles_n_permissions'][1]
 
-						# return HttpResponse (request.session['roles_n_permissions'])
+					# return HttpResponse (request.session['roles_n_permissions'])
 
-						# request.session['permissions'] = get_permissions(request, check_DB_user_details[0].id)
-						# return HttpResponse (request.session['roles_n_permissions'])
-
-
-						# if ('User' in request.session['roles_n_permissions'][0]):
-						# 	return HttpResponse('Yk')
+					# request.session['permissions'] = get_permissions(request, check_DB_user_details[0].id)
+					# return HttpResponse (request.session['roles_n_permissions'])
 
 
-						return redirect('/dashboard') 
-						# return HttpResponse (check_DB_user_details[0].password)
+					# if ('User' in request.session['roles_n_permissions'][0]):
+					# 	return HttpResponse('Yk')
 
-					else:
-						messages.success(request, 'Wrong credentials', extra_tags='alert-danger')
-						return redirect('/')
+
+					return redirect('/dashboard') 
+					# return HttpResponse (check_DB_user_details[0].password)
 
 				else:
-					messages.success(request, 'Account disabled, contact Admin', extra_tags='alert-danger')
 					return redirect('/')
 
 			else:
-				messages.success(request, 'This user does not exist', extra_tags='alert-danger')
 				return redirect('/') 
 
-		messages.success(request, 'You need to log in', extra_tags='alert-danger')
 		return redirect('/')
 
 
@@ -473,9 +464,6 @@ def add_project(request):
 		project.project_description = project_description
 		project.project_DOR = datetime.today()
 
-		# project_images = ['x','y','z']
-		# project_files = ['x','y','z']
-
 		project.project_images = project_images
 		project.project_files = project_files
 
@@ -502,7 +490,7 @@ def add_project(request):
 		project.user_project = User.objects.get(id = current_user)
 
 		project.save()
-		messages.success(request, 'Project added successfully.', extra_tags='alert-success')
+		messages.success(request, 'Project added successfully.')
 
 		project_added_success_msg = "Project has been added"
 
@@ -578,16 +566,11 @@ def add_role(request):
 		role_description_input = request.POST["role_description_input"]
 
 		#If Role does not exist
-		# if not (Role.objects.filter(role_name = role_name_input).exists()):
-		if not (Role.objects.filter(Q(role_name__icontains=role_name_input)).exists()):
+		if not (Role.objects.filter(role_name = role_name_input).exists()):
 			new_role = Role()
 			new_role.role_name = role_name_input
 			new_role.role_description = role_description_input
 			new_role.save()
-			messages.success(request, 'Role has been added', extra_tags='alert-success')
-
-		else:
-			messages.success(request, 'Role already exists', extra_tags='alert-danger')
 
 		return redirect ('/roles_permissions')
 
@@ -619,7 +602,7 @@ def user_management(request):
 
 	session_val = check_session(request, 'url_to_redirect_to')
 
-	get_all_users = User.objects.all().order_by('-date_of_registration').exclude(id = current_user)
+	get_all_users = User.objects.all().order_by('-date_of_registration')
 
 	#Count all user accounts
 	all_user_accounts_count = User.objects.all().count()
@@ -638,28 +621,6 @@ def user_management(request):
 
 	#Get roles in database
 	user_roles = Role.objects.all()
-
-	all_roles = []
-
-
-	#Get permissions for Roles
-	#user_roles = "id = 1, role = Userid = 2, role = Administrator"
-	permissions_for_role = []
-	permissions_each_role = []
-	for r in user_roles:
-		all_roles.append(r.role_name)
-		permissions_for_role_queryset = Role_Permission.objects.filter(role = r)
-
-		for role_perm in permissions_for_role_queryset:
-			permissions_each_role.append (role_perm.permission.permission_action)
-
-		#Role index 0, has permissions in list at index 0
-		permissions_for_role.append(permissions_each_role)
-		permissions_each_role = []
-
-	#roles = ['User', 'Administrator'], 
-	#permissions = [['track progress', 'comment on users'], 
-	#['manage users', 'manage projects', 'manage learning content', 'manage comments', 'comment on projects', 'track progress', 'comment on users']]
 
 
 	#Get all roles of each user
@@ -681,7 +642,7 @@ def user_management(request):
 			'user_summary': [all_user_accounts_count, active_user_count, disabled_user_count, deleted_user_count],
 			'user_permissions': user_permissions, 'user_roles': user_roles, 'roles_for_each_user': roles_for_each_user,
 			'roles_n_permissions': roles_n_permissions, 'get_all_projects': get_all_projects, 'user_names': user_names, 
-			'current_user': current_user, 'get_all_project_collabs': user_x_collab, 'all_roles': all_roles, 'permissions_each_role': permissions_each_role})
+			'current_user': current_user, 'get_all_project_collabs': user_x_collab})
 		# return render (request, "dashboard.html")
 
 	else:
@@ -706,7 +667,6 @@ def update_user(request, user_id):
 		user_to_update.password = password_input
 		user_to_update.save()
 
-		messages.success(request, 'User has been updated', extra_tags='alert-success')
 		return redirect('/dashboard')
 
 
@@ -723,8 +683,6 @@ def delete_role(request, role_id):
 	
 	# Delete the item
 	role_to_delete.delete()
-
-	messages.success(request, 'Role has been deleted', extra_tags='alert-danger')
 	return redirect ('/roles_permissions')
 
 
@@ -837,11 +795,10 @@ def admin_add_user(request):
 
 			# return HttpResponse (user)
 			# login_user(request, user)
-			messages.success(request, 'User has been registered', extra_tags='alert-success')
-			return HttpResponseRedirect('/dashboard')
+
+			return HttpResponseRedirect('/dashboard')  
 
 		else:
-			messages.success(request, 'User email already registered', extra_tags='alert-danger')
 			return redirect('/user_management')
 
 
@@ -855,7 +812,6 @@ def get_roles_permissions(request, user_id):
 
 	roles_n_permissions = []
 
-	#Getting specific permissions of user
 	permissions_of_user = []
 	for i in user_permissions:
 		permissions_of_user.append(i.permission.permission_action)
@@ -1031,7 +987,7 @@ def project_details(request, project_id):
 # 	User_Project_Like
 
 
-def apply_to_project(request, project_id, project_poster_id):
+def apply_to_project(request, project_id):
 	if request.method == 'POST':
 		current_user = request.session['user_id']
 
@@ -1040,9 +996,6 @@ def apply_to_project(request, project_id, project_poster_id):
 
 		#Get project
 		project_apply = Project.objects.get (id = project_id)
-
-		#Get Project Poster
-		project_poster = User.objects.get (id = project_poster_id)
 
 
 		#Check for the user's id and project id exist
@@ -1069,13 +1022,10 @@ def apply_to_project(request, project_id, project_poster_id):
 			collab_notif = Notification()
 			collab_notif.notification_title = "Project collaboration request"
 			collab_notif.notification_content = "{} {} has applied to collaborate in a project you posted".format(user_apply.first_name, user_apply.last_name)
-			collab_notif.notification_type = "Collab Application"
-
 			collab_notif.notification_status = 0
 			collab_notif.notification_link_to = "Take to user Page"
 			collab_notif.notification_date = datetime.today()
-			collab_notif.notification_recipient = project_poster
-			collab_notif.save()
+			# collab_notif.notification_recipient = 
 
 
 		return redirect('/dashboard')

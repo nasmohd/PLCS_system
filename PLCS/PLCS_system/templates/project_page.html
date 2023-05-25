@@ -259,6 +259,36 @@
       
       <!-- /.row -->
       <!-- Main row -->
+
+      <!-- <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color: white;">×</button>
+        <i class="icon fa fa-check"></i> Project has been Added
+      </div> -->
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-dismissible {{ message.tags }}">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color: white;">×</button>
+            <i class="icon fa fa-check"></i> {{ message }}
+          </div>
+          <script>
+              // Automatically close the alert after 5 seconds
+              setTimeout(function() {
+                  $('.alert').alert('close');
+              }, 5000);
+          </script>
+        {% endfor %}
+      {% endif %}
+
+
+      <!-- <script>
+          // Automatically close the alert after 5 seconds
+          setTimeout(function() {
+              $('.alert').alert('close');
+          }, 3000);
+      </script> -->
+
+
       <div class="row">
         <div class="col-xs-12">
 
@@ -294,11 +324,11 @@
 
                     <div class="nav-tabs-custom">
                       <ul class="nav nav-tabs">
-                        <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Project Details <span class="optional_entry"> * </span></a></li>
+                        <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Details <span class="optional_entry"> * </span></a></li>
                         <li><a href="#tab_2" data-toggle="tab" aria-expanded="false"> Requirements <span class="optional_entry"> * </span></a></li>
+                        <li><a href="#tab_tasks" data-toggle="tab" aria-expanded="false"> Tasks <span class="optional_entry"> * </span></a></li>
                         <li><a href="#tab_3" data-toggle="tab">Images <span class="optional_entry"> * </span></a></li>
                         <li><a href="#tab_4" data-toggle="tab">Other Attachments </a></li>
-
                       </ul>
 
                       <div class="tab-content">
@@ -662,6 +692,24 @@
 
                             <p class="help-block">File 3 describing the project</p>
                           </div>
+
+                          <style type="text/css">
+                            .optional_entry {
+                              color: red;
+                              font-weight: normal;
+                            }
+                          </style>
+                        </div>
+
+                        <div class="tab-pane" id="tab_tasks">
+                          <p class="help-block">Tasks for this project</p>
+                          
+                          <!-- <div class="form-group">
+                            <label for="exampleInputFile">File 1 <span class="optional_entry"> (optional) </span></label>
+                            <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
+
+                            <p class="help-block">File 1 describing the project</p>
+                          </div> -->
 
                           <style type="text/css">
                             .optional_entry {

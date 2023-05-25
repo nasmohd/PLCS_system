@@ -151,7 +151,7 @@
                       </script>
 
                       <div class="col-md-12" style="margin-top: 2rem;">
-                        <a class="btn btn-primary btn-sm" href="project_details/{{ i.id }}/">{{ i.id }}More details</a>
+                        <a class="btn btn-primary btn-sm" href="project_details/{{ i.id }}/">{{ i.id }}More details </a>
 
                         {% if i.user_project.id != current_user %}
                           {% if i.id in get_all_project_collabs %}
@@ -183,7 +183,7 @@
                         <div class="modal fade" id="applyModal{{ i.id }}" style="display: none;">
                           <div class="modal-dialog">
                             <div class="modal-content">
-                              <form method="POST" action="apply_to_project/{{ i.id }}">
+                              <form method="POST" action="apply_to_project/{{ i.id }}/{{ i.user_project.id }}">
                                 {% csrf_token %}
                               <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -220,7 +220,7 @@
                         <div class="modal modal-danger fade" id="remove_applyModal{{ i.id }}" style="display: none;">
                           <div class="modal-dialog">
                             <div class="modal-content">
-                              <form method="POST" action="apply_to_project/{{ i.id }}">
+                              <form method="POST" action="apply_to_project/{{ i.id }}/{{ i.user_project.id }}">
                                 {% csrf_token %}
                               <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">

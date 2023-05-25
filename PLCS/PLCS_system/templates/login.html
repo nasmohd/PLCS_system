@@ -37,6 +37,22 @@
   <div class="login-box-body">
     <p class="login-box-msg">Sign in to start your session</p>
 
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-dismissible {{ message.tags }}">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color: white;">×</button>
+          <i class="icon fa fa-check"></i> {{ message }}
+        </div>
+        <script>
+            // Automatically close the alert after 5 seconds
+            setTimeout(function() {
+                $('.alert').alert('close');
+            }, 5000);
+        </script>
+      {% endfor %}
+    {% endif %}
+
     <form action="/login_user" method="post">
       {% csrf_token %}
       <div class="form-group has-feedback">

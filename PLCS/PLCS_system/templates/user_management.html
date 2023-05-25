@@ -106,7 +106,7 @@
           </div> -->
 
           <!-- ./col -->
-          <div class="col-lg-3 col-xs-6">
+          <div class="col-lg-2 col-xs-6">
             <!-- small box -->
             <div class="small-box bg-green">
               <div class="inner">
@@ -114,15 +114,15 @@
 
                 <p>Active Users</p>
               </div>
-              <div class="icon">
+              <!-- <div class="icon">
                 <i class="ion ion-person"></i>
-              </div>
+              </div> -->
               <a href="#" class="small-box-footer" onclick="project_view('active_users')">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
           </div>
           
           <!-- ./col -->
-          <div class="col-lg-3 col-xs-6">
+          <div class="col-lg-2 col-xs-6">
             <!-- small box -->
             <div class="small-box bg-yellow">
               <div class="inner">
@@ -130,14 +130,14 @@
 
                 <p> Disabled Users</p>
               </div>
-              <div class="icon" style="margin-top: -0.5rem; margin-right: -1.2rem;">
+              <!-- <div class="icon" style="margin-top: -0.5rem; margin-right: -1.2rem;">
                 <i class="fa fa-fw fa-times-circle-o" style="font-size: 80%"></i>
-              </div>
+              </div> -->
               <a href="#" class="small-box-footer" onclick="project_view('disabled_users')">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
           </div>
 
-          <div class="col-lg-3 col-xs-6">
+          <div class="col-lg-2 col-xs-6">
             <!-- small box -->
             <div class="small-box bg-red">
               <div class="inner">
@@ -145,9 +145,9 @@
 
                 <p> Deleted Users</p>
               </div>
-              <div class="icon" style="margin-top: -0.9rem; margin-right: 0.8rem;">
+              <!-- <div class="icon" style="margin-top: -0.9rem; margin-right: 0.8rem;">
                 <i class="fa fa-trash" style="font-size: 70%"></i>
-              </div>
+              </div> -->
               <a href="#" class="small-box-footer" onclick="project_view('deleted_users')">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
           </div>
@@ -157,10 +157,18 @@
               if (v == 'registered_users'){
                 var txt_project_type = document.getElementById('type_of_user_view');
                 txt_project_type.innerHTML = 'Showing all Registered Users to date';
-                txt_project_type.style.color = '#3C8DBC';
+                txt_project_type.style.color = '#306FA0';
 
                 // Get the input element
                 var search_table = document.querySelector('#example1_filter input');
+
+                // Select all elements with the class "project_color"
+                const elements = document.querySelectorAll('.project_color');
+
+                // Change the text color of each element
+                elements.forEach(element => {
+                  element.style.color = '#306FA0'; // Change the color to your desired value
+                });
 
                 // Set the value of the input element
                 // search_table.value = "";
@@ -180,6 +188,14 @@
                 // Get the input element
                 var search_table = document.querySelector('#example1_filter input');
 
+                // Select all elements with the class "project_color"
+                const elements = document.querySelectorAll('.project_color');
+
+                // Change the text color of each element
+                elements.forEach(element => {
+                  element.style.color = '#F39C12'; // Change the color to your desired value
+                });
+
                 // Set the value of the input element
                 // search_table.value = "Disabled";
                 // search_table.dispatchEvent(new Event('input'));
@@ -197,6 +213,14 @@
 
                 // Get the input element
                 var search_table = document.querySelector('#example1_filter input');
+
+                // Select all elements with the class "project_color"
+                const elements = document.querySelectorAll('.project_color');
+
+                // Change the text color of each element
+                elements.forEach(element => {
+                  element.style.color = '#00A65A'; // Change the color to your desired value
+                });
 
                 // Set the value of the input element
                 // search_table.value = "Active";
@@ -216,6 +240,14 @@
                 // Get the input element
                 var search_table = document.querySelector('#example1_filter input');
 
+                // Select all elements with the class "project_color"
+                const elements = document.querySelectorAll('.project_color');
+
+                // Change the text color of each element
+                elements.forEach(element => {
+                  element.style.color = '#DD4B39'; // Change the color to your desired value
+                });
+
                 // Set the value of the input element
                 // search_table.value = "Deleted";
                 // search_table.dispatchEvent(new Event('input'));
@@ -233,6 +265,22 @@
 
         <!-- /.row -->
         <!-- Main row -->
+
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-dismissible {{ message.tags }}">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color: white;">×</button>
+              <i class="icon fa fa-check"></i> {{ message }}
+            </div>
+            <script>
+                // Automatically close the alert after 5 seconds
+                setTimeout(function() {
+                    $('.alert').alert('close');
+                }, 5000);
+            </script>
+          {% endfor %}
+        {% endif %}
+
         <div class="row">
           <div class="col-xs-12">
 
@@ -241,8 +289,8 @@
             <div class="box">
               <div class="box-header">
                 <h3 class="box-title" style="color: #306FA0;">
-                <i class="ion ion-person-add"></i>
-                <strong> User Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC; font-weight: normal;"> Showing all Registered Users to date </span> </h3>
+                <i class="ion ion-person-add project_color"></i>
+                <strong class="project_color"> User Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #306FA0; font-weight: normal;"> Showing all Registered Users to date </span> </h3>
                 <!-- label label-success -->
 
                 <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addUser"> Register New User </button>
@@ -292,7 +340,7 @@
 
                             <div class="form-group password-wrapper">
                               <label for="exampleInputPassword1">Password <span class="optional_entry"> * </span></label>
-                              <input type="password" class="form-control" placeholder="Password" name="password" autocomplete="off" required id="password_input2" value="jbond">
+                              <input type="password" class="form-control" placeholder="Password" name="password" autocomplete="off" required id="password_input" value="jbond">
                               <button id="toggle-password" type="button" aria-label="Toggle password visibility">
                                 <i class="fa fa-fw fa-eye"></i>
                               </button>
@@ -327,7 +375,7 @@
                                     <!-- <div class="col-lg-12 col-12"> -->
                                       <div class="checkbox">
                                         <label>
-                                          <input type="checkbox" name="{{ i.role_name }}">
+                                          <input type="checkbox" name="{{ i.role_name }}" value="{{ i.role_name }}">
                                           {{ i.role_name }}
                                         </label>
                                       </div>
@@ -344,7 +392,7 @@
                                     <!-- <div class="col-lg-12 col-12"> -->
                                       <div class="checkbox">
                                         <label>
-                                          <input type="checkbox" name="{{ i.permission_action }}">
+                                          <input type="checkbox" name="{{ i.permission_action }}" value="{{ i.permission_action }}">
                                           {{ i.permission_action }}
                                         </label>
                                       </div>
@@ -354,6 +402,28 @@
                                 </div>
                               </div>
                             </div>
+
+                            <script>
+                              document.addEventListener('DOMContentLoaded', function() {
+                                var roleCheckboxes = document.querySelectorAll('input[name="role"]');
+                                var permissionCheckboxes = document.querySelectorAll('input[name="permission"]');
+
+                                roleCheckboxes.forEach(function(roleCheckbox) {
+                                  roleCheckbox.addEventListener('change', function() {
+                                    var selectedRole = this.value;
+
+                                    permissionCheckboxes.forEach(function(permissionCheckbox) {
+                                      var permissionValue = permissionCheckbox.value;
+                                      if (permissionValue && permissionValue.includes(selectedRole)) {
+                                        permissionCheckbox.checked = true;
+                                      } else {
+                                        permissionCheckbox.checked = false;
+                                      }
+                                    });
+                                  });
+                                });
+                              });
+                            </script>
 
                             <style type="text/css">
                               .optional_entry {
@@ -414,7 +484,7 @@
                     <tr>
                       <td> {{ forloop.counter }}  </td>
                       <td> {{ i.first_name }} {{ i.last_name }} </td>
-                      <td> {{ i.email }} </td>
+                      <td> {{ i.email }} {{ i.password }} </td>
                       <td> {{ i.date_of_registration }} </td>
                       <td> 
                         {% if i.status == 1 %}
@@ -485,23 +555,24 @@
                       
                             <div class="form-group">
                               <label for="exampleInputEmail1">First Name <span class="optional_entry"> * </span></label>
-                              <input type="text" class="form-control" placeholder="Enter First Name" name="first_name" value="{{ i.first_name }}">
+                              <input type="text" class="form-control" placeholder="Enter First Name" name="first_name" value="{{ i.first_name }}"  autocomplete="off">
                             </div>
 
                             <div class="form-group">
                               <label for="exampleInputEmail1">Last Name <span class="optional_entry"> * </span></label>
-                              <input type="text" class="form-control" placeholder="Enter Last Name" name="last_name" value="{{ i.last_name }}">
+                              <input type="text" class="form-control" placeholder="Enter Last Name" name="last_name" value="{{ i.last_name }}"  autocomplete="off">
                             </div>
 
                             <div class="form-group">
                               <label for="exampleInputEmail1">Email address <span class="optional_entry"> * </span></label>
-                              <input type="email" class="form-control" placeholder="Enter email" name="email" value="{{ i.email }}">
+                              <input type="email" class="form-control" placeholder="Enter email" name="email" value="{{ i.email }}" autocomplete="off">
                             </div>
 
                             <div class="form-group password-wrapper">
-                              <label for="exampleInputPassword1">Password <span class="optional_entry"> * </span></label>
-                              <input type="password" class="form-control" placeholder="Password" name="password" value="{{ i.password }}" id="password_input">
-                              <button id="toggle-password" type="button" aria-label="Toggle password visibility">
+                              <label for="exampleInputPassword1">Password {{ i.password }} <span class="optional_entry"> * </span></label>
+                              <input id="password_input{{ i.id }}" type="password" class="form-control" placeholder="Password" name="password" value="{{ i.password }}" autocomplete="off">
+                              
+                              <button id="toggle-password{{ i.id }}" class="toggle_password" type="button" aria-label="Toggle password visibility">
                                 <i class="fa fa-fw fa-eye"></i>
                               </button>
                             </div>
@@ -525,7 +596,7 @@
                               position: relative;
                             }
 
-                            #toggle-password {
+                            #toggle-password, .toggle_password{
                               position: absolute;
                               top: 70%;
                               right: 10px;
@@ -535,15 +606,15 @@
                               cursor: pointer;
                             }
 
-                            #toggle-password:focus {
+                            #toggle-password:focus, .toggle_password:focus {
                               outline: none;
                             }
 
-                            #toggle-password i {
+                            #toggle-password i, .toggle_password i {
                               color: #999;
                             }
 
-                            #password:focus + #toggle-password i {
+                            #password:focus + .toggle_password i {
                               color: #000;
                             }
 
@@ -551,16 +622,27 @@
                           </style>
 
                           <script type="text/javascript">
-                            const passwordInput = document.getElementById('password_input');
-                            const passwordInput2 = document.getElementById('password_input2');
-                            const togglePasswordButton = document.getElementById('toggle-password');
+                            var passwordInput = document.getElementById('password_input');
+                            var togglePasswordButton = document.getElementById('toggle-password');
 
                             togglePasswordButton.addEventListener('click', () => {
-                              const passwordType = passwordInput.getAttribute('type');
+                              var passwordType = passwordInput.getAttribute('type');
                               passwordInput.setAttribute('type', passwordType === 'password' ? 'text' : 'password');
                               
-                              const icon = togglePasswordButton.querySelector('i');
+                              var icon = togglePasswordButton.querySelector('i');
                               icon.classList.toggle('fa-eye-slash');
+                            });
+
+
+                            var passwordInput{{ i.id }} = document.getElementById('password_input{{ i.id }}');
+                            var togglePasswordButton{{ i.id }} = document.getElementById('toggle-password{{ i.id }}');
+
+                            togglePasswordButton{{ i.id }}.addEventListener('click', function() {
+                              var passwordType{{ i.id }} = passwordInput{{ i.id }}.getAttribute('type');
+                              passwordInput{{ i.id }}.setAttribute('type', passwordType{{ i.id }} === 'password' ? 'text' : 'password');
+                              
+                              var icon{{ i.id }} = togglePasswordButton{{ i.id }}.querySelector('i');
+                              icon{{ i.id }}.classList.toggle('fa-eye-slash');
                             });
 
                           </script>

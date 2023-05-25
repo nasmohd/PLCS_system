@@ -13,6 +13,8 @@ class User(models.Model):
 	date_of_registration = models.DateTimeField(default = datetime.today())
 	last_login = models.DateTimeField(default  = datetime.today())
 
+	profile_img = models.TextField(default='')
+
 	class Meta:
 		db_table = "User"
 
