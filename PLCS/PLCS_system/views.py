@@ -122,6 +122,13 @@ def register_user(request):
 		project_interests = request.POST['project_interests']
 		learning_interests = request.POST['learning_interests']
 
+		# skills = request.POST['skills_required']
+		project_interests_list = project_interests.split(", ")
+		learning_interests_list = learning_interests.split(", ")
+
+		# project.project_skills = str(project_interests_list)
+
+
 		#If email does not exist/ User is not registered yet
 		if not (User.objects.filter(email=email_input).exists()):
 			if (password_input == confirm_password_input):
@@ -130,8 +137,8 @@ def register_user(request):
 				user.last_name = last_name_input
 				user.email = email_input
 				user.password = password_input
-				user.learning_interests = learning_interests
-				user.project_interests = project_interests
+				user.learning_interests = str(learning_interests_list)
+				user.project_interests = str(project_interests_list)
 
 				user.save()
 
@@ -1074,6 +1081,7 @@ def project_details(request, project_id):
 def apply_to_project(request, project_id, project_poster_id):
 	if request.method == 'POST':
 		current_user = request.session['user_id']
+		msg_project_application = request.POST['msg_project_application']
 
 		#Get user
 		user_apply = User.objects.get (id = current_user)
@@ -1102,6 +1110,7 @@ def apply_to_project(request, project_id, project_poster_id):
 
 			#0 = pending approval, 1 = approved, collaborating
 			user_project_collab.status = 0
+			user_project_collab.collab_request_msg = msg_project_application
 			user_project_collab.save()
 
 
@@ -1112,11 +1121,11 @@ def apply_to_project(request, project_id, project_poster_id):
 			collab_notif.notification_type = "Collab Application"
 
 			collab_notif.notification_status = 0
-			collab_notif.notification_link_to = "profile_history/{}/".format(current_user)
+			collab_notif.notification_link_to = "/profile_history/{}/".format(current_user)
 			collab_notif.notification_date = datetime.today()
 			collab_notif.notification_recipient = project_poster
 			collab_notif.save()
-
+			messages.success(request, 'Your request to collaborate in a project has been sent', extra_tags='alert-success')
 
 		return redirect('/dashboard')
 
@@ -1250,3 +1259,44 @@ def profile_history(request, user_id):
 	return render (request, "profile_history.html", {'user_project_collabs': all_projects_of_user, 
 		'user_project_details': user_project_details, 'user_x_details': user_x_details, 'collab_applications': collab_applications, 
 		'notifs': notifs, 'user_names': user_names})
+
+
+
+def view_collab_requests(request, project_id):
+	current_user = request.session['user_id']
+	notifs = get_notifications_of_user (request, current_user)
+	user_names = get_user_details(request, current_user)
+
+	me_user = User.objects.get (id = current_user)
+	
+	project_details = Project.objects.get (id = project_id)
+
+	project_details_list = literal_eval(project_details.project_skills)
+	project_details.project_skills = project_details_list
+	project_details.save()
+
+
+	#Get collabs of project from this user
+	collab_applications = User_Project_Collab.objects.filter(project=project_details, status = 0, project__user_project = me_user)
+
+	for obj in collab_applications:
+		column_value = obj.user.project_interests
+		if column_value:
+			list_value = literal_eval(column_value)
+			obj.user.project_interests = list_value
+			obj.save()
+
+	# return HttpResponse (collab_applications)
+
+	return render (request, "collab_requests.html", {'project_details': project_details, 'notifs': notifs, 
+		'user_names': user_names, 'collab_applications': collab_applications})
+
+
+def accept_collab (request, collab_id):
+	return HttpResponse ("accept")
+
+
+def reject_collab (request, collab_id):
+	return HttpResponse ("reject")
+
+

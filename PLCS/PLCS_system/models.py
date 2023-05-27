@@ -20,6 +20,8 @@ class User(models.Model):
 
 	user_activity_tags = models.TextField(default='')
 
+	user_description = models.TextField(default='I am a new user to this system')
+
 	class Meta:
 		db_table = "User"
 
@@ -130,6 +132,7 @@ class User_Project_Like (models.Model):
 class User_Project_Collab (models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
+	collab_request_msg = models.TextField(default='')
 	status = models.IntegerField(default=1)
 	
 	def __str__(self):

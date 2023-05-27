@@ -60,92 +60,6 @@
     <!-- Main content -->
     <section class="content">
       <!-- Small boxes (Stat box) -->
-      
-      <!-- /.row -->
-      <!-- Main row -->
-      <div class="row">
-        <div class="col-md-3">
-          <!-- Profile Image -->
-          <div class="box box-primary">
-            <div class="box-body box-profile">
-              <div class="image-container">
-                <img class="profile-user-img img-responsive img-circle" src="{% static 'profile_imgs/blank_user.png' %}" alt="User profile picture" id="profile_img">
-              </div>
-
-              <input id="file-input" type="file" style="display:none;">
-
-              <h3 class="profile-username text-center">{{ user_x_details.first_name }} {{ user_x_details.last_name }}</h3>
-
-              <!-- <p class="text-muted text-center">Software Engineer</p> -->
-
-              <ul class="list-group list-group-unbordered">
-                <li class="list-group-item">
-                  <b>Completed Projects</b> <a class="pull-right">{{ user_project_details.0 }}</a>
-                </li>
-                <li class="list-group-item">
-                  <b>Active Projects</b> <a class="pull-right">{{ user_project_details.1 }}</a>
-                </li>
-              </ul>
-
-              <!-- <div>
-                <a href="#" class="btn btn-sm btn-success btn-block"><i class="fa fa-fw fa-check"></i> <b>Accept</b></a>
-                <a href="#" class="btn btn-sm btn-danger btn-block"><i class="fa fa-fw fa-close"></i> <b>Reject</b></a>
-              </div> -->
-            </div>
-            <!-- /.box-body -->
-          </div>
-        </div>
-
-        <div class="col-md-9">
-          <!-- About Me Box -->
-          <div class="box box-primary">
-            <div class="box-header with-border">
-              <h3 class="box-title">About Me</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <strong><i class="fa fa-book margin-r-5"></i> Introduction </strong>
-
-              <p class="text-muted">
-                {{ user_x_details.user_description }}
-              </p>
-
-              <hr>
-
-              <strong><i class="fa fa-pencil margin-r-5"></i> Project Interests </strong>
-
-              <p>
-                {% for proj_int in user_x_details.project_interests %}
-                  <span class="label label-info">{{ proj_int }}</span>
-                {% endfor %}
-
-                <!-- <span class="label label-info">PLC Programming</span>
-                <span class="label label-success">Arduino Programming</span> -->
-              </p>
-
-              <hr>
-
-              <strong><i class="fa fa-file-text-o" style="margin-right: 0.6rem;"></i> Learning Interests </strong>
-
-              <p>
-                {% for proj_int in user_x_details.learning_interests %}
-                  <span class="label label-info">{{ proj_int }}</span>
-                {% endfor %}
-
-                <!-- <span class="label label-warning">Algorithms</span>
-                <span class="label label-success">Data Structures and Algorithms</span>
-                <span class="label label-info">Software Engineering</span>
-                <span class="label label-danger">Web application development</span>
-                <span class="label label-primary">Blockchain</span> -->
-              </p>
-
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-        </div>
-        <!-- /.col -->
-      </div>
 
       <div class="row">
         <div class="col-xs-12">
@@ -154,106 +68,80 @@
             <div class="box-header">
               <h3 class="box-title" style="color: #306FA0;">
               <i class="fa fa-file-text-o project_color"></i>
-              <strong class="project_color"> Project(s) this user applied to: </strong><br/> <span class="type_of_project_view" id="type_of_project_view" style="font-size:13px; font-weight: normal"> Showing projects this user applied to that you uploaded </span></h3>
+              <strong class="project_color"> Project being applied to: </strong><br/> <span class="type_of_project_view" id="type_of_project_view" style="font-size:13px; font-weight: normal"> Showing the project users have applied to collaborate </span></h3>
             </div>
 
             <div class="box-body table-responsive">
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th style="width: 5%;">SN</th>
                   <th style="width: 10%;">Project ID</th>
                   <th style="width: 15%;">Title</th>
                   <th style="width: 35%">Description</th>
                   <th style="width: 25%;">Required Skills</th>
-                  <!-- <th style="width: 10%;">Status</th> -->
-                  <th style="width: 10%;">Accept/Reject</th>
+                  <th style="width: 10%;">Status</th>
                 </tr>
                 </thead>
                 <tbody>
 
 
-                {% for i in collab_applications %}
-                  <tr>
-                    <td> {{ forloop.counter }} </td>
-                    <td> {{ i.project.project_id }} </td>
-                    <td> {{ i.project.project_title }} </td>
-                    <td class="description_column"> {{ i.project.project_description }} </td>
+                <tr>
+                  <td> {{ project_details.project_id }} </td>
+                  <td> {{ project_details.project_title }} </td>
+                  <td class="description_column"> {{ project_details.project_description }} </td>
 
-                    <td id="tagContainer"> 
-                      {% for j in i.project.project_skills %}
-                        <span class="label random-label" style="margin-right: 5px;">{{ j }} </span> 
-                      {% endfor %}
-                    </td>
-                    
-                    <!-- <td> 
-                      {% if i.status == 0 %}
-                        <span class="btn-round btn btn-info btn-xs"> Pending Approval </span>
-                      {% endif %}
+                  <td id="tagContainer"> 
+                    {% for j in project_details.project_skills %}
+                      <span class="label random-label" style="margin-right: 5px;">{{ j }} </span> 
+                    {% endfor %}
+                  </td>
+                  
+                  <td>
+                    {% if project_details.status == 0 %}
+                      <span class="btn-round btn btn-info btn-xs"> Pending Approval </span>
+                    {% endif %}
 
-                      {% if i.status == 1 %}
-                        <span class="btn-round btn btn-warning btn-xs"> Active </span>
-                      {% endif %}
+                    {% if project_details.status == 1 %}
+                      <span class="btn-round btn btn-warning btn-xs"> Active </span>
+                    {% endif %}
 
-                      {% if i.status == 2 %}
-                        <span class="btn-round btn btn-success btn-xs"> Completed </span>
-                      {% endif %}
+                    {% if project_details.status == 2 %}
+                      <span class="btn-round btn btn-success btn-xs"> Completed </span>
+                    {% endif %}
 
-                      <style type="text/css">
-                        .btn-round{
-                          border-radius: 100px;
-                        }
+                    <style type="text/css">
+                      .btn-round{
+                        border-radius: 100px;
+                      }
 
-                        .type_of_project_view{
-                          font-size:13px;
-                        }
-                      </style>
-                    </td> -->
+                      .type_of_project_view{
+                        font-size:13px;
+                      }
+                    </style>
+                  </td>
+                  <!-- <td class="text-center"> 
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-fw fa-pencil-square-o"></i>
+                      </button>
+                      <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                      </button>
 
-                    <td>
-                      <div class="button-container">
-                        <a href="/accept_collab/{{ i.id }}/" class="btn btn-sm custom-btn-success" title="Accept collaboration request"><i class="fa fa-fw fa-check" style="color: green;"></i></a>
-                        <a href="/reject_collab/{{ i.id }}/" class="btn btn-sm custom-btn-danger" title="Reject collaboration request"><i class="fa fa-fw fa-close" style="color: red;"></i></a>
-                      </div>
+                      <ul class="dropdown-menu pull-right" role="menu">
+                        <li><a href="#" data-toggle="modal" data-target="#modal-editProject{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li>
+                        <li><a data-toggle="modal" data-target="#modal-deleteProject{{ i.id }}"><i class="fa fa-trash"></i> Delete </a></li>
+                      </ul>
+                    </div>
+                  </td> -->
 
-                      <style type="text/css">
-                        .button-container {
-                          display: flex;
-                        }
-
-                        .custom-btn-success, .custom-btn-danger {
-                          flex: 1;
-                          height: 30px; /* Adjust the height as needed */
-                          line-height: 20px; /* Adjust the line-height as needed */
-                        }
-
-                      </style>
-                    </td>
-
-                    <!-- <td class="text-center"> 
-                      <div class="btn-group">
-                        <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                          <i class="fa fa-fw fa-pencil-square-o"></i>
-                        </button>
-                        <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                          <span class="caret"></span>
-                          <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-
-                        <ul class="dropdown-menu pull-right" role="menu">
-                          <li><a href="#" data-toggle="modal" data-target="#modal-editProject{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li>
-                          <li><a data-toggle="modal" data-target="#modal-deleteProject{{ i.id }}"><i class="fa fa-trash"></i> Delete </a></li>
-                        </ul>
-                      </div>
-                    </td> -->
-                  </tr>
-                {% endfor %}
+                </tr>
                 
                 </tbody>
 
                 <tfoot>
                 <tr>
-                  <th>SN</th>
                   <th>Project ID</th>
                   <th>Title</th>
                   <th>Description</th>
@@ -279,7 +167,7 @@
             <div class="box-header">
               <h3 class="box-title" style="color: #306FA0;">
               <i class="fa fa-file-text-o project_color"></i>
-              <strong class="project_color"> Project Collaboration History </strong><br/> <span class="type_of_project_view" id="type_of_project_view" style="font-size:13px; font-weight: normal"> Showing this user's project collaborations to date </span></h3>
+              <strong class="project_color"> Project Collaboration Applications </strong><br/> <span class="type_of_project_view" id="type_of_project_view" style="font-size:13px; font-weight: normal"> Showing requests for collaboration in the above project </span></h3>
             </div>
 
             <div class="box-body table-responsive">
@@ -287,69 +175,45 @@
                 <thead>
                 <tr>
                   <th style="width: 5%;">SN</th>
-                  <th style="width: 10%;">Project ID</th>
-                  <th style="width: 15%;">Title</th>
-                  <th style="width: 35%">Description</th>
-                  <th style="width: 25%;">Required Skills</th>
-                  <th style="width: 10%;">Status</th>
+                  <th style="width: 15%;">Email</th>
+                  <th style="width: 35%">Collab Request Message</th>
+                  <th style="width: 35%;">Skills</th>
+                  <th style="width: 10%;">Accept/Reject</th>
                 </tr>
                 </thead>
                 <tbody>
 
-
-                {% for i in user_project_collabs %}
+                {% for i in collab_applications %}
                   <tr>
-                    <td> {{ forloop.counter }} </td>
-                    <td> {{ i.project_id }} </td>
-                    <td> {{ i.project_title }} </td>
-                    <td class="description_column"> {{ i.project_description }} </td>
+                    <td><a href="/profile_history/{{ i.user.id }}/"> {{ forloop.counter }} </a></td>
+                    <td><a href="/profile_history/{{ i.user.id }}/"> {{ i.user.email }} </a></td>
+                    <td class="description_column"> {{ i.collab_request_msg }} </td>
 
                     <td id="tagContainer"> 
-                      {% for k in i.project_skills %}
+                      {% for k in i.user.project_interests %}
                         <span class="label random-label" style="margin-right: 5px;">{{ k }} </span> 
                       {% endfor %}
                     </td>
                     
-                    <td> 
-                      {% if i.status == 0 %}
-                        <span class="btn-round btn btn-info btn-xs"> Pending Approval </span>
-                      {% endif %}
-
-                      {% if i.status == 1 %}
-                        <span class="btn-round btn btn-warning btn-xs"> Active </span>
-                      {% endif %}
-
-                      {% if i.status == 2 %}
-                        <span class="btn-round btn btn-success btn-xs"> Completed </span>
-                      {% endif %}
+                    <td>
+                      <div class="button-container">
+                        <a href="/accept_collab/{{ i.id }}" class="btn btn-sm custom-btn-success"><i class="fa fa-fw fa-check" style="color: green;"></i></a>
+                        <a href="/deny_collab/{{ i.id }}" class="btn btn-sm custom-btn-danger"><i class="fa fa-fw fa-close" style="color: red;"></i></a>
+                      </div>
 
                       <style type="text/css">
-                        .btn-round{
-                          border-radius: 100px;
+                        .button-container {
+                          display: flex;
                         }
 
-                        .type_of_project_view{
-                          font-size:13px;
+                        .custom-btn-success, .custom-btn-danger {
+                          flex: 1;
+                          height: 30px; /* Adjust the height as needed */
+                          line-height: 20px; /* Adjust the line-height as needed */
                         }
+
                       </style>
                     </td>
-
-                    <!-- <td class="text-center"> 
-                      <div class="btn-group">
-                        <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                          <i class="fa fa-fw fa-pencil-square-o"></i>
-                        </button>
-                        <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                          <span class="caret"></span>
-                          <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-
-                        <ul class="dropdown-menu pull-right" role="menu">
-                          <li><a href="#" data-toggle="modal" data-target="#modal-editProject{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li>
-                          <li><a data-toggle="modal" data-target="#modal-deleteProject{{ i.id }}"><i class="fa fa-trash"></i> Delete </a></li>
-                        </ul>
-                      </div>
-                    </td> -->
                   </tr>
 
                  
@@ -359,12 +223,11 @@
 
                 <tfoot>
                 <tr>
-                  <th>SN</th>
-                  <th>Project ID</th>
-                  <th>Title</th>
-                  <th>Description</th>
-                  <th>Required Skills</th>
-                  <th>Status</th>
+                  <th style="width: 5%;">SN</th>
+                  <th style="width: 15%;">Email</th>
+                  <th style="width: 35%">Message</th>
+                  <th style="width: 35%;">Skills</th>
+                  <th style="width: 10%;">Accept/Reject</th>
                 </tr>
                 </tfoot>
               </table>
@@ -697,9 +560,7 @@
 
 <script>
   $(function () {
-    $('#example1').DataTable({
-      "pageLength": 5
-    })
+
 
     $('#example2').DataTable()
   })

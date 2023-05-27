@@ -302,7 +302,7 @@
               <i class="fa fa-file-text-o project_color"></i>
               <strong class="project_color"> Project Management </strong><br/> <span class="type_of_project_view" id="type_of_project_view" style="font-size:13px; font-weight: normal"> Showing all Registered Projects to date </span></h3>
 
-              <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addUser"> Add New Project </button>
+              <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addUser" title="Add New Project"><i class="fa fa-fw fa-plus"></i></button>
 
               <button class="btn btn-danger" style="margin-left: 1rem;" id="delete_Btn" title="Delete Project(s) &#10;(must select at least one checkbox)" disabled> <i class="fa fa-fw fa-trash" style="color: white;"></i>  </button>
             </div>
@@ -748,10 +748,11 @@
                   <th style="width: 5%;">SN</th>
                   <th style="width: 10%;">Project ID</th>
                   <th style="width: 10%;">Title</th>
-                  <th style="width: 20%;">Description</th>
+                  <th style="width: 15%;">Description</th>
                   <th style="width: 30%;">Required Skills</th>
                   <th style="width: 10%;">Status</th>
-                  <th class="text-center" style="width: 15%;"> Change details </th>
+                  <th class="text-center" style="width: 10%;">Collaboration requests</th>
+                  <th class="text-center" style="width: 10%;"> Change details </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -793,6 +794,10 @@
                           font-size:13px;
                         }
                       </style>
+                    </td>
+
+                    <td class="text-center">
+                      <a href="/view_collab_requests/{{ i.id }}/" class="btn btn-sm btn-round btn-info" title="view collaboration requests"><i class="fa fa-fw fa-commenting"></i></a>
                     </td>
 
                     <td class="text-center"> 
@@ -1505,6 +1510,7 @@
         null,
         { searchable: false }, // Second column (index 1) - not searchable
         null, // Third column (index 2) - searchable
+        null,
         null,
         // ... and so on
       ]

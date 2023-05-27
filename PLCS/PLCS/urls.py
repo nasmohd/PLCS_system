@@ -70,5 +70,9 @@ urlpatterns = [
     path("apply_to_project/<int:project_id>/<int:project_poster_id>", views.apply_to_project),
 
     path("view_projects_collaborations/", views.view_projects_collaborations),
-    path("profile_history/<int:user_id>/", views.profile_history)
+    path("profile_history/<int:user_id>/", views.profile_history),
+
+    path("view_collab_requests/<int:project_id>/", views.view_collab_requests) ,
+    path("accept_collab/<int:collab_id>/", views.accept_collab),
+    path("accept_collab/<int:collab_id>/", views.reject_collab),
 ]
