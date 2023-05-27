@@ -36,18 +36,34 @@
 
 
   <div class="register-box-body">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-dismissible {{ message.tags }}">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color: white;">×</button>
+          <i class="icon fa fa-fw fa-close"></i> {{ message }}
+        </div>
+        <script>
+            // Automatically close the alert after 5 seconds
+            setTimeout(function() {
+                $('.alert').alert('close');
+            }, 5000);
+        </script>
+      {% endfor %}
+    {% endif %}
+    
     <div class="nav-tabs-custom">
       <ul class="nav nav-tabs">
         <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Details <span class="optional_entry"> * </span></a></li>
         <li><a href="#tab_2" data-toggle="tab" aria-expanded="false"> Interests <span class="optional_entry"> * </span></a></li>
       </ul>
 
+      <form action="/register_user" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+            {% csrf_token %}
       <div class="tab-content">
         <div class="tab-pane active" id="tab_1">
           <p class="login-box-msg">Register a new membership</p>
 
-          <form action="/register_user" method="post">
-            {% csrf_token %}
+          
             <div class="form-group has-feedback">
               <input type="text" class="form-control" placeholder="First name" name="first_name" value="nassor">
               <span class="glyphicon glyphicon-user form-control-feedback"></span>
@@ -73,30 +89,225 @@
               <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
             </div>
 
-            <div class="row">
-              <div class="col-xs-8">
-                <div class="checkbox icheck">
-                  <label>
-                    <input type="checkbox"> I agree to the <a href="#">terms</a>
-                  </label>
-                </div>
-              </div>
-              <!-- /.col -->
-              <div class="col-xs-4">
-                <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
-              </div>
-              <!-- /.col -->
+            
+
+        </div>
+
+        <div class="tab-pane" id="tab_2">
+          <p class="help-block">Please select your interests to get Recommendations</p>
+
+          <div class="form-group">
+            <label for="exampleInputEmail1">Project Interests <span class="optional_entry"> * </span></label>
+            <input type="text" id="search-input" list="search-terms" onchange="showSelectedSearchTerms()" name="project_interests" class="form-control" placeholder="Search...">
+
+            <datalist id="search-terms">
+              <option value="Algorithms">
+              <option value="Data Structures and Algorithms">
+              <option value="Software Engineering">
+              <option value="Web application development">
+              <option value="Blockchain">
+            </datalist>
+                                        
+            <div id="selected-search-terms">
+              
             </div>
-          </form>
 
-        
-          <a href="../" class="text-center">I already have a membership</a>
+            <style>
+              #selected-search-terms, #selected-search-terms2{
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 10px;
+              }
+              #selected-search-terms div, #selected-search-terms2 div {
+                display: inline-block;
+              }
 
+              .selected-term:hover, .selected-term2:hover {
+                cursor: pointer;
+              }
+            </style>
+          </div>
+
+          <div class="form-group" style="margin-top: 3rem;">
+            <label for="exampleInputEmail1">Learning Interests <span class="optional_entry"> * </span></label>
+            <input type="text" id="search-input2" list="search-terms2" onchange="showSelectedSearchTerms2()" name="learning_interests" class="form-control" placeholder="Search...">
+
+            <datalist id="search-terms2">
+              <option value="Algorithms" style="color:red;">
+              <option value="Data Structures and Algorithms">
+              <option value="Software Engineering">
+              <option value="Web application development">
+              <option value="Blockchain">
+            </datalist>
+                                        
+            <div id="selected-search-terms2">
+              
+            </div>
+          </div>
         </div>
 
-        <div class="tab-pane active" id="tab_2">
+        <script type="text/javascript">
+          // Learning Interests
+          const labelClasses2 = ['label-warning', 'label-danger', 'label-success', 'label-info', 'label-primary'];
+          const selectedTerms2 = new Set();
+          var search_input2 = document.getElementById("search-input2");
 
-        </div>
+
+          function showSelectedSearchTerms2() {
+            const input2 = document.getElementById("search-input2");
+            const selectedTerm2 = input2.value.trim();
+
+            const datalist2 = document.getElementById("search-terms2");
+
+            //Choose random label from those specified above
+            const selectedOption2 = datalist2.querySelector(`option[value='${input2.value.trim()}']`);
+            
+
+            if (selectedTerm2 && !(selectedTerm2 in selectedTerms2)  && !(selectedOption2.value in selectedTerms2) && selectedOption2){
+              const labelClass2 = labelClasses2[Math.floor(Math.random() * labelClasses2.length)];
+              selectedTerms2[selectedTerm2] = labelClass2;
+              input2.value = "";
+              displaySelectedSearchTerms2();
+
+              // Remove selected option from datalist
+              const selectedOption2 = datalist2.querySelector(`option[value='${selectedTerm2}']`);
+
+              if (selectedOption2) {
+                selectedOption2.remove();
+              }
+            }
+          }
+
+          function displaySelectedSearchTerms2() {
+            const selectedTermsDiv2 = document.getElementById("selected-search-terms2");
+
+            selectedTermsDiv2.innerHTML = "";
+            Object.keys(selectedTerms2).forEach((term2) => {
+              const termDiv2 = document.createElement("div");
+              const label2 = document.createElement("span");
+              label2.className = `label ${selectedTerms2[term2]}`;
+              label2.textContent = term2;
+              label2.style.marginRight = '5px';
+              termDiv2.appendChild(label2);
+              termDiv2.className = 'selected-term2';
+
+              // Add an 'x' icon using font awesome
+              const deleteIcon2 = document.createElement("i");
+              deleteIcon2.className = "fa fa-fw fa-close";
+              deleteIcon2.style.color = "white";
+
+
+              termDiv2.onclick = function() {
+                //Deletes no problem, though still shows the selected
+                // alert (selectedTerms2[term2])
+                delete selectedTerms2[term2];
+                displaySelectedSearchTerms2();
+
+                // Add option back to datalist
+                const datalist2 = document.getElementById("search-terms2");
+                const option2 = document.createElement("option");
+                option2.value = term2;
+                datalist2.appendChild(option2);
+              }
+              label2.appendChild(deleteIcon2);
+              selectedTermsDiv2.appendChild(termDiv2);
+            });
+          }
+
+          // function validateForm() {
+
+          //   const input2 = document.getElementById("search-input2");
+          //   const terms = Object.keys(selectedTerms2);
+          //   input2.value = terms.join(', ');
+
+          //   return true;
+          // }
+        </script>
+
+
+
+
+
+        <script type="text/javascript">
+          // Project Interests
+          const labelClasses = ['label-warning', 'label-danger', 'label-success', 'label-info', 'label-primary'];
+          const selectedTerms = new Set();
+          var search_input = document.getElementById("search-input");
+
+
+          function showSelectedSearchTerms() {
+            const input = document.getElementById("search-input");
+            const selectedTerm = input.value.trim();
+
+            const datalist = document.getElementById("search-terms");
+
+            //Choose random label from those specified above
+            const selectedOption = datalist.querySelector(`option[value='${input.value.trim()}']`);
+
+            if (selectedTerm && !(selectedTerm in selectedTerms)  && !(selectedOption.value in selectedTerms) && selectedOption){
+              const labelClass = labelClasses[Math.floor(Math.random() * labelClasses.length)];
+              selectedTerms[selectedTerm] = labelClass;
+              input.value = "";
+              displaySelectedSearchTerms();
+
+              // Remove selected option from datalist
+              const selectedOption = datalist.querySelector(`option[value='${selectedTerm}']`);
+              if (selectedOption) {
+                selectedOption.remove();
+              }
+            }
+          }
+
+          function displaySelectedSearchTerms() {
+            const selectedTermsDiv = document.getElementById("selected-search-terms");
+
+            selectedTermsDiv.innerHTML = "";
+            Object.keys(selectedTerms).forEach((term) => {
+              const termDiv = document.createElement("div");
+              const label = document.createElement("span");
+              label.className = `label ${selectedTerms[term]}`;
+              label.textContent = term;
+              label.style.marginRight = '5px';
+              termDiv.appendChild(label);
+              termDiv.className = 'selected-term';
+
+              // Add an 'x' icon using font awesome
+              const deleteIcon = document.createElement("i");
+              deleteIcon.className = "fa fa-fw fa-close";
+              deleteIcon.style.color = "white";
+
+              termDiv.onclick = function() {
+                delete selectedTerms[term];
+                displaySelectedSearchTerms();
+
+                // Add option back to datalist
+                const datalist = document.getElementById("search-terms");
+                const option = document.createElement("option");
+                option.value = term;
+                datalist.appendChild(option);
+              }
+              label.appendChild(deleteIcon);
+              selectedTermsDiv.appendChild(termDiv);
+            });
+          }
+
+          function validateForm() {
+
+            const input = document.getElementById("search-input");
+            const terms = Object.keys(selectedTerms);
+            input.value = terms.join(', ');
+
+
+            const input2 = document.getElementById("search-input2");
+            const terms2 = Object.keys(selectedTerms2);
+            input2.value = terms2.join(', ');
+
+
+
+            return true;
+          }
+        </script>
 
         <style type="text/css">
           .optional_entry {
@@ -104,8 +315,28 @@
           }
         </style>
 
-
       </div>
+
+      <div class="row">
+        <div class="col-xs-8">
+          <div class="checkbox icheck">
+            <label>
+              <input type="checkbox" name="agree_to_terms"> I agree to the <a href="#">terms</a>
+            </label>
+          </div>
+        </div>
+        <!-- /.col -->
+        <div class="col-xs-4">
+          <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
+        </div>
+        <!-- /.col -->
+      </div>
+      
+
+    
+      <a href="../" class="text-center">I already have a membership</a>
+
+      </form>
 
     </div>
 

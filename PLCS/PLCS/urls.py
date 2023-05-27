@@ -69,5 +69,6 @@ urlpatterns = [
 
     path("apply_to_project/<int:project_id>/<int:project_poster_id>", views.apply_to_project),
 
-    path("view_projects_collaborations/", views.view_projects_collaborations)
+    path("view_projects_collaborations/", views.view_projects_collaborations),
+    path("profile_history/<int:user_id>/", views.profile_history)
 ]

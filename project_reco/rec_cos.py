@@ -24,7 +24,6 @@ project skills, as in the example code.
 """
 
 
-
 # Generate recommendations for each user
 recommendations = []
 for _, user in users_df.iterrows():

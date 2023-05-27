@@ -15,6 +15,11 @@ class User(models.Model):
 
 	profile_img = models.TextField(default='')
 
+	learning_interests = models.TextField(default='')
+	project_interests = models.TextField(default='')
+
+	user_activity_tags = models.TextField(default='')
+
 	class Meta:
 		db_table = "User"
 
@@ -107,6 +112,8 @@ class Notification (models.Model):
 	notification_date = models.DateTimeField(default  = datetime.today())
 
 	notification_recipient = models.ForeignKey(User, on_delete=models.CASCADE)
+
+	project_applied_to = models.CharField (max_length=50, default='')
 	
 	def __str__(self):
 		return "id = {}, content = {}".format(self.id, self.notification_content)
@@ -120,7 +127,7 @@ class User_Project_Like (models.Model):
 		return "id = {}, user = {}".format(self.id, self.user)
 
 
-class User_Project_Collab (models.Model):	
+class User_Project_Collab (models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
 	status = models.IntegerField(default=1)

@@ -119,43 +119,30 @@ def register_user(request):
 		password_input = request.POST["password"]
 		confirm_password_input = request.POST["confirm_password"]
 
-		project_interests = request.POST['project_interests']
-		learning_interests = request.POST['learning_interests']
-
 		#If email does not exist/ User is not registered yet
 		if not (User.objects.filter(email=email_input).exists()):
-			if (password_input == confirm_password_input):
-				user = User()
-				user.first_name = first_name_input
-				user.last_name = last_name_input
-				user.email = email_input
-				user.password = password_input
-				user.learning_interests = learning_interests
-				user.project_interests = project_interests
+			user = User()
+			user.first_name = first_name_input
+			user.last_name = last_name_input
+			user.email = email_input
+			user.password = password_input
+			user.save()
 
-				user.save()
+			user_role = User_Role()
+			user_role.user_x = user
 
-				user_role = User_Role()
-				user_role.user_x = user
+			role_of_user = Role.objects.get(role_name = 'User')
+			user_role.role_x = role_of_user
+			user_role.save()
 
-				#When user registers, directly given role 'User'
-				role_of_user = Role.objects.get(role_name = 'User')
-				user_role.role_x = role_of_user
-				user_role.save()
+			user = authenticate(request, email=email_input, password = password_input)
+			# return HttpResponse (user)
+			# login_user(request, user)
 
-				user = authenticate(request, email=email_input, password = password_input)
-				# return HttpResponse (user)
-				# login_user(request, user)
-
-				#return HttpResponseRedirect('/dashboard')
-				return redirect('/dashboard')
-
-			else:
-				messages.success(request, 'Confirm password does not match with password entereed', extra_tags='alert-danger')
-				return redirect('/register')
+			#return HttpResponseRedirect('/dashboard')
+			return redirect('/dashboard')
 
 		else:
-			messages.success(request, 'User already registered', extra_tags='alert-danger')
 			return redirect('/register')
 
 
@@ -230,8 +217,6 @@ def view_projects(request):
 	current_user = request.session['user_id']
 	user_names = request.session['user_names']
 
-	notifs = get_notifications_of_user (request, current_user)
-
 	if ('Administrator' in roles_permissions[0]):
 		# return HttpResponse ('admin')
 
@@ -274,7 +259,7 @@ def view_projects(request):
 		return render (request, "project_page.html", {'all_projects': get_all_projects,
 			'active_projects' : active_all_projects, 'roles_n_permissions': roles_permissions,
 			'projects_summary': [all_projects_count, active_project_count, deleted_project_count, completed_project_count],
-			'user_names': user_names, 'notifs': notifs})
+			'user_names': user_names})
 
 
 	if ('User' in roles_permissions[0]):
@@ -311,7 +296,7 @@ def view_projects(request):
 		return render (request, "project_page.html", {'all_projects': get_all_projects, 
 			'active_projects' : active_all_projects,
 			'projects_summary': [all_projects_count, active_project_count, deleted_project_count, completed_project_count], 
-			'user_names':user_names, 'current_user': current_user, 'notifs': notifs})
+			'user_names':user_names, 'current_user': current_user})
 
 
 
@@ -333,44 +318,44 @@ def add_project(request):
 		current_user = request.session['user_id']
 
 		# if 'image1' in request.FILES or 'image2' in request.FILES or 'image3' in request.FILES:
-		# project_images = ['x.pdf', 'x.pdf', 'x.pdf']
-		# if 'image1' in request.FILES:
-		# 	image1 = request.FILES['image1'].name
-		# 	uploaded_image1 = request.FILES.get('image1')
-		# 	project_images[0] = image1
-		# 	# project_images.append(image1)
+		project_images = ['x.pdf', 'x.pdf', 'x.pdf']
+		if 'image1' in request.FILES:
+			image1 = request.FILES['image1'].name
+			uploaded_image1 = request.FILES.get('image1')
+			project_images[0] = image1
+			# project_images.append(image1)
 			
-		# if 'image2' in request.FILES:
-		# 	image2 = request.FILES['image2'].name
-		# 	uploaded_image2 = request.FILES.get('image2')
-		# 	project_images[1] = image2
-		# 	# project_images.append(image2)
+		if 'image2' in request.FILES:
+			image2 = request.FILES['image2'].name
+			uploaded_image2 = request.FILES.get('image2')
+			project_images[1] = image2
+			# project_images.append(image2)
 
-		# if 'image3' in request.FILES:
-		# 	image3 = request.FILES['image3'].name
-		# 	uploaded_image3 = request.FILES.get('image3')
-		# 	project_images[2] = image3
-		# 	# project_images.append(image3)
+		if 'image3' in request.FILES:
+			image3 = request.FILES['image3'].name
+			uploaded_image3 = request.FILES.get('image3')
+			project_images[2] = image3
+			# project_images.append(image3)
 
 
 
-		# project_files = ['x.jpg', 'x.jpg', 'x.jpg']
-		# if 'file1' in request.FILES:
-		# 	file1 = request.FILES['file1'].name
-		# 	uploaded_file1 = request.FILES.get('file1')
-		# 	project_files[0] = file1
-		# 	# project_files.append(file1)
+		project_files = ['x.jpg', 'x.jpg', 'x.jpg']
+		if 'file1' in request.FILES:
+			file1 = request.FILES['file1'].name
+			uploaded_file1 = request.FILES.get('file1')
+			project_files[0] = file1
+			# project_files.append(file1)
 			
-		# if 'file2' in request.FILES:
-		# 	file2 = request.FILES['file2'].name
-		# 	uploaded_file2 = request.FILES.get('file2')
-		# 	project_files[1] = file2
-		# 	# project_images.append(file2)
+		if 'file2' in request.FILES:
+			file2 = request.FILES['file2'].name
+			uploaded_file2 = request.FILES.get('file2')
+			project_files[1] = file2
+			# project_images.append(file2)
 
-		# if 'file3' in request.FILES:
-		# 	file3 = request.FILES['file3'].name
-		# 	uploaded_file3 = request.FILES.get('file3')
-		# 	project_files[2] = file3
+		if 'file3' in request.FILES:
+			file3 = request.FILES['file3'].name
+			uploaded_file3 = request.FILES.get('file3')
+			project_files[2] = file3
 			# project_files.append(file3)
 		
         
@@ -403,84 +388,84 @@ def add_project(request):
 
 
 		#COPY THE IMAGE TO THE PROJECT DIRECTORY 'static/project_imgs'
-		# for index, i in enumerate(project_images):
-		# 	destination_path = settings.STATIC_ROOT
+		for index, i in enumerate(project_images):
+			destination_path = settings.STATIC_ROOT
 
-		# 	# Construct the full destination path
-		# 	destination_fullpath = os.path.join(destination_path, i)
+			# Construct the full destination path
+			destination_fullpath = os.path.join(destination_path, i)
 
-		# 	pj = ['x', 'x', 'x']
+			pj = ['x', 'x', 'x']
 
-		# 	# Copy the uploaded image to the destination directory
-		# 	with open(destination_fullpath, 'wb') as destination_file:
+			# Copy the uploaded image to the destination directory
+			with open(destination_fullpath, 'wb') as destination_file:
 				
-		# 		if ((index == 0) and project_images[0] != 'x.pdf'):
-		# 			source_file = uploaded_image1.file
-		# 			pj[0] = 'y'
+				if ((index == 0) and project_images[0] != 'x.pdf'):
+					source_file = uploaded_image1.file
+					pj[0] = 'y'
 
-		# 		if ((index == 1) and (project_images[1] != 'x.pdf')):
-		# 			source_file = uploaded_image2.file
-		# 			pj[1] = 'y'
+				if ((index == 1) and (project_images[1] != 'x.pdf')):
+					source_file = uploaded_image2.file
+					pj[1] = 'y'
 
-		# 		if ((index == 2) and (project_images[2] != 'x.pdf')):
-		# 			source_file = uploaded_image3.file
-		# 			pj[2] = 'y'
+				if ((index == 2) and (project_images[2] != 'x.pdf')):
+					source_file = uploaded_image3.file
+					pj[2] = 'y'
 
-		# 		copyfileobj(source_file, destination_file)
-		# 		destination_file.close()
+				copyfileobj(source_file, destination_file)
+				destination_file.close()
 
-		# 	img_extension = os.path.splitext(i)[1]
+			img_extension = os.path.splitext(i)[1]
 
-		# 	# Rename the file
-		# 	img_count = index+1
-		# 	new_name = 'PLCS' + num + "#img" + str(img_count) + img_extension
+			# Rename the file
+			img_count = index+1
+			new_name = 'PLCS' + num + "#img" + str(img_count) + img_extension
 
-		# 	project_images[index] = new_name
+			project_images[index] = new_name
 			
-		# 	# Construct the full path to the file
-		# 	full_path = os.path.join(destination_path, i)
+			# Construct the full path to the file
+			full_path = os.path.join(destination_path, i)
 
-		# 	# Rename the file
-		# 	os.rename(full_path, os.path.join(destination_path, new_name))
-
-
+			# Rename the file
+			os.rename(full_path, os.path.join(destination_path, new_name))
 
 
-		# #COPY THE FILE TO THE PROJECT DIRECTORY 'static/project_files'
-		# for index, i in enumerate(project_files): #index 0, 1, 2, i iterates each element in the list
-		# 	destination_path = settings.STATIC_ROOT2
 
-		# 	# Construct the full destination path
-		# 	destination_fullpath = os.path.join(destination_path, i)
 
-		# 	# Copy the uploaded image to the destination directory
-		# 	with open(destination_fullpath, 'wb') as destination_file:
+		#COPY THE FILE TO THE PROJECT DIRECTORY 'static/project_files'
+		for index, i in enumerate(project_files): #index 0, 1, 2, i iterates each element in the list
+			destination_path = settings.STATIC_ROOT2
+
+			# Construct the full destination path
+			destination_fullpath = os.path.join(destination_path, i)
+
+			# Copy the uploaded image to the destination directory
+			with open(destination_fullpath, 'wb') as destination_file:
 				
-		# 		if ((index == 0) and (project_files[0] != 'x.jpg')):
-		# 			source_file = uploaded_file1.file
+				if ((index == 0) and (project_files[0] != 'x.jpg')):
+					source_file = uploaded_file1.file
 
-		# 		if ((index == 1) and (project_files[1] != 'x.jpg')):
-		# 			source_file = uploaded_file2.file
+				if ((index == 1) and (project_files[1] != 'x.jpg')):
+					source_file = uploaded_file2.file
 
-		# 		if ((index == 2) and (project_files[2] != 'x.jpg')):
-		# 			source_file = uploaded_file3.file
+				if ((index == 2) and (project_files[2] != 'x.jpg')):
+					source_file = uploaded_file3.file
 
-		# 		copyfileobj(source_file, destination_file)
-		# 		destination_file.close()
+				copyfileobj(source_file, destination_file)
+				destination_file.close()
 
-		# 	file_extension = os.path.splitext(i)[1]
+			file_extension = os.path.splitext(i)[1]
 
-		# 	# Rename the file
-		# 	file_count = index+1
-		# 	new_name = 'PLCS' + num + "#file" + str(file_count) + file_extension
+			# Rename the file
+			file_count = index+1
+			new_name = 'PLCS' + num + "#file" + str(file_count) + file_extension
 
-		# 	project_files[index] = new_name
+			project_files[index] = new_name
 			
-		# 	# Construct the full path to the file
-		# 	full_path = os.path.join(destination_path, i)
+			# Construct the full path to the file
+			full_path = os.path.join(destination_path, i)
 
-		# 	# Rename the file
-		# 	os.rename(full_path, os.path.join(destination_path, new_name))
+			# Rename the file
+			os.rename(full_path, os.path.join(destination_path, new_name))
 
 
 
@@ -488,8 +473,8 @@ def add_project(request):
 		project.project_description = project_description
 		project.project_DOR = datetime.today()
 
-		project_images = ['x','y','z']
-		project_files = ['x','y','z']
+		# project_images = ['x','y','z']
+		# project_files = ['x','y','z']
 
 		project.project_images = project_images
 		project.project_files = project_files
@@ -657,9 +642,6 @@ def user_management(request):
 	all_roles = []
 
 
-	notifs = get_notifications_of_user (request, current_user)
-
-
 	#Get permissions for Roles
 	#user_roles = "id = 1, role = Userid = 2, role = Administrator"
 	permissions_for_role = []
@@ -699,30 +681,12 @@ def user_management(request):
 			'user_summary': [all_user_accounts_count, active_user_count, disabled_user_count, deleted_user_count],
 			'user_permissions': user_permissions, 'user_roles': user_roles, 'roles_for_each_user': roles_for_each_user,
 			'roles_n_permissions': roles_n_permissions, 'get_all_projects': get_all_projects, 'user_names': user_names, 
-			'current_user': current_user, 'get_all_project_collabs': user_x_collab, 'all_roles': all_roles, 
-			'permissions_each_role': permissions_each_role, 'notifs': notifs})
+			'current_user': current_user, 'get_all_project_collabs': user_x_collab, 'all_roles': all_roles, 'permissions_each_role': permissions_each_role})
 		# return render (request, "dashboard.html")
 
 	else:
 		return redirect ('/')
 	# return render (request, "user_management.html")
-
-
-
-def get_notifications_of_user (request, user_id):
-	user_x = User.objects.get(id = user_id)
-
-	#Get notifications for this user
-	user_notifications = Notification.objects.filter(notification_recipient = user_x).order_by('-notification_status')
-
-	#Get new notification
-	new_user_notifications = Notification.objects.filter(notification_recipient = user_x).filter (notification_status = 0)
-	new_user_notifications_count = new_user_notifications.count()
-
-	notifs = [user_notifications, new_user_notifications, new_user_notifications_count]
-
-	return notifs
-
 
 
 
@@ -1108,7 +1072,7 @@ def apply_to_project(request, project_id, project_poster_id):
 			collab_notif.notification_type = "Collab Application"
 
 			collab_notif.notification_status = 0
-			collab_notif.notification_link_to = "profile_history/{}/".format(current_user)
+			collab_notif.notification_link_to = "Take to user Page"
 			collab_notif.notification_date = datetime.today()
 			collab_notif.notification_recipient = project_poster
 			collab_notif.save()
@@ -1120,7 +1084,6 @@ def apply_to_project(request, project_id, project_poster_id):
 #Project Collaborations, Track project progresses
 def view_projects_collaborations(request):
 	current_user = request.session['user_id']
-	user_names = request.session['user_names']	
 
 	project_collab_status = [0, 0, 0, 0, 0]
 
@@ -1169,44 +1132,4 @@ def view_projects_collaborations(request):
 	project_collab_status[4] = get_deleted_project_collab_count
 
 
-	return render (request, "project_collab_page.html", 
-		{'user_project_collabs': user_project_collabs, 'project_collab_status': project_collab_status, 'user_names': user_names})
-
-
-
-def profile_history(request, user_id):
-	profile_user_id = user_id
-	user_x_details = User.objects.get(id = profile_user_id)
-
-	count_completed_projects = Project.objects.filter(user_project = user_x_details).filter(status = 3).count()
-	count_active_projects = Project.objects.filter(user_project = user_x_details).filter(status = 1).count()
-	all_projects_of_user = Project.objects.filter(user_project = user_x_details)
-
-	user_project_details = [count_completed_projects, count_active_projects]
-
-	for obj in all_projects_of_user:
-		column_value = obj.project_skills
-		if column_value:
-			list_value = literal_eval(column_value)
-			obj.project_skills = list_value
-			obj.save()
-
-	# return HttpResponse (user_x_details.project_interests)
-
-	#Project Interests
-	user_x_details_list = literal_eval(user_x_details.project_interests)
-	user_x_details.project_interests = user_x_details_list
-
-	user_x_details_list = literal_eval(user_x_details.learning_interests)
-	user_x_details.learning_interests = user_x_details_list
-
-	user_x_details.save()
-
-
-	# Query to merge data based on shared_column
-	# merged_collab_data = User_Project_Collab.objects.annotate(other_column2=F('table2__other_column2')).filter(
-	# 	shared_column__isnull=False).values('shared_column', 'other_column1', 'other_column2')
-
-
-	return render (request, "profile_history.html", {'user_project_collabs': all_projects_of_user, 
-		'user_project_details': user_project_details, 'user_x_details': user_x_details})
+	return render (request, "project_collab_page.html", {'user_project_collabs': user_project_collabs, 'project_collab_status': project_collab_status})
