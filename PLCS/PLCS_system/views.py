@@ -19,7 +19,7 @@ from ast import literal_eval
 
 from django.core.paginator import Paginator
 from django.db.models import Q
-
+from django.db.models import F
 
 # Create your views here.
 def login(request):
@@ -713,7 +713,7 @@ def get_notifications_of_user (request, user_id):
 	user_x = User.objects.get(id = user_id)
 
 	#Get notifications for this user
-	user_notifications = Notification.objects.filter(notification_recipient = user_x).order_by('-notification_status')
+	user_notifications = Notification.objects.filter(notification_recipient = user_x).order_by('-notification_date')
 
 	#Get new notification
 	new_user_notifications = Notification.objects.filter(notification_recipient = user_x).filter (notification_status = 0)
@@ -723,6 +723,10 @@ def get_notifications_of_user (request, user_id):
 
 	return notifs
 
+
+def get_user_details (request, user_id):
+	user_names = request.session['user_names']
+	return user_names
 
 
 
@@ -1178,6 +1182,9 @@ def profile_history(request, user_id):
 	profile_user_id = user_id
 	user_x_details = User.objects.get(id = profile_user_id)
 
+	current_user = request.session['user_id']
+	me_user = User.objects.get (id = current_user)
+
 	count_completed_projects = Project.objects.filter(user_project = user_x_details).filter(status = 3).count()
 	count_active_projects = Project.objects.filter(user_project = user_x_details).filter(status = 1).count()
 	all_projects_of_user = Project.objects.filter(user_project = user_x_details)
@@ -1203,10 +1210,43 @@ def profile_history(request, user_id):
 	user_x_details.save()
 
 
+	#Get collab application
+	# collab_applications= User_Project_Collab.objects.filter (user = user_x_details).filter (status = 0).filter(project.user_project = user_x_details)
+
+	collab_applications = User_Project_Collab.objects.filter(user=user_x_details, status = 0, project__user_project = me_user)
+
+	# collab_applications = collab_applications.values('project')
+
+	for obj in collab_applications:
+		column_value = obj.project.project_skills
+		if column_value:
+			list_value = literal_eval(column_value)
+			obj.project.project_skills = list_value
+			obj.save()
+
+
+	notifs = get_notifications_of_user (request, current_user)
+	user_names = get_user_details(request, current_user)
+
+	"""
+	In this query, we use the double underscore (__) notation to perform a related model lookup. The project__user_project represents the user_project field on the related Project model.
+	"""
+	# id = 7, user = id = 12, f_name = test123, email = test123@gmail.com, status = 1, project = id = 11, title = PLC Programming, status = 1
+
+	# return HttpResponse(collab_applications)
+
+
+	# User_Project_Collab (models.Model):
+	# user = models.ForeignKey(User, on_delete=models.CASCADE)
+	# project = models.ForeignKey(Project, on_delete=models.CASCADE)
+	# status = models.IntegerField(default=1)
+
+
 	# Query to merge data based on shared_column
 	# merged_collab_data = User_Project_Collab.objects.annotate(other_column2=F('table2__other_column2')).filter(
 	# 	shared_column__isnull=False).values('shared_column', 'other_column1', 'other_column2')
 
 
 	return render (request, "profile_history.html", {'user_project_collabs': all_projects_of_user, 
-		'user_project_details': user_project_details, 'user_x_details': user_x_details})
+		'user_project_details': user_project_details, 'user_x_details': user_x_details, 'collab_applications': collab_applications, 
+		'notifs': notifs, 'user_names': user_names})

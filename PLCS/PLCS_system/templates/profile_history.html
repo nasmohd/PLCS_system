@@ -173,15 +173,15 @@
                 <tbody>
 
 
-                {% for i in user_project_collabs %}
+                {% for i in collab_applications %}
                   <tr>
                     <td> {{ forloop.counter }} </td>
-                    <td> {{ i.project_id }} </td>
-                    <td> {{ i.project_title }} </td>
-                    <td class="description_column"> {{ i.project_description }} </td>
+                    <td> {{ i.project.project_id }} </td>
+                    <td> {{ i.project.project_title }} </td>
+                    <td class="description_column"> {{ i.project.project_description }} </td>
 
                     <td id="tagContainer"> 
-                      {% for j in i.project_skills %}
+                      {% for j in i.project.project_skills %}
                         <span class="label random-label" style="margin-right: 5px;">{{ j }} </span> 
                       {% endfor %}
                     </td>
@@ -212,8 +212,8 @@
 
                     <td>
                       <div class="button-container">
-                        <a href="#" class="btn btn-sm custom-btn-success"><i class="fa fa-fw fa-check" style="color: green;"></i></a>
-                        <a href="#" class="btn btn-sm custom-btn-danger"><i class="fa fa-fw fa-close" style="color: red;"></i></a>
+                        <a href="/accept_collab/{{ i.id }}" class="btn btn-sm custom-btn-success"><i class="fa fa-fw fa-check" style="color: green;"></i></a>
+                        <a href="/deny_collab/{{ i.id }}" class="btn btn-sm custom-btn-danger"><i class="fa fa-fw fa-close" style="color: red;"></i></a>
                       </div>
 
                       <style type="text/css">
