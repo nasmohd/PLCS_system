@@ -135,23 +135,381 @@
 
               </script>
 
-              <h3 class="profile-username text-center">{{ user_names.0 }} {{ user_names.1 }}</h3>
+              <h3 class="profile-username text-center">{{ user_x_details.first_name }} {{ user_x_details.last_name }}</h3>
 
               <!-- <p class="text-muted text-center">Software Engineer</p> -->
 
               <ul class="list-group list-group-unbordered">
                 <li class="list-group-item">
-                  <b>Followers</b> <a class="pull-right">1,322</a>
+                  <b>Completed Projects</b> <a class="pull-right">{{ user_project_details.0 }}</a>
                 </li>
                 <li class="list-group-item">
-                  <b>Following</b> <a class="pull-right">543</a>
-                </li>
-                <li class="list-group-item">
-                  <b>Friends</b> <a class="pull-right">13,287</a>
+                  <b>Active Projects</b> <a class="pull-right">{{ user_project_details.1 }}</a>
                 </li>
               </ul>
 
-              <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
+              <a href="#" class="btn btn-sm btn-primary btn-block" data-toggle="modal" data-target="#modal-editUserProfile"><i class="fa fa-fw fa-pencil" style="margin-right: 0.5rem;"></i><b>Edit Profile</b></a>
+
+              <div class="modal fade" id="modal-editUserProfile" style="display: none;">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                      <h4 class="modal-title"> Edit Your Profile </h4>
+                    </div>
+                    <form role="form" action="/admin_add_user/" method="POST" id="addUser">
+                      {% csrf_token %}
+
+                    <div class="modal-body">
+                      <p>Please fill in details for your profile</p>
+
+                      <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                          <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">User Details <span class="optional_entry"> * </span></a></li>
+                          <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false"> Interests <span class="optional_entry"> * </span></a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="tab_1">
+                            
+                      <!-- form start -->
+                      
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">First Name <span class="optional_entry"> * </span></label>
+                              <input type="text" class="form-control" placeholder="Enter First Name" name="first_name" required value="{{ user_x_details.first_name }}">
+                            </div>
+
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Last Name <span class="optional_entry"> * </span></label>
+                              <input type="text" class="form-control" placeholder="Enter Last Name" name="last_name" required value="{{ user_x_details.last_name }}">
+                            </div>
+
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Email address <span class="optional_entry"> * </span></label>
+                              <input type="email" class="form-control" placeholder="Enter email" name="email" autocomplete="off" required value="{{ user_x_details.email }}">
+                            </div>
+
+                            <div class="form-group password-wrapper">
+                              <label for="exampleInputPassword1">Password <span class="optional_entry"> * </span></label>
+                              <input type="password" class="form-control" placeholder="Password" name="password" autocomplete="off" required id="password_input" value="{{ user_x_details.password }}">
+                              <button id="toggle-password" type="button" aria-label="Toggle password visibility">
+                                <i class="fa fa-fw fa-eye"></i>
+                              </button>
+                            </div>
+
+                            <!-- <div class="form-group password-wrapper">
+                              <label for="exampleInputPassword1">Confirm Password <span class="optional_entry"> * </span></label>
+                              <input type="password" class="form-control" placeholder="Password" name="password" autocomplete="off" required id="password_input" value="{{ user_x_details.password }}">
+                              <button id="toggle-password2" type="button" aria-label="Toggle password visibility">
+                                <i class="fa fa-fw fa-eye"></i>
+                              </button>
+                            </div> -->
+
+                            <style type="text/css">
+                              .optional_entry {
+                                color: red;
+                              }
+                            </style>
+                        <!-- <div class="form-group">
+                          <label for="exampleInputFile"> Profile Picture </label>
+                          <input type="file" id="user_profile_picture">
+                        </div> -->
+                          </div>
+
+
+                          <!-- /.tab-pane -->
+                          <div class="tab-pane" id="tab_2">
+                            <p class="help-block">Please select your interests to get Recommendations</p>
+
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Project Interests <span class="optional_entry"> * </span></label>
+                              <input type="text" id="search-input" list="search-terms" onchange="showSelectedSearchTerms()" name="project_interests" class="form-control" placeholder="Search...">
+
+                              <datalist id="search-terms">
+                                <option value="Algorithms">
+                                <option value="Data Structures and Algorithms">
+                                <option value="Software Engineering">
+                                <option value="Web application development">
+                                <option value="Blockchain">
+                              </datalist>
+                                                          
+                              <div id="selected-search-terms">
+                                
+                              </div>
+
+                              <style>
+                                #selected-search-terms, #selected-search-terms2{
+                                  display: flex;
+                                  flex-wrap: wrap;
+                                  gap: 10px;
+                                  margin-top: 10px;
+                                }
+                                #selected-search-terms div, #selected-search-terms2 div {
+                                  display: inline-block;
+                                }
+
+                                .selected-term:hover, .selected-term2:hover {
+                                  cursor: pointer;
+                                }
+                              </style>
+                            </div>
+
+                            <div class="form-group" style="margin-top: 3rem;">
+                              <label for="exampleInputEmail1">Learning Interests <span class="optional_entry"> * </span></label>
+                              <input type="text" id="search-input2" list="search-terms2" onchange="showSelectedSearchTerms2()" name="learning_interests" class="form-control" placeholder="Search...">
+
+                              <datalist id="search-terms2">
+                                <option value="Algorithms" style="color:red;">
+                                <option value="Data Structures and Algorithms">
+                                <option value="Software Engineering">
+                                <option value="Web application development">
+                                <option value="Blockchain">
+                              </datalist>
+                                                          
+                              <div id="selected-search-terms2">
+                                
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- /.tab-content -->
+                      </div>
+                    </div>
+
+                    <style type="text/css">
+                      .optional_entry {
+                        color: red;
+                      }
+
+                      .password-wrapper {
+                        position: relative;
+                      }
+
+                      #toggle-password, .toggle_password, #toggle-password2, .toggle-password2{
+                        position: absolute;
+                        top: 70%;
+                        right: 10px;
+                        transform: translateY(-50%);
+                        background-color: transparent;
+                        border: none;
+                        cursor: pointer;
+                      }
+
+                      #toggle-password:focus, .toggle_password:focus {
+                        outline: none;
+                      }
+
+                      #toggle-password i, .toggle_password i {
+                        color: #999;
+                      }
+
+                      #password:focus + .toggle_password i {
+                        color: #000;
+                      }
+
+                      }
+                    </style>
+
+                    <script type="text/javascript">
+                      var passwordInput = document.getElementById('password_input');
+                      var togglePasswordButton = document.getElementById('toggle-password');
+
+                      togglePasswordButton.addEventListener('click', () => {
+                        var passwordType = passwordInput.getAttribute('type');
+                        passwordInput.setAttribute('type', passwordType === 'password' ? 'text' : 'password');
+                        
+                        var icon = togglePasswordButton.querySelector('i');
+                        icon.classList.toggle('fa-eye-slash');
+                      });
+
+
+                      var passwordInput2 = document.getElementById('password_input2');
+                      var togglePasswordButton2 = document.getElementById('toggle-password2');
+
+                      togglePasswordButton2.addEventListener('click', function() {
+                        var passwordType2 = passwordInput2.getAttribute('type');
+                        passwordInput2.setAttribute('type', passwordType2 === 'password' ? 'text' : 'password');
+                        
+                        var icon2 = togglePasswordButton2.querySelector('i');
+                        icon2.classList.toggle('fa-eye-slash');
+                      });
+
+                    </script>
+
+                    <script type="text/javascript">
+                      // Learning Interests
+                      const labelClasses2 = ['label-warning', 'label-danger', 'label-success', 'label-info', 'label-primary'];
+                      const selectedTerms2 = new Set();
+                      var search_input2 = document.getElementById("search-input2");
+
+
+                      function showSelectedSearchTerms2() {
+                        const input2 = document.getElementById("search-input2");
+                        const selectedTerm2 = input2.value.trim();
+
+                        const datalist2 = document.getElementById("search-terms2");
+
+                        //Choose random label from those specified above
+                        const selectedOption2 = datalist2.querySelector(`option[value='${input2.value.trim()}']`);
+                        
+
+                        if (selectedTerm2 && !(selectedTerm2 in selectedTerms2)  && !(selectedOption2.value in selectedTerms2) && selectedOption2){
+                          const labelClass2 = labelClasses2[Math.floor(Math.random() * labelClasses2.length)];
+                          selectedTerms2[selectedTerm2] = labelClass2;
+                          input2.value = "";
+                          displaySelectedSearchTerms2();
+
+                          // Remove selected option from datalist
+                          const selectedOption2 = datalist2.querySelector(`option[value='${selectedTerm2}']`);
+
+                          if (selectedOption2) {
+                            selectedOption2.remove();
+                          }
+                        }
+                      }
+
+                      function displaySelectedSearchTerms2() {
+                        const selectedTermsDiv2 = document.getElementById("selected-search-terms2");
+
+                        selectedTermsDiv2.innerHTML = "";
+                        Object.keys(selectedTerms2).forEach((term2) => {
+                          const termDiv2 = document.createElement("div");
+                          const label2 = document.createElement("span");
+                          label2.className = `label ${selectedTerms2[term2]}`;
+                          label2.textContent = term2;
+                          label2.style.marginRight = '5px';
+                          termDiv2.appendChild(label2);
+                          termDiv2.className = 'selected-term2';
+
+                          // Add an 'x' icon using font awesome
+                          const deleteIcon2 = document.createElement("i");
+                          deleteIcon2.className = "fa fa-fw fa-close";
+                          deleteIcon2.style.color = "white";
+
+
+                          termDiv2.onclick = function() {
+                            //Deletes no problem, though still shows the selected
+                            // alert (selectedTerms2[term2])
+                            delete selectedTerms2[term2];
+                            displaySelectedSearchTerms2();
+
+                            // Add option back to datalist
+                            const datalist2 = document.getElementById("search-terms2");
+                            const option2 = document.createElement("option");
+                            option2.value = term2;
+                            datalist2.appendChild(option2);
+                          }
+                          label2.appendChild(deleteIcon2);
+                          selectedTermsDiv2.appendChild(termDiv2);
+                        });
+                      }
+
+                      // function validateForm() {
+
+                      //   const input2 = document.getElementById("search-input2");
+                      //   const terms = Object.keys(selectedTerms2);
+                      //   input2.value = terms.join(', ');
+
+                      //   return true;
+                      // }
+                    </script>
+
+
+
+
+
+                    <script type="text/javascript">
+                      // Project Interests
+                      const labelClasses = ['label-warning', 'label-danger', 'label-success', 'label-info', 'label-primary'];
+                      const selectedTerms = new Set();
+
+                      // const selectedTerms = new Set({% for proj_int in user_x_details.project_interests %}'{{ proj_int }}',{% endfor %});
+
+                      var search_input = document.getElementById("search-input");
+
+
+                      function showSelectedSearchTerms() {
+                        const input = document.getElementById("search-input");
+                        const selectedTerm = input.value.trim();
+
+                        const datalist = document.getElementById("search-terms");
+
+                        //Choose random label from those specified above
+                        const selectedOption = datalist.querySelector(`option[value='${input.value.trim()}']`);
+
+                        if (selectedTerm && !(selectedTerm in selectedTerms)  && !(selectedOption.value in selectedTerms) && selectedOption){
+                          const labelClass = labelClasses[Math.floor(Math.random() * labelClasses.length)];
+                          selectedTerms[selectedTerm] = labelClass;
+                          input.value = "";
+                          displaySelectedSearchTerms();
+
+                          // Remove selected option from datalist
+                          const selectedOption = datalist.querySelector(`option[value='${selectedTerm}']`);
+                          if (selectedOption) {
+                            selectedOption.remove();
+                          }
+                        }
+                      }
+
+                      function displaySelectedSearchTerms() {
+                        const selectedTermsDiv = document.getElementById("selected-search-terms");
+
+                        selectedTermsDiv.innerHTML = "";
+                        Object.keys(selectedTerms).forEach((term) => {
+                          const termDiv = document.createElement("div");
+                          const label = document.createElement("span");
+                          label.className = `label ${selectedTerms[term]}`;
+                          label.textContent = term;
+                          label.style.marginRight = '5px';
+                          termDiv.appendChild(label);
+                          termDiv.className = 'selected-term';
+
+                          // Add an 'x' icon using font awesome
+                          const deleteIcon = document.createElement("i");
+                          deleteIcon.className = "fa fa-fw fa-close";
+                          deleteIcon.style.color = "white";
+
+                          termDiv.onclick = function() {
+                            delete selectedTerms[term];
+                            displaySelectedSearchTerms();
+
+                            // Add option back to datalist
+                            const datalist = document.getElementById("search-terms");
+                            const option = document.createElement("option");
+                            option.value = term;
+                            datalist.appendChild(option);
+                          }
+                          label.appendChild(deleteIcon);
+                          selectedTermsDiv.appendChild(termDiv);
+                        });
+                      }
+
+                      function validateForm() {
+
+                        const input = document.getElementById("search-input");
+                        const terms = Object.keys(selectedTerms);
+                        input.value = terms.join(', ');
+
+
+                        const input2 = document.getElementById("search-input2");
+                        const terms2 = Object.keys(selectedTerms2);
+                        input2.value = terms2.join(', ');
+                        return true;
+                      }
+                    </script>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </div>
+
+                    </form>
+                  </div>
+                  <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+              </div>
             </div>
             <!-- /.box-body -->
           </div>
@@ -165,28 +523,10 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <strong><i class="fa fa-book margin-r-5"></i> Education</strong>
+              <strong><i class="fa fa-book margin-r-5"></i> Introduction </strong>
 
               <p class="text-muted">
-                B.S. in Computer Science from the University of Tennessee at Knoxville
-              </p>
-
-              <hr>
-
-              <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
-
-              <p class="text-muted">Malibu, California</p>
-
-              <hr>
-
-              <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
-
-              <p>
-                <span class="label label-danger">UI Design</span>
-                <span class="label label-success">Coding</span>
-                <span class="label label-info">Javascript</span>
-                <span class="label label-warning">PHP</span>
-                <span class="label label-primary">Node.js</span>
+                {{ user_x_details.user_description }}
               </p>
 
               <hr>
@@ -194,8 +534,12 @@
               <strong><i class="fa fa-pencil margin-r-5"></i> Project Interests </strong>
 
               <p>
-                <span class="label label-info">PLC Programming</span>
-                <span class="label label-success">Arduino Programming</span>
+                {% for proj_int in user_x_details.project_interests %}
+                  <span class="label label-info">{{ proj_int }}</span>
+                {% endfor %}
+
+                <!-- <span class="label label-info">PLC Programming</span>
+                <span class="label label-success">Arduino Programming</span> -->
               </p>
 
               <hr>
@@ -203,18 +547,17 @@
               <strong><i class="fa fa-file-text-o" style="margin-right: 0.6rem;"></i> Learning Interests </strong>
 
               <p>
-                <span class="label label-warning">Algorithms</span>
+                {% for proj_int in user_x_details.learning_interests %}
+                  <span class="label label-info">{{ proj_int }}</span>
+                {% endfor %}
+
+                <!-- <span class="label label-warning">Algorithms</span>
                 <span class="label label-success">Data Structures and Algorithms</span>
                 <span class="label label-info">Software Engineering</span>
                 <span class="label label-danger">Web application development</span>
-                <span class="label label-primary">Blockchain</span>
+                <span class="label label-primary">Blockchain</span> -->
               </p>
 
-              <hr>
-
-              <strong><i class="fa fa-file-text-o margin-r-5"></i> Notes</strong>
-
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
             </div>
             <!-- /.box-body -->
           </div>

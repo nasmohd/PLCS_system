@@ -39,6 +39,7 @@ class Project (models.Model):
 
 	project_skills = models.TextField(default='')
 	project_collaborators = models.IntegerField (default=1)
+	accepted_project_collaborators = models.IntegerField (default=1)
 	project_deadline = models.DateTimeField(default = '')
 
 	project_images = models.TextField(default='')

@@ -61,6 +61,21 @@
     <section class="content">
       <!-- Small boxes (Stat box) -->
 
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-dismissible {{ message.tags }}">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color: white;">×</button>
+            <i class="icon fa fa-check"></i> {{ message }}
+          </div>
+          <script>
+              // Automatically close the alert after 5 seconds
+              setTimeout(function() {
+                  $('.alert').alert('close');
+              }, 5000);
+          </script>
+        {% endfor %}
+      {% endif %}
+
       <div class="row">
         <div class="col-xs-12">
           <div class="box">
@@ -198,7 +213,7 @@
                     <td>
                       <div class="button-container">
                         <a href="/accept_collab/{{ i.id }}" class="btn btn-sm custom-btn-success"><i class="fa fa-fw fa-check" style="color: green;"></i></a>
-                        <a href="/deny_collab/{{ i.id }}" class="btn btn-sm custom-btn-danger"><i class="fa fa-fw fa-close" style="color: red;"></i></a>
+                        <a href="/reject_collab/{{ i.id }}" class="btn btn-sm custom-btn-danger"><i class="fa fa-fw fa-close" style="color: red;"></i></a>
                       </div>
 
                       <style type="text/css">

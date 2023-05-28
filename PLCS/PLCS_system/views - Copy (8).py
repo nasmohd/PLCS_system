@@ -20,7 +20,6 @@ from ast import literal_eval
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.db.models import F
-from django.db.models import Count
 
 # Create your views here.
 def login(request):
@@ -239,15 +238,11 @@ def view_projects(request):
 	user_names = request.session['user_names']
 
 	notifs = get_notifications_of_user (request, current_user)
-	# projects = Project.objects.annotate(request_counts=Count('user_project_collab', filter=models.Q(user_project_collab__status=0)))
-
-	# return HttpResponse (projects)
 
 	if ('Administrator' in roles_permissions[0]):
 		# return HttpResponse ('admin')
 
-		# get_all_projects = Project.objects.all().order_by('-project_DOR')
-		get_all_projects = Project.objects.annotate(request_counts=Count('user_project_collab', filter=models.Q(user_project_collab__status=0))).order_by('-project_DOR')
+		get_all_projects = Project.objects.all().order_by('-project_DOR')
 
 		    # Paginate the data
 		# paginator = Paginator(get_all_projects, 5)  # Change 10 to the desired number of items per page
@@ -291,10 +286,7 @@ def view_projects(request):
 
 	if ('User' in roles_permissions[0]):
 		user_x = User.objects.get (id = current_user)
-
-		get_all_projects = Project.objects.filter(user_project = user_x).annotate(request_counts=Count('user_project_collab', filter=models.Q(user_project_collab__status=0))).order_by('-project_DOR')
-
-		# get_all_projects = Project.objects.filter(user_project = user_x).order_by('-project_DOR')
+		get_all_projects = Project.objects.filter(user_project = user_x).order_by('-project_DOR')
 
 		active_all_projects = Project.objects.filter(status = 1, user_project = user_x).order_by('-project_DOR')
 
@@ -1169,7 +1161,7 @@ def view_projects_collaborations(request):
 	#Get user
 	user_collabs = User.objects.get (id = current_user)
 
-	user_project_collabs = User_Project_Collab.objects.filter(project__user_project = user_collabs).filter(status = 1)
+	user_project_collabs = User_Project_Collab.objects.filter(user = user_collabs)
 
 	for obj in user_project_collabs:
 		column_value = obj.project.project_skills
@@ -1180,27 +1172,27 @@ def view_projects_collaborations(request):
 
 
 	#Get All collabs
-	get_project_collabs = User_Project_Collab.objects.filter(project__user_project = user_collabs)
+	get_project_collabs = User_Project_Collab.objects.filter(user = user_collabs).filter (status = 0)
 	get_project_collab_count = get_project_collabs.count()
 
 
 	#Get Pending collabs
-	get_pending_project_collabs = User_Project_Collab.objects.filter(project__user_project = user_collabs).filter (status = 0)
+	get_pending_project_collabs = User_Project_Collab.objects.filter(user = user_collabs).filter (status = 0)
 	get_pending_project_collab_count = get_pending_project_collabs.count()
 
 
 	#Get Active collabs
-	get_active_project_collabs = User_Project_Collab.objects.filter(project__user_project = user_collabs).filter (status = 1)
+	get_active_project_collabs = User_Project_Collab.objects.filter(user = user_collabs).filter (status = 1)
 	get_active_project_collab_count = get_active_project_collabs.count()
 
 
 	#Get Completed collabs
-	get_completed_project_collabs = User_Project_Collab.objects.filter(project__user_project = user_collabs).filter (status = 2)
+	get_completed_project_collabs = User_Project_Collab.objects.filter(user = user_collabs).filter (status = 2)
 	get_completed_project_collab_count = get_completed_project_collabs.count()
 
 
 	#Get Deleted collabs
-	get_deleted_project_collabs = User_Project_Collab.objects.filter(project__user_project = user_collabs).filter (status = 3)
+	get_deleted_project_collabs = User_Project_Collab.objects.filter(user = user_collabs).filter (status = 3)
 	get_deleted_project_collab_count = get_deleted_project_collabs.count()
 
 
@@ -1211,8 +1203,8 @@ def view_projects_collaborations(request):
 	project_collab_status[4] = get_deleted_project_collab_count
 
 
-	return render (request, "project_collab_page.html", {'user_project_collabs': user_project_collabs, 
-		'project_collab_status': project_collab_status, 'user_names': user_names})
+	return render (request, "project_collab_page.html", 
+		{'user_project_collabs': user_project_collabs, 'project_collab_status': project_collab_status, 'user_names': user_names})
 
 
 
@@ -1322,19 +1314,7 @@ def view_collab_requests(request, project_id):
 
 
 def accept_collab (request, collab_id):
-	get_exact_collab_details = User_Project_Collab.objects.get(id = collab_id)
-
-	project_id_of_this_collab = get_exact_collab_details.project.id
-
-	get_exact_collab_details.status = 1
-	get_exact_collab_details.save()
-
-	redirect_link = "/view_collab_requests/{}/".format(project_id_of_this_collab)
-
-	messages.success(request, 'Collaboration request approved', extra_tags='alert-success')
-	return redirect(redirect_link)
-
-	# return HttpResponse ("accept")
+	return HttpResponse ("accept")
 
 
 def reject_collab (request, collab_id):

@@ -58,7 +58,7 @@
                   <div class="box-header with-border">
                     <i class="fa fa-file"></i>
 
-                    <h3 class="box-title"> {{ i.project_title }} 
+                    <h3 class="box-title"> {{ i.project_id }}: {{ i.project_title }} 
                       {% if i.user_project.id == current_user %}
                         <span style="color: red; font-size: 13px;"> (Submitted by you!) </span>
                       {% endif %}
