@@ -1169,7 +1169,7 @@ def view_projects_collaborations(request):
 	#Get user
 	user_collabs = User.objects.get (id = current_user)
 
-	user_project_collabs = User_Project_Collab.objects.filter(project__user_project = user_collabs).filter(status = 1)
+	user_project_collabs = User_Project_Collab.objects.filter(project__user_project = user_collabs).exclude(status = 0).distinct()
 
 	for obj in user_project_collabs:
 		column_value = obj.project.project_skills
@@ -1180,7 +1180,7 @@ def view_projects_collaborations(request):
 
 
 	#Get All collabs
-	get_project_collabs = User_Project_Collab.objects.filter(project__user_project = user_collabs)
+	get_project_collabs = User_Project_Collab.objects.filter(project__user_project = user_collabs).exclude(status = 0)
 	get_project_collab_count = get_project_collabs.count()
 
 

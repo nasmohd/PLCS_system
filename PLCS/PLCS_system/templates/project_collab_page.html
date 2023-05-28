@@ -77,8 +77,7 @@
           </div>
         </div>
 
-        <div class="col-lg-2 col-xs-6">
-          <!-- small box -->
+        <!-- <div class="col-lg-2 col-xs-6">
           <div class="small-box bg-aqua">
             <div class="inner">
               <h3>{{ project_collab_status.1 }}</h3>
@@ -87,7 +86,7 @@
             </div>
             <a href="#" class="small-box-footer" onclick="project_view('pending_approval')">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
-        </div>
+        </div> -->
 
         <div class="col-lg-2 col-xs-6">
           <!-- small box -->
@@ -199,7 +198,7 @@
               // search_table.dispatchEvent(new Event('input'));
 
               var dataTable = $('#example1').DataTable();
-              dataTable.columns(5).search("In Progress").draw();
+              dataTable.columns(5).search("Active").draw();
 
               // search_table.value = "In Progress";
             }

@@ -46,7 +46,6 @@
 
   {% include 'header.html' %}
 
-
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -864,24 +863,122 @@
                                 <!-- <div class="form-group">
                                   <label for="exampleInputFile"> Profile Picture </label>
                                   <input type="file" id="user_profile_picture">
-                                </div> -->
-                              
+                                </div> -->                             
                               </div>
-
 
                               <!-- /.tab-pane -->
                               <div class="tab-pane" id="tab_6">
                                 <div class="form-group">
-                                  <label for="exampleInputEmail1">Skills required <span class="optional_entry"> * </span></label>
-                                  <input type="text" name="q" class="form-control" placeholder="Search...">
+                                  <label for="exampleInputEmail1"> Skills required <span class="optional_entry"> * </span></label>
+                                  <input type="text" id="search-input2" list="search-terms2" onchange="showSelectedSearchTerms2()" name="skills_required" class="form-control" placeholder="Search...">
+
+                                  <datalist id="search-terms2">
+                                    <option value="Algorithms" style="color:red;">
+                                    <option value="Data Structures and Algorithms">
+                                    <option value="Software Engineering">
+                                    <option value="Web application development">
+                                    <option value="Blockchain">
+                                  </datalist>
                                                               
-                                  <div>
-                                    <span class="label label-warning">Algorithms</span>
-                                    <span class="label label-success">Data Structures and Algorithms</span>
-                                    <span class="label label-info">Software Engineering</span>
-                                    <span class="label label-danger">Web application development</span>
-                                    <span class="label label-primary">Blockchain</span>
+                                  <div id="selected-search-terms2">
+                                    {% for j in i.project_skills %}
+                                      <span class="label random-label" style="margin-right: 5px;">{{ j }} <i class="fa fa-fw fa-close" style="color:white;"> </i> </span> 
+                                    {% endfor %}
                                   </div>
+
+                                  <style>
+                                    #selected-search-terms2{
+                                      display: flex;
+                                      flex-wrap: wrap;
+                                      gap: 10px;
+                                      margin-top: 10px;
+                                    }
+                                    #selected-search-terms2 div {
+                                      display: inline-block;
+                                    }
+
+                                    .selected-term2:hover {
+                                      cursor: pointer;
+                                    }
+                                  </style>
+
+                                  <script type="text/javascript">
+                                    // Learning Interests
+                                    const labelClasses2 = ['label-warning', 'label-danger', 'label-success', 'label-info', 'label-primary'];
+                                    const selectedTerms2 = new Set();
+                                    var search_input2 = document.getElementById("search-input2");
+
+
+                                    function showSelectedSearchTerms2() {
+                                      const input2 = document.getElementById("search-input2");
+                                      const selectedTerm2 = input2.value.trim();
+
+                                      const datalist2 = document.getElementById("search-terms2");
+
+                                      //Choose random label from those specified above
+                                      const selectedOption2 = datalist2.querySelector(`option[value='${input2.value.trim()}']`);
+                                      
+
+                                      if (selectedTerm2 && !(selectedTerm2 in selectedTerms2)  && !(selectedOption2.value in selectedTerms2) && selectedOption2){
+                                        const labelClass2 = labelClasses2[Math.floor(Math.random() * labelClasses2.length)];
+                                        selectedTerms2[selectedTerm2] = labelClass2;
+                                        input2.value = "";
+                                        displaySelectedSearchTerms2();
+
+                                        // Remove selected option from datalist
+                                        const selectedOption2 = datalist2.querySelector(`option[value='${selectedTerm2}']`);
+
+                                        if (selectedOption2) {
+                                          selectedOption2.remove();
+                                        }
+                                      }
+                                    }
+
+                                    function displaySelectedSearchTerms2() {
+                                      const selectedTermsDiv2 = document.getElementById("selected-search-terms2");
+
+                                      selectedTermsDiv2.innerHTML = "";
+                                      Object.keys(selectedTerms2).forEach((term2) => {
+                                        const termDiv2 = document.createElement("div");
+                                        const label2 = document.createElement("span");
+                                        label2.className = `label ${selectedTerms2[term2]}`;
+                                        label2.textContent = term2;
+                                        label2.style.marginRight = '5px';
+                                        termDiv2.appendChild(label2);
+                                        termDiv2.className = 'selected-term2';
+
+                                        // Add an 'x' icon using font awesome
+                                        const deleteIcon2 = document.createElement("i");
+                                        deleteIcon2.className = "fa fa-fw fa-close";
+                                        deleteIcon2.style.color = "white";
+
+
+                                        termDiv2.onclick = function() {
+                                          //Deletes no problem, though still shows the selected
+                                          // alert (selectedTerms2[term2])
+                                          delete selectedTerms2[term2];
+                                          displaySelectedSearchTerms2();
+
+                                          // Add option back to datalist
+                                          const datalist2 = document.getElementById("search-terms2");
+                                          const option2 = document.createElement("option");
+                                          option2.value = term2;
+                                          datalist2.appendChild(option2);
+                                        }
+                                        label2.appendChild(deleteIcon2);
+                                        selectedTermsDiv2.appendChild(termDiv2);
+                                      });
+                                    }
+
+                                    // function validateForm() {
+
+                                    //   const input2 = document.getElementById("search-input2");
+                                    //   const terms = Object.keys(selectedTerms2);
+                                    //   input2.value = terms.join(', ');
+
+                                    //   return true;
+                                    // }
+                                  </script>
                                 </div>
 
                                 <div class="form-group">
@@ -926,7 +1023,6 @@
                                 </style>
                               </div>
                               <!-- /.tab-pane -->
-
 
                               <div class="tab-pane" id="tab_7">
                                 <div class="boxes_container">
@@ -1185,17 +1281,17 @@
                   const labelElements = document.getElementsByClassName('random-label');
 
                   // Define an array of random label classes
-                  const labelClasses2 = ['label-success', 'label-danger', 'label-info', 'label-warning', 'label-primary'];
+                  const labelClasses3 = ['label-success', 'label-danger', 'label-info', 'label-warning', 'label-primary'];
 
                   // Iterate over the label elements and assign random classes
                   for (let i = 0; i < labelElements.length; i++) {
                     const labelElement = labelElements[i];
                     
                     // Get a random index from the labelClasses array
-                    const randomIndex = Math.floor(Math.random() * labelClasses2.length);
+                    const randomIndex = Math.floor(Math.random() * labelClasses3.length);
                     
                     // Assign the random label class to the element
-                    labelElement.classList.add(labelClasses2[randomIndex]);
+                    labelElement.classList.add(labelClasses3[randomIndex]);
                   }
 
 
