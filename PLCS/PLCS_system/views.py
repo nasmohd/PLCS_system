@@ -736,7 +736,7 @@ def user_management(request):
 			'user_permissions': user_permissions, 'user_roles': user_roles, 'roles_for_each_user': roles_for_each_user,
 			'roles_n_permissions': roles_n_permissions, 'get_all_projects': get_all_projects, 'user_names': user_names, 
 			'current_user': current_user, 'get_all_project_collabs': user_x_collab, 'all_roles': all_roles, 
-			'permissions_each_role': permissions_each_role, 'notifs': notifs})
+			'permissions_for_role': permissions_for_role, 'notifs': notifs})
 		# return render (request, "dashboard.html")
 
 	else:

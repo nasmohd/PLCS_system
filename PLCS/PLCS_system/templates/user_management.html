@@ -346,6 +346,19 @@
                               </button>
                             </div>
 
+                            <script type="text/javascript">
+                              var passwordInput = document.getElementById('password_input');
+                              var togglePasswordButton = document.getElementById('toggle-password');
+
+                              togglePasswordButton.addEventListener('click', () => {
+                                var passwordType = passwordInput.getAttribute('type');
+                                passwordInput.setAttribute('type', passwordType === 'password' ? 'text' : 'password');
+                                
+                                var icon = togglePasswordButton.querySelector('i');
+                                icon.classList.toggle('fa-eye-slash');
+                              });
+                            </script>
+
                             <!-- <div class="form-group">
                               <label for="exampleInputPassword1">Confirm Password <span class="optional_entry"> * </span></label>
                               <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" required>
@@ -370,15 +383,75 @@
                                 <p style="font-weight: bold;"> Roles </p>
                                 
                                 <div class="form-group pb-5">
-
                                   {% for i in user_roles %}
                                     <!-- <div class="col-lg-12 col-12"> -->
                                       <div class="checkbox">
                                         <label>
-                                          <input type="checkbox" name="{{ i.role_name }}" value="{{ i.role_name }}">
+                                          <input type="checkbox" name="{{ i.role_name }}" value="{{ i.role_name }}" id="{{ i.role_name }}">
                                           {{ i.role_name }}
                                         </label>
                                       </div>
+
+                                      <script type="text/javascript">
+                                        // Get the source checkbox and target checkboxes using their classes
+                                        var role{{ i.id }} = document.querySelector('#{{ i.role_name }}');
+                                        
+                                        // Add an event listener to the source checkbox
+                                        role{{ i.id }}.addEventListener('change', function() {
+                                          //Get value of selected User
+
+                                          var selected_role = "." + role{{ i.id }}.value
+                                          var permission_boxes = document.querySelectorAll(selected_role);
+                                          // console.log (permission_boxes);
+
+                                          // Check if the source checkbox is checked
+                                          if (role{{ i.id }}.checked) {
+
+                                            permission_boxes.forEach(function(targetCheckbox) {
+                                              if (selected_role == '.User'){
+                                                targetCheckbox.classList.add('user_disabled');
+                                              }
+
+                                              if (selected_role == '.Administrator'){
+                                                targetCheckbox.classList.add('administrator_disabled');
+                                              }
+
+                                              if (!targetCheckbox.disabled) {
+                                                //If doesn't contain disabled attribute
+                                                targetCheckbox.disabled = true;
+                                              }
+                                              if (targetCheckbox.disabled) {
+                                                //If doesn't contain disabled attribute
+                                                targetCheckbox.disabled = true;
+                                              }
+                                            });
+
+                                          } else {
+                                            var permission_boxes = document.querySelectorAll(selected_role);
+                                            permission_boxes.forEach(function(targetCheckbox) {
+
+                                              if (selected_role == '.User'){
+                                                targetCheckbox.classList.remove('user_disabled');
+                                              }
+
+                                              if (selected_role == '.Administrator'){
+                                                targetCheckbox.classList.remove('administrator_disabled');
+                                              }
+
+                                              target_userDisabled_status = targetCheckbox.classList.contains('user_disabled')
+                                              target_adminDisabled_status = targetCheckbox.classList.contains('administrator_disabled')
+
+                                              if (targetCheckbox.disabled && ((!target_userDisabled_status) && (!target_adminDisabled_status))) {
+                                                //If contains disabled attribute
+                                                targetCheckbox.disabled = false;
+                                              }
+                                            });
+                                          
+                                          }
+
+                                        });
+
+                                      </script>
                                   {% endfor %}
                                   
                                 </div>
@@ -392,10 +465,26 @@
                                     <!-- <div class="col-lg-12 col-12"> -->
                                       <div class="checkbox">
                                         <label>
-                                          <input type="checkbox" name="{{ i.permission_action }}" value="{{ i.permission_action }}">
+                                          <input class="permission_x" type="checkbox" name="{{ i.permission_action }}" value="{{ i.permission_action }}" id="permission_x{{ i.id }}">
                                           {{ i.permission_action }}
                                         </label>
                                       </div>
+
+                                      <!-- User -->
+                                      {% if i.permission_action in permissions_for_role.0 %}
+                                        <script type="text/javascript">
+                                          var element_permission_x = document.querySelector('#permission_x{{ i.id }}');
+                                          element_permission_x.classList.add('User');
+                                        </script>
+                                      {% endif %}
+
+                                      <!-- Administrator -->
+                                      {% if i.permission_action in permissions_for_role.1 %}
+                                        <script type="text/javascript">
+                                          var element_permission_x2 = document.querySelector('#permission_x{{ i.id }}');
+                                          element_permission_x2.classList.add('Administrator');
+                                        </script>
+                                      {% endif %}
                                     <!-- </div> -->
                                   {% endfor %}
                                   
@@ -423,6 +512,7 @@
                                   });
                                 });
                               });
+                              
                             </script>
 
                             <style type="text/css">
@@ -622,16 +712,17 @@
                           </style>
 
                           <script type="text/javascript">
-                            var passwordInput = document.getElementById('password_input');
-                            var togglePasswordButton = document.getElementById('toggle-password');
+                            // var passwordInput = document.getElementById('password_input');
+                            // var togglePasswordButton = document.getElementById('toggle-password');
 
-                            togglePasswordButton.addEventListener('click', () => {
-                              var passwordType = passwordInput.getAttribute('type');
-                              passwordInput.setAttribute('type', passwordType === 'password' ? 'text' : 'password');
+                            // togglePasswordButton.addEventListener('click', () => {
+                            //   alert ('yk');
+                            //   var passwordType = passwordInput.getAttribute('type');
+                            //   passwordInput.setAttribute('type', passwordType === 'password' ? 'text' : 'password');
                               
-                              var icon = togglePasswordButton.querySelector('i');
-                              icon.classList.toggle('fa-eye-slash');
-                            });
+                            //   var icon = togglePasswordButton.querySelector('i');
+                            //   icon.classList.toggle('fa-eye-slash');
+                            // });
 
 
                             var passwordInput{{ i.id }} = document.getElementById('password_input{{ i.id }}');
