@@ -1341,3 +1341,16 @@ def reject_collab (request, collab_id):
 	return HttpResponse ("reject")
 
 
+def project_collab_tasks(request, project_id):
+	current_user = request.session['user_id']
+	notifs = get_notifications_of_user (request, current_user)
+	user_names = get_user_details(request, current_user)
+	project_details = Project.objects.get (id = project_id)
+
+	project_details_list = literal_eval(project_details.project_skills)
+	project_details.project_skills = project_details_list
+	project_details.save()
+
+
+	return render (request, "project_tasks.html", {'project_details': project_details, 'notifs': notifs, 
+		'user_names': user_names})

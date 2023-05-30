@@ -75,4 +75,6 @@ urlpatterns = [
     path("view_collab_requests/<int:project_id>/", views.view_collab_requests) ,
     path("accept_collab/<int:collab_id>/", views.accept_collab),
     path("reject_collab/<int:collab_id>/", views.reject_collab),
+
+    path("project_collab_tasks/<int:project_id>/", views.project_collab_tasks),
 ]

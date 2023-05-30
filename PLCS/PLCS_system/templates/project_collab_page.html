@@ -311,8 +311,8 @@
                 {% for i in user_project_collabs %}
                   <tr>
                     <td> {{ forloop.counter }} </td>
-                    <td> {{ i.project.project_id }} </td>
-                    <td> {{ i.project.project_title }} </td>
+                    <td><a href="/project_collab_tasks/{{ i.project.id }}"> {{ i.project.project_id }} </a></td>
+                    <td><a href="/project_collab_tasks/{{ i.project.id }}"> {{ i.project.project_title }} </a> </td>
                     <td class="description_column"> {{ i.project.project_description }} </td>
 
                     <td id="tagContainer"> 
