@@ -895,12 +895,6 @@ def admin_add_user(request):
 			user.last_name = last_name_input
 			user.email = email_input
 			user.password = password_input
-			user.profile_img = 'Beginner'
-			user.learning_interests = 'Beginner'
-			user.project_interests = 'Beginner'
-			user.user_activity_tags = 'Beginner'
-			user.user_description = 'Beginner'
-
 			user.save()
 
 
@@ -911,12 +905,10 @@ def admin_add_user(request):
 			all_roles = Role.objects.all()
 
 			for i in all_permissions:
-				# checkbox_status = request.POST.get(i.permission_action, None)
-
-				if i.permission_action in request.POST:
+				checkbox_status = request.POST.get(i.permission_action, None)
 
 				#Checkbox has been selected
-				# if (checkbox_status == 'on'):
+				if (checkbox_status == 'on'):
 					user_perm = Permission.objects.get (permission_action = i.permission_action)
 					
 					user_permission_add = User_Permission()
@@ -926,11 +918,10 @@ def admin_add_user(request):
 
 
 			for i in all_roles:
-				# checkbox_status = request.POST.get(i.role_name, None)
+				checkbox_status = request.POST.get(i.role_name, None)
 
 				#Checkbox has been selected
-				if i.role_name in request.POST:
-				# if (checkbox_status == 'on'):
+				if (checkbox_status == 'on'):
 					user_role_selected = Role.objects.get (role_name = i.role_name)
 
 					user_role = User_Role()
