@@ -56,10 +56,10 @@
           Learning Content Management
           <small>Control panel</small>
         </h1>
-        <ol class="breadcrumb">
+        <!-- <ol class="breadcrumb">
           <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
           <li class="active">Learning Content Management</li>
-        </ol>
+        </ol> -->
       </section>
 
       <!-- Main content -->
@@ -533,68 +533,51 @@
                 <strong> Summary Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC;"> Summaries for study preparation </span> </h3>
                 <!-- label label-success -->
 
-                <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addUser"> Add New Summary </button>
+                <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addSummary"> Add New Summary </button>
               </div>
               <!-- /.box-header -->
 
 
-              <div class="modal fade" id="modal-addUser" style="display: none;">
+              <div class="modal fade" id="modal-addSummary" style="display: none;">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                      <h4 class="modal-title"> Add New User </h4>
+                      <h4 class="modal-title"> Add New Summary </h4>
                     </div>
-                    <form role="form" action="/admin_add_user/" method="POST" id="addUser">
+                    <form role="form" action="/add_summary_content/{{ module_id }}/" method="POST" id="addUser" enctype="multipart/form-data">
                       {% csrf_token %}
 
                     <div class="modal-body">
-                      <p>Please fill in details of the module/subject</p>
+                      <p>Please fill in details of the summary you want to upload</p>
 
                       <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
-                          <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">User Details <span class="optional_entry"> * </span></a></li>
+                          <!-- <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">User Details <span class="optional_entry"> * </span></a></li> -->
                           
                         </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="tab_1">
-                            
-                      <!-- form start -->
                       
-                            <div class="form-group">
-                              <label for="exampleInputEmail1">First Name <span class="optional_entry"> * </span></label>
-                              <input type="text" class="form-control" placeholder="Enter First Name" name="first_name" required value="James">
-                            </div>
-
-                            <div class="form-group">
-                              <label for="exampleInputEmail1">Last Name <span class="optional_entry"> * </span></label>
-                              <input type="text" class="form-control" placeholder="Enter Last Name" name="last_name" required value="Bond">
-                            </div>
-
-                            <div class="form-group">
-                              <label for="exampleInputEmail1">Email address <span class="optional_entry"> * </span></label>
-                              <input type="email" class="form-control" placeholder="Enter email" name="email" autocomplete="off" required value="jbond@gmail.com">
-                            </div>
-
-                            
-
-                            <!-- <div class="form-group">
-                              <label for="exampleInputPassword1">Confirm Password <span class="optional_entry"> * </span></label>
-                              <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" required>
-                            </div> -->
-
-                            <style type="text/css">
-                              .optional_entry {
-                                color: red;
-                              }
-                            </style>
-                        <!-- <div class="form-group">
-                          <label for="exampleInputFile"> Profile Picture </label>
-                          <input type="file" id="user_profile_picture">
-                        </div> -->
+                          <div class="form-group">
+                            <label for="exampleInputEmail1"> Name <span class="optional_entry"> * </span></label>
+                            <input type="text" class="form-control" placeholder="Enter Name of the file" name="name_summary" required value="James">
                           </div>
+
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
+                            <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the summary file" rows="10" style="resize: none;" name="summary_description" required>Programming PLC and HMI using Ladder Diagrams</textarea>
+                          </div>
+
+                          <div class="form-group">
+                            <label for="exampleInputFile">File Attachment </label>
+                            <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
+                          </div>
+
+                          <style type="text/css">
+                            .optional_entry {
+                              color: red;
+                            }
+                          </style>
 
                           <script type="text/javascript">
                             const form = document.getElementById("addUser");
@@ -608,9 +591,6 @@
                             });
                           </script>
 
-
-                        </div>
-                        <!-- /.tab-content -->
                       </div>
 
                       
@@ -636,12 +616,37 @@
                   <tr>
                     <th> SN </th>
                     <th>Name</th>
+                    <th>Description</th>
                     <th>File</th>
                     <th class="text-center">Change details </th>
                   </tr>
                   </thead>
 
-                  
+                  <tbody>
+                    {% for summary in get_all_summaries %}
+                      <td>
+                        {{ forloop.counter }}
+                      </td>
+
+                      <td>
+                        {{ summary.file_name }}
+                      </td>
+
+                      <td>
+                        {{ summary.file_description }}
+                      </td>
+
+                      <td>
+                        {{ summary.file_link }}
+                      </td>
+
+                      <td>
+
+                      </td>
+
+
+                    {% endfor %}
+                  </tbody>
 
                   <tfoot>
                   <tr>

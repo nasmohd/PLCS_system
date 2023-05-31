@@ -1442,7 +1442,6 @@ from django.core.management.base import BaseCommand
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
 import pandas as pd
-from sklearn.metrics.pairwise import cosine_similarity
 
 
 def recommend_projects(user_id):
@@ -1450,7 +1449,7 @@ def recommend_projects(user_id):
     # users = User.objects.all()
 	user = User.objects.get(id = user_id)
 
-	# Fetch projects data from the Django database
+    # Fetch projects data from the Django database
 	projects = Project.objects.all()
 	projects_data = [{'project_id': project.project_id, 'project_skills': project.project_skills} for project in projects]
 	projects_df = pd.DataFrame(projects_data)
@@ -1467,19 +1466,27 @@ def recommend_projects(user_id):
 
 	# Compute TF-IDF matrix for project skills
 	project_skills_matrix = vectorizer.fit_transform(projects_df['project_skills'])
+
+	# Fit NearestNeighbors model to project skills matrix
+	nn_model = NearestNeighbors(n_neighbors=10)
+	nn_model.fit(project_skills_matrix)
+
+	# Generate recommendations for each user
 	recommendations = []
 	user_email = user.email
 	user_interests = user.project_interests
-
 	user_skills = user_interests.split(', ')
+
 	# Compute user interests vector using the same TF-IDF vectorizer
 	user_skills_vector = vectorizer.transform([user_interests])
-	# Compute similarity between user interests and each project
-	project_similarities = cosine_similarity(user_skills_vector, project_skills_matrix).flatten()
-	# Sort projects by similarity and recommend top 10
-	recommended_projects_indices = project_similarities.argsort()[::-1][:10]
-	recommended_projects = list(projects_df.iloc[recommended_projects_indices]['project_id'])
+
+	# Find nearest neighbors (i.e., recommended projects) to user interests vector
+	_, recommended_projects_indices = nn_model.kneighbors(user_skills_vector)
+	recommended_projects_indices = recommended_projects_indices.flatten()
+
+	# Get recommended project IDs
+	recommended_projects = list(projects_df.iloc[recommended_projects_indices.astype(int)]['project_id'])
 	recommendations.append({'recommended_projects': recommended_projects})
 
     # Do something with the recommendations (e.g., store in a CSV file or display)
-	return "{} {}".format(user.project_interests)
+	return recommendations

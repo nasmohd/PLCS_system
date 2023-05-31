@@ -56,10 +56,10 @@
           Learning Content Management
           <small>Control panel</small>
         </h1>
-        <ol class="breadcrumb">
+        <!-- <ol class="breadcrumb">
           <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
           <li class="active">Learning Content Management</li>
-        </ol>
+        </ol> -->
       </section>
 
       <!-- Main content -->
@@ -453,8 +453,8 @@
                                     </style>
 
                                     <script>
-                                      const labelClasses = ['label-warning', 'label-danger', 'label-success', 'label-info', 'label-primary'];
-                                      const selectedTerms = new Set();
+                                      const labelClasses{{ i.id }} = ['label-warning', 'label-danger', 'label-success', 'label-info', 'label-primary'];
+                                      const selectedTerms{{ i.id }} = new Set();
 
                                       function showSelectedSearchTerms() {
                                         const input = document.getElementById("search-input");
@@ -465,9 +465,9 @@
                                         //Choose random label from those specified above
                                         const selectedOption = datalist.querySelector(`option[value='${input.value.trim()}']`);
 
-                                        if (selectedTerm && !(selectedTerm in selectedTerms)  && !(selectedOption.value in selectedTerms) && selectedOption){
-                                          const labelClass = labelClasses[Math.floor(Math.random() * labelClasses.length)];
-                                          selectedTerms[selectedTerm] = labelClass;
+                                        if (selectedTerm && !(selectedTerm in selectedTerms{{ i.id }})  && !(selectedOption.value in selectedTerms{{ i.id }}) && selectedOption){
+                                          const labelClass = labelClasses{{ i.id }}[Math.floor(Math.random() * labelClasses{{ i.id }}.length)];
+                                          selectedTerms{{ i.id }}[selectedTerm] = labelClass;
                                           input.value = "";
                                           displaySelectedSearchTerms();
 
@@ -482,10 +482,10 @@
                                       function displaySelectedSearchTerms() {
                                         const selectedTermsDiv = document.getElementById("selected-search-terms");
                                         selectedTermsDiv.innerHTML = "";
-                                        Object.keys(selectedTerms).forEach((term) => {
+                                        Object.keys(selectedTerms{{ i.id }}).forEach((term) => {
                                           const termDiv = document.createElement("div");
                                           const label = document.createElement("span");
-                                          label.className = `label ${selectedTerms[term]}`;
+                                          label.className = `label ${selectedTerms{{ i.id }}[term]}`;
                                           label.textContent = term;
                                           label.style.marginRight = '5px';
                                           termDiv.appendChild(label);
@@ -497,7 +497,7 @@
                                           deleteIcon.style.color = "white";
 
                                           termDiv.onclick = function() {
-                                            delete selectedTerms[term];
+                                            delete selectedTerms{{ i.id }}[term];
                                             displaySelectedSearchTerms();
 
                                             // Add option back to datalist

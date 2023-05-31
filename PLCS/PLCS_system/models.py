@@ -138,3 +138,18 @@ class User_Project_Collab (models.Model):
 	
 	def __str__(self):
 		return "id = {}, user = {}, project = {}".format(self.id, self.user, self.project)
+
+
+class Summary (models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	module = models.ForeignKey(Learning_Module, on_delete=models.CASCADE)
+
+	file_name = models.CharField(max_length=45, default = '')
+	file_description = models.TextField(default='')
+	file_link = models.CharField(max_length=100, default = '')
+
+	def __str__(self):
+		return "id = {}, file_name = {}, file_link = {}".format(self.id, self.file_name, self.file_link)
+
+
+
