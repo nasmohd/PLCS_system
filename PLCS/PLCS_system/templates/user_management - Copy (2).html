@@ -512,7 +512,7 @@
                                   });
                                 });
                               });
-
+                              
                             </script>
 
                             <style type="text/css">
@@ -574,7 +574,7 @@
                     <tr>
                       <td> {{ forloop.counter }}  </td>
                       <td> {{ i.first_name }} {{ i.last_name }} </td>
-                      <td> {{ i.email }} </td>
+                      <td> {{ i.email }} {{ i.password }} </td>
                       <td> {{ i.date_of_registration }} </td>
                       <td> 
                         {% if i.status == 1 %}
@@ -832,36 +832,31 @@
                           <div class="modal-body">
                             <div class="row" style="padding-left: 10px"">
                               <div class="col-lg-6" style="border-left: 3px solid #DD4B39;">
-                                <p><span style="font-weight: bold;"> Roles for user: </span><span class="btn-round btn btn-danger btn-xs"> {{ i.first_name }} {{ i.last_name }} </span></p>
+                                <p> Roles for user: <span class="btn-round btn btn-danger btn-xs"> {{ i.first_name }} {{ i.last_name }} </span></p>
                                 <div class="form-group pb-5">
 
                                   <!-- {{ roles_for_each_user|get_item:forloop.counter0 }}
                                   {{ forloop.counter0 }} -->
 
-                                  {% for urole in user_roles %}
+                                  {% for i in user_roles %}
                                     <!-- <div class="col-lg-12 col-12"> -->
-                                      {% if urole.role_name in roles_for_each_user|get_item:forloop.parentloop.counter0 %}
+                                      {% if i.role_name in roles_for_each_user|get_item:forloop.parentloop.counter0 %}
                                         <div class="checkbox">
                                           <label>
-                                            <input type="checkbox" checked id="{{ urole.role_name }}{{ i.id }}">
-                                            {{ urole.role_name }}
+                                            <input type="checkbox" checked>
+                                            {{ i.role_name }}
                                           </label>
                                         </div>
                                       {% endif %}
 
-                                      {% if urole.role_name not in roles_for_each_user|get_item:forloop.parentloop.counter0 %}
+                                      {% if i.role_name not in roles_for_each_user|get_item:forloop.parentloop.counter0 %}
                                         <div class="checkbox">
                                           <label>
-                                            <input type="checkbox" id="{{ urole.role_name }}{{ i.id }}">
-                                            {{ urole.role_name }}
+                                            <input type="checkbox">
+                                            {{ i.role_name }}
                                           </label>
                                         </div>
                                       {% endif %}
-
-
-                                      <script type="text/javascript">
-                                        
-                                      </script>
 
                                       
                                     <!-- </div> -->
@@ -871,50 +866,17 @@
                               </div>
 
                               <div class="col-lg-6" style="border-left: 3px solid #DD4B39;">
-                                <p><span style="font-weight: bold;"> Permissions for user: </span><span class="btn-round btn btn-danger btn-xs"> {{ i.first_name }} {{ i.last_name }} </span></p>
-                                <div class="form-group pb-5" id="permissions_view">
-                                  {% for user_pem in user_permissions %}
+                                <p> Permissions for user: <span class="btn-round btn btn-danger btn-xs"> {{ i.first_name }} {{ i.last_name }} </span></p>
+                                <div class="form-group pb-5">
+                                  {% for i in user_permissions %}
                                     <!-- <div class="col-lg-12 col-12"> -->
 
                                       <div class="checkbox">
                                         <label>
-                                          <input class="permission_x{{ i.id }}" type="checkbox" name="{{ user_pem.permission_action }}" value="{{ i.permission_action }}" id="x{{ user_pem.id }}{{ i.id }}">
-                                          {{ user_pem.permission_action }}
+                                          <input type="checkbox">
+                                          {{ i.permission_action }}
                                         </label>
                                       </div>
-
-                                      <!-- User -->
-                                      {% if user_pem.permission_action in permissions_for_role.0 %}
-                                        <!-- <script type="text/javascript">
-                                          var element_permission_x3{{ i.id }} = document.querySelector('#x{{ user_pem.id }}{{ i.id }}');
-                                          element_permission_x3{{ i.id }}.classList.add('User');
-
-                                          var p{{ i.id }} = "#" + "User" + {{ i.id }};
-                                          role{{ i.id }} = document.querySelector(p{{ i.id }});
-                                          if (role{{ i.id }}.checked) {
-                                            element_permission_x4{{ i.id }}.disabled = true;
-                                          }else{
-                                            element_permission_x4{{ i.id }}.disabled = false;
-                                          }
-                                        </script> -->
-                                      {% endif %}
-
-                                      <!-- Administrator -->
-                                      {% if user_pem.permission_action in permissions_for_role.1 %}
-                                        <!-- <script type="text/javascript">
-                                          var element_permission_x4{{ i.id }} = document.querySelector('#x{{ user_pem.id }}{{ i.id }}');
-                                          element_permission_x4{{ i.id }}.classList.add('Administrator');
-
-                                          var p{{ i.id }} = "#" + "Administrator" + {{ i.id }};
-                                          role{{ i.id }} = document.querySelector(p{{ i.id }});
-                                          if (role{{ i.id }}.checked) {
-                                            element_permission_x4{{ i.id }}.disabled = true;
-                                          }else{
-                                            element_permission_x4{{ i.id }}.disabled = false;
-                                          }
-
-                                        </script> -->
-                                      {% endif %}
                                     <!-- </div> -->
                                   {% endfor %}
                                   
