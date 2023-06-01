@@ -78,4 +78,5 @@ urlpatterns = [
 
     path("project_collab_tasks/<int:project_id>/", views.project_collab_tasks),
     path("add_summary_content/<int:module_id>/", views.add_summary_content),
+    path("delete_summary/<int:summary_id>/<int:module_id>/", views.delete_summary),
 ]

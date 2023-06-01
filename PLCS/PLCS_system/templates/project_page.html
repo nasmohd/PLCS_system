@@ -325,7 +325,7 @@
                       <ul class="nav nav-tabs">
                         <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Details <span class="optional_entry"> * </span></a></li>
                         <li><a href="#tab_2" data-toggle="tab" aria-expanded="false"> Requirements <span class="optional_entry"> * </span></a></li>
-                        <li><a href="#tab_tasks" data-toggle="tab" aria-expanded="false"> Tasks <span class="optional_entry"> * </span></a></li>
+                        <!-- <li><a href="#tab_tasks" data-toggle="tab" aria-expanded="false"> Tasks <span class="optional_entry"> * </span></a></li> -->
                         <li><a href="#tab_3" data-toggle="tab">Images <span class="optional_entry"> * </span></a></li>
                         <li><a href="#tab_4" data-toggle="tab">Other Attachments </a></li>
                       </ul>
@@ -760,9 +760,9 @@
                 {% for i in all_projects %}
                   <tr>
                     <td> <input type="checkbox" class="table-checkbox" name="email[]" value="{{ i.id }}"> </td>
-                    <td> {{ forloop.counter }} </td>
-                    <td> {{ i.project_id }} </td>
-                    <td> {{ i.project_title }} </td>
+                    <td><a href="project_details/{{ i.id }}/"> {{ forloop.counter }} </a></td>
+                    <td><a href="project_details/{{ i.id }}/"> {{ i.project_id }} </a></td>
+                    <td><a href="project_details/{{ i.id }}/"> {{ i.project_title }} </a></td>
                     <td class="description_column"> {{ i.project_description }} </td>
 
                     <td id="tagContainer"> 

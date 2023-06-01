@@ -114,35 +114,30 @@
                     <!-- {{ i.project_images }} -->
                     <!-- <i class="fa fa-file-text-o"></i> -->
                     
-                    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" >
+                    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="width: inherit; height: inherit;">
                       <ol class="carousel-indicators">
                         <li data-target="#carousel-example-generic" data-slide-to="0" class=""></li>
                         <li data-target="#carousel-example-generic" data-slide-to="1" class="active"></li>
                         <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
                       </ol>
                       <div class="carousel-inner">
-                        <div class="item">
-                          <img src="{% static 'project_imgs/PLCS6#img1.jpg' %}" alt="First slide">
+                        {% for im in get_project_details.project_images %}
+                          {% if im != 'x.pdf' %}
+                            {% if forloop.counter == 1 %}
+                            <div class="item active">
+                              <img src="{% static 'project_imgs/'|add:im %}" alt="Image" style="width: inherit; height: inherit;">
+                            </div>
 
-                          <!-- <div class="carousel-caption">
-                            First Slide
-                          </div> -->
-                        </div>
-                        <div class="item active">
-                          <img src="{% static 'project_imgs/PLCS6#img1.jpg' %}" alt="Second slide">
-
-                          <!-- <div class="carousel-caption">
-                            Second Slide
-                          </div> -->
-                        </div>
-                        <div class="item">
-                          <img src="{% static 'project_imgs/PLCS6#img1.jpg' %}" alt="Third slide">
-
-                          <!-- <div class="carousel-caption">
-                            Third Slide
-                          </div> -->
-                        </div>
+                            {% else %}
+                              <div class="item">
+                                <img src="{% static 'project_imgs/'|add:im %}" alt="Image" style="width: inherit; height: inherit;">
+                              </div>
+                            {% endif %}
+                          {% endif %}
+                        
+                        {% endfor %}
                       </div>
+
                       <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
                         <span class="fa fa-angle-left"></span>
                       </a>
@@ -151,6 +146,7 @@
                       </a>
                     </div>
                     
+                    <!-- {{ get_project_details.project_images.2 }} -->
 
                     <!-- <img src="{% static 'project_imgs/PLCS6#img1.jpg' %}" style="height: 120%; width:100%; background-color: red;"/> -->
                     <!-- <img src="{% static 'profile_imgs/{{ i.project_images.0 }}' %}"/> -->
@@ -377,13 +373,25 @@
                       <div class="tab-content">
                         <div class="tab-pane active" id="tab_5">
                           <p> Images Here </p>
-                          
+                          <div style="display: flex;">
+                          {% for im in get_project_details.project_images %}
+                            {% if im != 'x.pdf' %}
+                              <div class="item active" style="height: 100px; width: 100px; margin-right: 10px;">
+                                <img src="{% static 'project_imgs/'|add:im %}" alt="Image" style="width: inherit; height: inherit;">
+                              </div>
+                            {% endif %}
+                          {% endfor %}
+                          </div>
                         </div>
 
 
                         <!-- /.tab-pane -->
                         <div class="tab-pane" id="tab_6">
-                          <p> Files Here </p>
+                          {% for im in get_project_details.project_files %}
+                            {% if im != 'x.jpg' %}
+                              <a href="#"> {{ im }} </a>
+                            {% endif %}
+                          {% endfor %}
                         </div>
 
                       </div>

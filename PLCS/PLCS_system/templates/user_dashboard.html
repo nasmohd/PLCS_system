@@ -166,7 +166,7 @@
                       </script>
 
                       <div class="col-md-12" style="margin-top: 2rem;">
-                        <a class="btn btn-primary btn-sm" href="project_details/{{ i.id }}/">{{ i.id }}More details </a>
+                        <a class="btn btn-primary btn-sm" href="project_details/{{ i.id }}/"> More details </a>
 
                         {% if i.user_project.id != current_user %}
                           {% if i.id in get_all_project_collabs %}

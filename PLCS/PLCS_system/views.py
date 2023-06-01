@@ -259,9 +259,16 @@ def view_projects(request):
 
 		for obj in get_all_projects:
 			column_value = obj.project_skills
+			column_value2 = obj.project_images
+
 			if column_value:
 				list_value = literal_eval(column_value)
 				obj.project_skills = list_value
+				obj.save()
+
+			if column_value2:
+				list_value2 = literal_eval(column_value2)
+				obj.project_images = list_value2
 				obj.save()
 
 
@@ -301,9 +308,16 @@ def view_projects(request):
 
 		for obj in get_all_projects:
 			column_value = obj.project_skills
+			column_value2 = obj.project_images
+
 			if column_value:
 				list_value = literal_eval(column_value)
 				obj.project_skills = list_value
+				obj.save()
+
+			if column_value2:
+				list_value2 = literal_eval(column_value2)
+				obj.project_images = list_value2
 				obj.save()
 
 
@@ -348,44 +362,46 @@ def add_project(request):
 		current_user = request.session['user_id']
 
 		# if 'image1' in request.FILES or 'image2' in request.FILES or 'image3' in request.FILES:
-		# project_images = ['x.pdf', 'x.pdf', 'x.pdf']
-		# if 'image1' in request.FILES:
-		# 	image1 = request.FILES['image1'].name
-		# 	uploaded_image1 = request.FILES.get('image1')
-		# 	project_images[0] = image1
-		# 	# project_images.append(image1)
+		project_images = ['x.pdf', 'x.pdf', 'x.pdf']
+		# project_images = []
+		if 'image1' in request.FILES:
+			image1 = request.FILES['image1'].name
+			uploaded_image1 = request.FILES.get('image1')
+			project_images[0] = image1
+			# project_images.append(image1)
 			
-		# if 'image2' in request.FILES:
-		# 	image2 = request.FILES['image2'].name
-		# 	uploaded_image2 = request.FILES.get('image2')
-		# 	project_images[1] = image2
-		# 	# project_images.append(image2)
+		if 'image2' in request.FILES:
+			image2 = request.FILES['image2'].name
+			uploaded_image2 = request.FILES.get('image2')
+			project_images[1] = image2
+			# project_images.append(image2)
 
-		# if 'image3' in request.FILES:
-		# 	image3 = request.FILES['image3'].name
-		# 	uploaded_image3 = request.FILES.get('image3')
-		# 	project_images[2] = image3
-		# 	# project_images.append(image3)
+		if 'image3' in request.FILES:
+			image3 = request.FILES['image3'].name
+			uploaded_image3 = request.FILES.get('image3')
+			project_images[2] = image3
+			# project_images.append(image3)
+
+		#If image has been selected by the user, it is placed in the list "project_images" based on index
 
 
-
-		# project_files = ['x.jpg', 'x.jpg', 'x.jpg']
-		# if 'file1' in request.FILES:
-		# 	file1 = request.FILES['file1'].name
-		# 	uploaded_file1 = request.FILES.get('file1')
-		# 	project_files[0] = file1
-		# 	# project_files.append(file1)
+		project_files = ['x.jpg', 'x.jpg', 'x.jpg']
+		if 'file1' in request.FILES:
+			file1 = request.FILES['file1'].name
+			uploaded_file1 = request.FILES.get('file1')
+			project_files[0] = file1
+			# project_files.append(file1)
 			
-		# if 'file2' in request.FILES:
-		# 	file2 = request.FILES['file2'].name
-		# 	uploaded_file2 = request.FILES.get('file2')
-		# 	project_files[1] = file2
-		# 	# project_images.append(file2)
+		if 'file2' in request.FILES:
+			file2 = request.FILES['file2'].name
+			uploaded_file2 = request.FILES.get('file2')
+			project_files[1] = file2
+			# project_images.append(file2)
 
-		# if 'file3' in request.FILES:
-		# 	file3 = request.FILES['file3'].name
-		# 	uploaded_file3 = request.FILES.get('file3')
-		# 	project_files[2] = file3
+		if 'file3' in request.FILES:
+			file3 = request.FILES['file3'].name
+			uploaded_file3 = request.FILES.get('file3')
+			project_files[2] = file3
 			# project_files.append(file3)
 		
         
@@ -394,6 +410,8 @@ def add_project(request):
 		# Get the destination path and filename for the copied image
 		# destination_path = 'C:\\Users\\Nassor\\Desktop\\Project II implementation\\PLCS\\PLCS_system\\static\\project_imgs'
 
+
+		#Take the submitted data about projec title, description, collaborators, budget etc.
 		project_title = request.POST["project_title"]
 		project_description = request.POST["project_description"]
 
@@ -416,95 +434,167 @@ def add_project(request):
 		project = Project()
 		project.project_id = 'PLCS' + num
 
+		img_present = ['n', 'n', 'n']
+
 
 		#COPY THE IMAGE TO THE PROJECT DIRECTORY 'static/project_imgs'
-		# for index, i in enumerate(project_images):
-		# 	destination_path = settings.STATIC_ROOT
+		for index, i in enumerate(project_images):
+			destination_path = settings.STATIC_ROOT
 
-		# 	# Construct the full destination path
-		# 	destination_fullpath = os.path.join(destination_path, i)
+			# Construct the full destination path
+			destination_fullpath = os.path.join(destination_path, i)
 
-		# 	pj = ['x', 'x', 'x']
+			# pj = ['x', 'x', 'x']
 
-		# 	# Copy the uploaded image to the destination directory
-		# 	with open(destination_fullpath, 'wb') as destination_file:
+			# Copy the uploaded image to the destination directory
+			with open(destination_fullpath, 'wb') as destination_file:
+				#For the first index, check at first index of project_images list if submitted
+				if ((index == 0) and project_images[0] != 'x.pdf'):
+					source_file = uploaded_image1.file
+					# img_present[0] = ['y']
+					copyfileobj(source_file, destination_file)
+					destination_file.close()
+
+					img_extension = os.path.splitext(i)[1]
+
+					# Rename the file
+					img_count = index+1
+					new_name = 'PLCS' + num + "#img" + str(img_count) + img_extension
+
+					project_images[index] = new_name
+					
+					# Construct the full path to the file
+					full_path = os.path.join(destination_path, i)
+
+					# Rename the file
+					os.rename(full_path, os.path.join(destination_path, new_name))
+					# pj[0] = 'y'
+
+
+				if ((index == 1) and (project_images[1] != 'x.pdf')):
+					source_file = uploaded_image2.file
+					# img_present[1] = ['y']
+					copyfileobj(source_file, destination_file)
+					destination_file.close()
+
+					img_extension = os.path.splitext(i)[1]
+
+					# Rename the file
+					img_count = index+1
+					new_name = 'PLCS' + num + "#img" + str(img_count) + img_extension
+
+					project_images[index] = new_name
+					
+					# Construct the full path to the file
+					full_path = os.path.join(destination_path, i)
+
+					# Rename the file
+					os.rename(full_path, os.path.join(destination_path, new_name))
+					# pj[1] = 'y'
+
+				if ((index == 2) and (project_images[2] != 'x.pdf')):
+					source_file = uploaded_image3.file
+					# img_present[2] = ['y']
+					copyfileobj(source_file, destination_file)
+					destination_file.close()
+
+					img_extension = os.path.splitext(i)[1]
+
+					# Rename the file
+					img_count = index+1
+					new_name = 'PLCS' + num + "#img" + str(img_count) + img_extension
+
+					project_images[index] = new_name
+					
+					# Construct the full path to the file
+					full_path = os.path.join(destination_path, i)
+
+					# Rename the file
+					os.rename(full_path, os.path.join(destination_path, new_name))
+					# pj[2] = 'y'
+
+		# return HttpResponse ('success')				
+
+
+
+
+		#COPY THE FILE TO THE PROJECT DIRECTORY 'static/project_files'
+		for index, i in enumerate(project_files): #index 0, 1, 2, i iterates each element in the list
+			destination_path = settings.STATIC_ROOT2
+
+			# Construct the full destination path
+			destination_fullpath = os.path.join(destination_path, i)
+
+			# Copy the uploaded image to the destination directory
+			with open(destination_fullpath, 'wb') as destination_file:
 				
-		# 		if ((index == 0) and project_images[0] != 'x.pdf'):
-		# 			source_file = uploaded_image1.file
-		# 			pj[0] = 'y'
+				if ((index == 0) and (project_files[0] != 'x.jpg')):
+					source_file = uploaded_file1.file
 
-		# 		if ((index == 1) and (project_images[1] != 'x.pdf')):
-		# 			source_file = uploaded_image2.file
-		# 			pj[1] = 'y'
+					copyfileobj(source_file, destination_file)
+					destination_file.close()
 
-		# 		if ((index == 2) and (project_images[2] != 'x.pdf')):
-		# 			source_file = uploaded_image3.file
-		# 			pj[2] = 'y'
+					file_extension = os.path.splitext(i)[1]
 
-		# 		copyfileobj(source_file, destination_file)
-		# 		destination_file.close()
+					# Rename the file
+					file_count = index+1
+					new_name = 'PLCS' + num + "#file" + str(file_count) + file_extension
 
-		# 	img_extension = os.path.splitext(i)[1]
+					project_files[index] = new_name
+					
+					# Construct the full path to the file
+					full_path = os.path.join(destination_path, i)
 
-		# 	# Rename the file
-		# 	img_count = index+1
-		# 	new_name = 'PLCS' + num + "#img" + str(img_count) + img_extension
+					# Rename the file
+					os.rename(full_path, os.path.join(destination_path, new_name))
 
-		# 	project_images[index] = new_name
-			
-		# 	# Construct the full path to the file
-		# 	full_path = os.path.join(destination_path, i)
+				if ((index == 1) and (project_files[1] != 'x.jpg')):
+					source_file = uploaded_file2.file
 
-		# 	# Rename the file
-		# 	os.rename(full_path, os.path.join(destination_path, new_name))
+					copyfileobj(source_file, destination_file)
+					destination_file.close()
 
+					file_extension = os.path.splitext(i)[1]
 
+					# Rename the file
+					file_count = index+1
+					new_name = 'PLCS' + num + "#file" + str(file_count) + file_extension
 
+					project_files[index] = new_name
+					
+					# Construct the full path to the file
+					full_path = os.path.join(destination_path, i)
 
-		# #COPY THE FILE TO THE PROJECT DIRECTORY 'static/project_files'
-		# for index, i in enumerate(project_files): #index 0, 1, 2, i iterates each element in the list
-		# 	destination_path = settings.STATIC_ROOT2
+					# Rename the file
+					os.rename(full_path, os.path.join(destination_path, new_name))
 
-		# 	# Construct the full destination path
-		# 	destination_fullpath = os.path.join(destination_path, i)
+				if ((index == 2) and (project_files[2] != 'x.jpg')):
+					source_file = uploaded_file3.file
 
-		# 	# Copy the uploaded image to the destination directory
-		# 	with open(destination_fullpath, 'wb') as destination_file:
+					copyfileobj(source_file, destination_file)
+					destination_file.close()
+
+					file_extension = os.path.splitext(i)[1]
+
+					# Rename the file
+					file_count = index+1
+					new_name = 'PLCS' + num + "#file" + str(file_count) + file_extension
+
+					project_files[index] = new_name
+					
+					# Construct the full path to the file
+					full_path = os.path.join(destination_path, i)
+
+					# Rename the file
+					os.rename(full_path, os.path.join(destination_path, new_name))
+
 				
-		# 		if ((index == 0) and (project_files[0] != 'x.jpg')):
-		# 			source_file = uploaded_file1.file
-
-		# 		if ((index == 1) and (project_files[1] != 'x.jpg')):
-		# 			source_file = uploaded_file2.file
-
-		# 		if ((index == 2) and (project_files[2] != 'x.jpg')):
-		# 			source_file = uploaded_file3.file
-
-		# 		copyfileobj(source_file, destination_file)
-		# 		destination_file.close()
-
-		# 	file_extension = os.path.splitext(i)[1]
-
-		# 	# Rename the file
-		# 	file_count = index+1
-		# 	new_name = 'PLCS' + num + "#file" + str(file_count) + file_extension
-
-		# 	project_files[index] = new_name
-			
-		# 	# Construct the full path to the file
-		# 	full_path = os.path.join(destination_path, i)
-
-		# 	# Rename the file
-		# 	os.rename(full_path, os.path.join(destination_path, new_name))
-
-
-
 		project.project_title = project_title
 		project.project_description = project_description
 		project.project_DOR = datetime.today()
 
-		project_images = ['x','y','z']
-		project_files = ['x','y','z']
+		# project_images = ['x','y','z']
+		# project_files = ['x','y','z']
 
 		project.project_images = project_images
 		project.project_files = project_files
@@ -660,9 +750,16 @@ def user_management(request):
 
 	for obj in get_all_projects:
 		column_value = obj.project_skills
+		column_value2 = obj.project_images
+
 		if column_value:
 			list_value = literal_eval(column_value)
 			obj.project_skills = list_value
+			obj.save()
+
+		if column_value2:
+			list_value2 = literal_eval(column_value2)
+			obj.project_images = list_value2
 			obj.save()
 
 
@@ -1135,12 +1232,31 @@ def project_details(request, project_id):
 		get_project_details.save()
 
 
+	column_value2 = get_project_details.project_images
+	if column_value2:
+		list_value2 = literal_eval(column_value2)
+
+		get_project_details.project_images = list_value2
+		get_project_details.save()
+
+
+	column_value3 = get_project_details.project_files
+	if column_value3:
+		list_value3 = literal_eval(column_value3)
+		get_project_details.project_files = list_value3
+		get_project_details.save()
+
+	# for index, im in enumerate(list_value2):
+	# 	list_value2[index] = "/static/project_imgs/" + im
+	# 	get_project_details.project_images = list_value2
+
+	# return HttpResponse (get_project_details.project_images)
+	# {% static '/project_imgs/PLCS44#img1.png' %}{% static '/project_imgs/x.pdf' %}{% static '/project_imgs/x.pdf' %}
 	return render(request, "project_details.html", {'get_project_details': get_project_details, 'roles_n_permissions': roles_n_permissions, 'user_names': user_names})
 
 
 # def user_project_likes (request, user_id, project_id):
 # 	User_Project_Like
-
 
 def apply_to_project(request, project_id, project_poster_id):
 	if request.method == 'POST':
@@ -1394,31 +1510,9 @@ def project_collab_tasks(request, project_id):
 def add_summary_content(request, module_id):
 	current_user = request.session['user_id']
 	rec_proj = recommend_projects(current_user)
-
 	return HttpResponse (rec_proj)
 
-
-	# current_user = request.session['user_id']
-	# user_details = User.objects.get(id = current_user)
-	# module_details = Learning_Module.objects.get(id = module_id)
-
-	# if request.method == 'POST':
-	# 	name_summary = request.POST['name_summary'] 
-	# 	summary_description = request.POST['summary_description'] 
-	# 	# file1 = request.POST['file1']
-
-	# 	summary_cont = Summary()
-	# 	summary_cont.user = user_details
-	# 	summary_cont.module = module_details
-	# 	summary_cont.file_name = name_summary
-	# 	summary_cont.file_description = summary_description
-	# 	summary_cont.file_link = summary_description
-	# 	summary_cont.save()
-
-	# 	messages.success(request, 'Summary file added', extra_tags='alert-success')
-
-	# 	redir = str("/view_module/" + module_id)
-	# 	return redirect (redir)
+	
 
 		# if 'file1' in request.FILES:
 		# 	return HttpResponse ('file added')
@@ -1438,48 +1532,66 @@ def add_summary_content(request, module_id):
 
 
 #Recommend Projects
-from django.core.management.base import BaseCommand
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.neighbors import NearestNeighbors
 import pandas as pd
+import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
-
 def recommend_projects(user_id):
-    # Fetch users from the database
-    # users = User.objects.all()
-	user = User.objects.get(id = user_id)
 
-	# Fetch projects data from the Django database
+	# Step 1: Load the data from Django models
+	user = User.objects.get(id=user_id)
 	projects = Project.objects.all()
-	projects_data = [{'project_id': project.project_id, 'project_skills': project.project_skills} for project in projects]
-	projects_df = pd.DataFrame(projects_data)
 
-	# Fetch users data from the Django database
-	# users = User.objects.all()
-	# users_data = [{'email': user.email, 'interests': user.learning_interests} for user in users]
+	# Create lists to store user interests and project skills
+	user_interests = [user.project_interests]
+	project_skills = [project.project_skills for project in projects]
 
-	users_data = [{'email': user.email, 'interests': user.project_interests}]
-	users_df = pd.DataFrame(users_data)
+	# Step 2: Preprocess the data
+	# Create a list of unique interests/skills
+	all_interests = list(set([interest for interests in user_interests for interest in interests]))
+	all_skills = list(set([skill for skills in project_skills for skill in skills]))
 
-	# Create TF-IDF vectorizer to compute similarities between projects and user interests
-	vectorizer = TfidfVectorizer()
+	# Create numerical vectors for user's interests and projects' skills
+	user_vector = np.zeros(len(all_skills))
+	for interest in user_interests[0]:
+		if interest in all_skills:
+			user_vector[all_skills.index(interest)] = 1
 
-	# Compute TF-IDF matrix for project skills
-	project_skills_matrix = vectorizer.fit_transform(projects_df['project_skills'])
-	recommendations = []
+	project_vectors = np.zeros((len(project_skills), len(all_skills)))
+	for i, skills in enumerate(project_skills):
+		for skill in skills:
+			if skill in all_skills:
+				project_vectors[i, all_skills.index(skill)] = 1
+
+	# Step 3: Calculate cosine similarity
+	similarity_scores = cosine_similarity([user_vector], project_vectors)[0]
+
+	# Step 4: Sort projects based on cosine similarity scores
+	sorted_indices = np.argsort(similarity_scores)[::-1]  # Descending order
+
+	# Step 5: Write recommendations to a new CSV file
+	num_recommendations = 10
+	rec_df = pd.DataFrame(columns=['email', 'recommended_projects'])
+
 	user_email = user.email
-	user_interests = user.project_interests
+	user_recommendations = []
 
-	user_skills = user_interests.split(', ')
-	# Compute user interests vector using the same TF-IDF vectorizer
-	user_skills_vector = vectorizer.transform([user_interests])
-	# Compute similarity between user interests and each project
-	project_similarities = cosine_similarity(user_skills_vector, project_skills_matrix).flatten()
-	# Sort projects by similarity and recommend top 10
-	recommended_projects_indices = project_similarities.argsort()[::-1][:10]
-	recommended_projects = list(projects_df.iloc[recommended_projects_indices]['project_id'])
-	recommendations.append({'recommended_projects': recommended_projects})
+	for j in range(num_recommendations):
+		project_index = sorted_indices[j]
+		project_id = projects[project_index].project_id
+		user_recommendations.append(project_id)
 
-    # Do something with the recommendations (e.g., store in a CSV file or display)
-	return "{} {}".format(user.project_interests)
+	rec_df.loc[0] = [user_email, user_recommendations]
+
+	# rec_df.to_csv('rec_cosSim.csv', index=False)
+
+	return user_recommendations
+
+
+
+def delete_summary(request, summary_id, module_id):
+	get_summary = Summary.objects.get (id = summary_id)
+	get_summary.delete()
+
+	red = "/view_module/" + str(module_id)
+	return redirect (red)
