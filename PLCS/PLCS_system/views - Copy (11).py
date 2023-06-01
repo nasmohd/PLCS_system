@@ -1320,17 +1320,7 @@ def view_projects_collaborations(request):
 	#Get user
 	user_collabs = User.objects.get (id = current_user)
 
-	user_project_collabs = User_Project_Collab.objects.filter(project__user_project = user_collabs).exclude(status = 0)
-
-	unique_projects = set()
-	filtered_collabs = []
-
-	for collab in user_project_collabs:
-		if collab.project not in unique_projects:
-			unique_projects.add(collab.project)
-			filtered_collabs.append(collab)
-
-	user_project_collabs = filtered_collabs
+	user_project_collabs = User_Project_Collab.objects.filter(project__user_project = user_collabs).exclude(status = 0).distinct()
 
 	for obj in user_project_collabs:
 		column_value = obj.project.project_skills
@@ -1522,8 +1512,6 @@ def add_summary_content(request, module_id):
 	# rec_proj = recommend_projects(current_user)
 	# return HttpResponse (rec_proj)
 
-
-
 	current_user = request.session['user_id']
 	user_details = User.objects.get(id = current_user)
 	module_details = Learning_Module.objects.get(id = module_id)
@@ -1592,10 +1580,6 @@ def add_summary_content(request, module_id):
 		redir = "/view_module/" + str(module_id)
 		return redirect (redir)
 
-
-
-
-
 		# if 'file1' in request.FILES:
 		# 	return HttpResponse ('file added')
 
@@ -1620,27 +1604,30 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 def recommend_projects(user_id):
 	# Step 1: Load the data from Django models
+
+	# Step 1: Load the data from Django models
 	user = User.objects.get(id=user_id)
-	projects = list(Project.objects.all())  # Convert QuerySet to a list
+	projects = list(Project.objects.all())
 
 	# Step 2: Preprocess the data
-	user_interests = user.project_interests
+	user_interests = [user.project_interests]
 	project_skills = [project.project_skills for project in projects]
 
-	# Create a list of unique skills
+	# Create a list of unique interests/skills
+	all_interests = list(set([interest for interests in user_interests for interest in interests]))
 	all_skills = list(set([skill for skills in project_skills for skill in skills]))
 
 	# Create numerical vectors for users' interests and projects' skills
 	user_vector = np.zeros(len(all_skills))
-	for i, skill in enumerate(all_skills):
-		if skill in user_interests:
-			user_vector[i] = 1
+	for interest in user_interests[0]:
+		if interest in all_skills:
+			user_vector[all_skills.index(interest)] = 1
 
 	project_vectors = np.zeros((len(project_skills), len(all_skills)))
 	for i, skills in enumerate(project_skills):
-		for j, skill in enumerate(all_skills):
-			if skill in skills:
-				project_vectors[i, j] = 1
+		for skill in skills:
+			if skill in all_skills:
+				project_vectors[i, all_skills.index(skill)] = 1
 
 	# Step 3: Calculate cosine similarity
 	similarity_scores = cosine_similarity([user_vector], project_vectors)[0]
@@ -1658,7 +1645,6 @@ def recommend_projects(user_id):
 		user_recommendations.append(project_id)
 
 	return user_recommendations
-
 
 
 
