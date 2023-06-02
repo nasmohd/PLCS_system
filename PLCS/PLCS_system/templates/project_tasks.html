@@ -85,6 +85,123 @@
             <div class="box-header">
               <h3 class="box-title" style="color: #306FA0;">
               <i class="fa fa-file-text-o project_color"></i>
+              <strong class="project_color"> Collaborators in this project </strong><br/> <span class="type_of_project_view" id="type_of_project_view" style="font-size:13px; font-weight: normal"> Showing collaborators for this project </span></h3>
+            </div>
+
+            <div class="box-body table-responsive">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th style="width: 5%;">SN</th>
+                  <th style="width: 95%;">Email</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for i in collaborators_for_project %}
+                  <tr>
+                    <td><a href="/profile_history/{{ i.user.id }}/"> {{ forloop.counter }} </a></td>
+                    <td><a href="/profile_history/{{ i.user.id }}/"> {{ i.user.email }} </a></td>
+                  </tr>
+
+                 
+                {% endfor %}
+                
+                </tbody>
+
+                <tfoot>
+                <tr>
+                  <th style="width: 5%;">SN</th>
+                  <th style="width: 95%;">Email</th>
+                </tr>
+                </tfoot>
+              </table>
+
+              <script type="text/javascript">
+                  
+
+                  // Get all elements with the specified class
+                  const desc_columnElement = document.getElementsByClassName("description_column");
+                  console.log (desc_columnElement);
+
+                  // Define the maximum number of characters to display
+                  const maxLength = 50;
+
+                  // Iterate over the column elements
+                  for (let i = 0; i < desc_columnElement.length; i++) {
+                    const columnElement = desc_columnElement[i];
+                    
+                    // Get the text content of the column
+                    const columnText = columnElement.textContent;
+
+                    // Check if the text exceeds the maximum length
+                    if (columnText.length > maxLength) {
+                      // Truncate the text to the maximum length
+                      const truncatedText = columnText.substring(0, maxLength) + "...";
+                      
+                      // Set the truncated text as the column content
+                      columnElement.textContent = truncatedText;
+                    }
+                  }
+
+
+                  //Labels for required skills for project
+                  // Get all elements with the 'random-label' class
+                  const labelElements = document.getElementsByClassName('random-label');
+
+                  // Define an array of random label classes
+                  const labelClasses2 = ['label-success', 'label-danger', 'label-info', 'label-warning', 'label-primary'];
+
+                  // Iterate over the label elements and assign random classes
+                  for (let i = 0; i < labelElements.length; i++) {
+                    const labelElement = labelElements[i];
+                    
+                    // Get a random index from the labelClasses array
+                    const randomIndex = Math.floor(Math.random() * labelClasses2.length);
+                    
+                    // Assign the random label class to the element
+                    labelElement.classList.add(labelClasses2[randomIndex]);
+                  }
+
+
+                  //Disable button if checkbox is not selected
+                  const checkboxes = document.querySelectorAll('.table-checkbox');
+                  const del_Btn = document.getElementById('delete_Btn');
+                  
+                  checkboxes.forEach((checkbox) => {
+                    checkbox.addEventListener('change', () => {
+                      const checkedCheckboxes = document.querySelectorAll('.table-checkbox:checked');
+                      del_Btn.disabled = checkedCheckboxes.length === 0;
+                    });
+                  });
+
+
+                  //Check all checkbox
+                  const checkAllCheckbox = document.querySelector('.check-all');
+                  const checkboxes2 = document.querySelectorAll('.table-checkbox');
+                  
+                  checkAllCheckbox.addEventListener('change', function() {
+
+                    checkboxes2.forEach(function(checkbox) {
+                      checkbox.checked = checkAllCheckbox.checked;
+                    });
+
+                    del_Btn.disabled = !checkAllCheckbox.checked;
+                  });
+                </script>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+
+            <div class="box-header">
+              <h3 class="box-title" style="color: #306FA0;">
+              <i class="fa fa-file-text-o project_color"></i>
               <strong class="project_color"> Task Assignment for this project </strong><br/> <span class="type_of_project_view" id="type_of_project_view" style="font-size:13px; font-weight: normal"> Showing tasks distribution for this project </span></h3>
             </div>
 
@@ -93,44 +210,38 @@
                 <thead>
                 <tr>
                   <th style="width: 5%;">SN</th>
-                  <th style="width: 15%;">Email</th>
-                  <th style="width: 35%">Collab Request Message</th>
-                  <th style="width: 35%;">Skills</th>
-                  <th style="width: 10%;">Accept/Reject</th>
+                  <th style="width: 55%;">Task</th>
+                  <th style="width: 20%">Deadline</th>
+                  <!-- <th style="width: 35%;">Skills</th> -->
+                  <th class="text-center" style="width: 20%;">Assign to</th>
                 </tr>
                 </thead>
                 <tbody>
 
-                {% for i in collab_applications %}
+                {% for i in get_tasks_for_project %}
                   <tr>
-                    <td><a href="/profile_history/{{ i.user.id }}/"> {{ forloop.counter }} </a></td>
-                    <td><a href="/profile_history/{{ i.user.id }}/"> {{ i.user.email }} </a></td>
-                    <td class="description_column"> {{ i.collab_request_msg }} </td>
-
-                    <td id="tagContainer"> 
-                      {% for k in i.user.project_interests %}
-                        <span class="label random-label" style="margin-right: 5px;">{{ k }} </span> 
-                      {% endfor %}
-                    </td>
+                    <td> {{ forloop.counter }} </a></td>
+                    <td> {{ i.task_x }} </a></td>
+                    <td class="description_column"> {{ i.task_deadline }} </td>
                     
-                    <td>
-                      <div class="button-container">
-                        <a href="/accept_collab/{{ i.id }}" class="btn btn-sm custom-btn-success"><i class="fa fa-fw fa-check" style="color: green;"></i></a>
-                        <a href="/reject_collab/{{ i.id }}" class="btn btn-sm custom-btn-danger"><i class="fa fa-fw fa-close" style="color: red;"></i></a>
+                    <td class="text-center"> 
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                          <i class="fa fa-fw fa-pencil-square-o"></i>
+                        </button>
+                        <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                          <span class="caret"></span>
+                          <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+
+                        <ul class="dropdown-menu pull-right" role="menu">
+                          {% for i in collaborators_for_project %}
+                            <li><a href="#"> {{ i.user.email }} </a></li>
+                          {% endfor %}
+                          
+                          
+                        </ul>
                       </div>
-
-                      <style type="text/css">
-                        .button-container {
-                          display: flex;
-                        }
-
-                        .custom-btn-success, .custom-btn-danger {
-                          flex: 1;
-                          height: 30px; /* Adjust the height as needed */
-                          line-height: 20px; /* Adjust the line-height as needed */
-                        }
-
-                      </style>
                     </td>
                   </tr>
 
@@ -142,10 +253,10 @@
                 <tfoot>
                 <tr>
                   <th style="width: 5%;">SN</th>
-                  <th style="width: 15%;">Email</th>
-                  <th style="width: 35%">Message</th>
-                  <th style="width: 35%;">Skills</th>
-                  <th style="width: 10%;">Accept/Reject</th>
+                  <th style="width: 55%;">Task</th>
+                  <th style="width: 20%">Deadline</th>
+                  <!-- <th style="width: 35%;">Skills</th> -->
+                  <th class="text-center" style="width: 20%;">Assign to</th>
                 </tr>
                 </tfoot>
               </table>
@@ -478,8 +589,7 @@
 
 <script>
   $(function () {
-
-
+    $('#example1').DataTable()
     $('#example2').DataTable()
   })
 </script>

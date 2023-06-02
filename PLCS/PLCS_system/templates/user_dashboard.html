@@ -6,7 +6,8 @@
     <section class="content-header">
       <h1>
         Projects
-        <small>Control panel</small>
+        <!-- <small>Control panel</small> -->
+        <!-- {{ rec_proj }} -->
       </h1>
       <!-- <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -22,7 +23,7 @@
         <div class="col-md-8 col-8">
           <div class="row">
 
-            <div class="col-md-12 col-12" style="margin-bottom: 3rem;">
+            <!-- <div class="col-md-12 col-12" style="margin-bottom: 3rem;">
               <form action="#" method="get" class="">
                 <div class="input-group">
                   <input type="text" name="q" class="form-control" placeholder="Search...">
@@ -32,7 +33,7 @@
                   </span>
                 </div>
               </form>
-            </div>
+            </div> -->
             
             <!-- ./col -->
             {% if messages %}
@@ -84,12 +85,14 @@
 
 
                   <!-- /.box-header -->
-                  <div class="box-body">
+                  <div class="box-body"> 
                     <div class="col-md-5 col-5" style="height: 200px;">
                       <!-- {{ i.project_images }} -->
                       <!-- <i class="fa fa-file-text-o"></i> -->
+                      
 
                       <img src="{% static 'project_imgs/PLCS6#img1.jpg' %}" style="height: 100%; background-color: red;"/>
+                      <!-- <img src="{% static 'project_imgs/PLCS6#img1.jpg' %}" style="height: 100%; background-color: red;"/> -->
                       <!-- <img src="{% static 'profile_imgs/{{ i.project_images.0 }}' %}"/> -->
                       
                     </div>

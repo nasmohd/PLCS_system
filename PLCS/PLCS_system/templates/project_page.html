@@ -315,7 +315,7 @@
                     <h4 class="modal-title"> Add New Project </h4>
                   </div>
 
-                  <form role="form" action="/add_project" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+                  <form id="todo_form" role="form" action="/add_project" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
                   <div class="modal-body">
                     <p>Please fill in details for the project </p>
 
@@ -325,7 +325,7 @@
                       <ul class="nav nav-tabs">
                         <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Details <span class="optional_entry"> * </span></a></li>
                         <li><a href="#tab_2" data-toggle="tab" aria-expanded="false"> Requirements <span class="optional_entry"> * </span></a></li>
-                        <!-- <li><a href="#tab_tasks" data-toggle="tab" aria-expanded="false"> Tasks <span class="optional_entry"> * </span></a></li> -->
+                        <li><a href="#tab_tasks" data-toggle="tab" aria-expanded="false"> Tasks <span class="optional_entry"> * </span></a></li>
                         <li><a href="#tab_3" data-toggle="tab">Images <span class="optional_entry"> * </span></a></li>
                         <li><a href="#tab_4" data-toggle="tab">Other Attachments </a></li>
                       </ul>
@@ -340,7 +340,7 @@
 
                           <div class="form-group">
                             <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
-                            <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the project" rows="10" style="resize: none;" name="project_description" required>Programming PLC and HMI using Ladder Diagrams</textarea>
+                            <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the project" rows="10" style="resize: none;" name="project_description" required>Programming the system</textarea>
                           </div>
 
                           <style type="text/css">
@@ -487,6 +487,26 @@
 
                                 return true;
                               }
+
+                              document.getElementById('todo_form').addEventListener('submit', function(e) {
+                                  e.preventDefault();
+
+                                  var todoItems = [];
+                                  var todoList = document.querySelectorAll('.todo-list li');
+                                  todoList.forEach(function(li) {
+                                      var textSpan = li.querySelector('.text');
+                                      var todoText = textSpan.textContent.trim();
+                                      todoItems.push(todoText);
+                                  });
+
+                                  var formInput = document.createElement('input');
+                                  formInput.setAttribute('type', 'hidden');
+                                  formInput.setAttribute('name', 'todo_items');
+                                  formInput.setAttribute('value', JSON.stringify(todoItems));
+                                  this.appendChild(formInput);
+
+                                  this.submit();
+                              });
                             </script>
                           </div>
 
@@ -702,6 +722,49 @@
 
                         <div class="tab-pane" id="tab_tasks">
                           <p class="help-block">Tasks for this project</p>
+                          <button type="button" class="btn btn-sm btn-default" style="margin-bottom: 1.2rem;" title="Add New Project" id="add_task"><i class="fa fa-fw fa-plus"></i></button>
+
+                          <ul class="todo-list ui-sortable">
+                            <!-- <li id="original_li" style="display: none;">
+                              <span class="handle ui-sortable-handle">
+                                    <i class="fa fa-ellipsis-v"></i>
+                                    <i class="fa fa-ellipsis-v"></i>
+                                  </span>
+                              <input type="checkbox" value="" disabled style="display: none;">
+                              <span class="text">Design a nice theme</span>
+                              <div class="tools">
+                                <i class="fa fa-trash-o"></i>
+                              </div>
+                            </li> -->
+                          </ul>
+
+                          <script>
+                              document.getElementById('add_task').addEventListener('click', function() {
+                                  var todoList = document.querySelector('.todo-list');
+                                  var originalLi = document.getElementById('original_li');
+                                  var newLi = document.createElement('li');
+                                  newLi.innerHTML = `
+                                    <span class="handle ui-sortable-handle">
+                                        <i class="fa fa-ellipsis-v"></i>
+                                        <i class="fa fa-ellipsis-v"></i>
+                                    </span>
+                                    <input type="checkbox" value="" style="display: none;">
+                                    <span class="text" contenteditable="true"></span>
+                                    <div class="tools">
+                                        <i class="fa fa-trash-o"></i>
+                                    </div>
+                                  `;
+                                  todoList.appendChild(newLi);
+
+                                  var trashIcons = newLi.querySelectorAll('.fa-trash-o');
+                                  trashIcons.forEach(function(icon) {
+                                      icon.addEventListener('click', function() {
+                                          var liToRemove = this.closest('li');
+                                          liToRemove.remove();
+                                      });
+                                  });
+                              });
+                          </script>
                           
                           <!-- <div class="form-group">
                             <label for="exampleInputFile">File 1 <span class="optional_entry"> (optional) </span></label>

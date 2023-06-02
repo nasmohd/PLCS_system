@@ -152,4 +152,14 @@ class Summary (models.Model):
 		return "id = {}, file_name = {}, file_link = {}".format(self.id, self.file_name, self.file_link)
 
 
+class Collab_Task (models.Model):
+	task_x = models.CharField(max_length=150, default = '')
+	project = models.ForeignKey(Project, on_delete=models.CASCADE)
+	assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+	# task_deadline = models.DateTimeField(default = '')
 
+	task_status = models.IntegerField (default=0)
+	op_status = models.IntegerField (default=0)
+
+	def __str__(self):
+		return "id = {}, task = {}".format(self.id, self.task_x)

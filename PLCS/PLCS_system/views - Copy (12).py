@@ -348,7 +348,6 @@ import re
 import os
 from shutil import copyfileobj
 from django.conf import settings
-import json
 
 def add_project(request):
 	# skills = request.POST['skills_required']
@@ -359,23 +358,8 @@ def add_project(request):
 	uploaded_image2 = None
 	uploaded_image3 = None
 
-	# if request.method == 'POST':
-	# 	todo_items = request.POST.get('todo_items')
-	# 	if todo_items:
-	# 		# Deserialize the JSON string into a Python list
-	# 		todo_items = json.loads(todo_items)
-
-	# 		# Process the todo_items as needed
-	# 		for item in todo_items:
-	# 			print (item)
-	# 			# Perform your desired operations on each item
-	# 			# For example, you can save each item to the database
-	# 	return HttpResponse('ym')
-
-
 	if request.method == "POST":
 		current_user = request.session['user_id']
-
 
 		# if 'image1' in request.FILES or 'image2' in request.FILES or 'image3' in request.FILES:
 		project_images = ['x.pdf', 'x.pdf', 'x.pdf']
@@ -638,22 +622,6 @@ def add_project(request):
 		project.user_project = User.objects.get(id = current_user)
 
 		project.save()
-
-		todo_items = request.POST.get('todo_items')
-		if todo_items:
-			# Deserialize the JSON string into a Python list
-			todo_items = json.loads(todo_items)
-
-			# Process the todo_items as needed
-			for item in todo_items:
-				new_task = Collab_Task()
-				new_task.project = project
-				new_task.task_x = item
-				new_task.task_status = 0
-				new_task.op_status = 0
-				new_task.save()
-
-
 		messages.success(request, 'Project added successfully.', extra_tags='alert-success')
 
 		project_added_success_msg = "Project has been added"
@@ -770,10 +738,6 @@ def user_management(request):
 	user_x = User.objects.get (id = current_user)
 	get_all_projects = Project.objects.all().order_by('-project_DOR')
 	user_names = request.session['user_names']
-
-	#Recommnend Projects
-	# rec_proj = recommend_projects(current_user)
-	# return HttpResponse (rec_proj)
 
 
 	get_all_project_collabs = User_Project_Collab.objects.filter(user = user_x)
@@ -1555,12 +1519,8 @@ def project_collab_tasks(request, project_id):
 	# collaborators_for_project = User_Project_Collab.objects.filter (user__id = current_user).filter(project__id = project_id).exclude(status=0)
 	collaborators_for_project = User_Project_Collab.objects.filter(project__user_project = user_collabs).filter(project__id = project_id).exclude(status = 0)
 
-	get_tasks_for_project = Collab_Task.objects.filter(project__id = project_id)
-
-
 	return render (request, "project_tasks.html", {'project_details': project_details, 'notifs': notifs, 
-		'user_names': user_names, 'collaborators_for_project': collaborators_for_project, 'get_tasks_for_project': get_tasks_for_project})
-
+		'user_names': user_names, 'collaborators_for_project': collaborators_for_project})
 
 
 def add_summary_content(request, module_id):
