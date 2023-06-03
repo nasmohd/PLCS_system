@@ -1,0 +1,38 @@
+The cosine similarity is a measure of similarity between two vectors in a multi-dimensional space. It measures the cosine of the angle between the vectors, hence the name "cosine similarity." The cosine similarity value ranges from -1 to 1, where 1 indicates that the vectors are pointing in the same direction (perfect similarity), 0 indicates no similarity, and -1 indicates they are pointing in opposite directions (perfect dissimilarity).
+
+
+
+TfidfVectorizer from sklearn.feature_extraction.text for computing TF-IDF scores, and NearestNeighbors from sklearn.neighbors for finding nearest neighbors.
+
+A TfidfVectorizer object called vectorizer is created. This vectorizer will be used to transform project skills and user interests into TF-IDF matrices.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -27,7 +27,7 @@ class User(models.Model):
 
 
 	def __str__(self):
-		return "id = {}, f_name = {}, email = {}, status = {}".format(self.id, self.first_name, self.email, self.status)
+		return "id = {}, email = {}, project_interests = {}".format(self.id, self.email, self.project_interests)
 
 
 class Project (models.Model):
@@ -51,7 +51,7 @@ class Project (models.Model):
 	status = models.IntegerField(default=1)
 
 	def __str__(self):
-		return "id = {}, title = {}, status = {}".format(self.id, self.project_title, self.status)
+		return "id = {}, title = {}, status = {}, project_skills = {}".format(self.id, self.project_title, self.status, self.project_skills)
 
 
 class Permission (models.Model):

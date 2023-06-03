@@ -703,11 +703,6 @@ def view_profile(request):
 		'user_project_details': user_project_details})
 
 
-
-def view_messages(request):
-	return render (request, "messages_chats.html")
-
-
 def nm_user(request):
 	return render (request, "user_projects.html")
 
@@ -1207,7 +1202,7 @@ def view_module (request, module_id):
 	# 		module_to_edit.module_description = module_description
 	# 		module_to_edit.save()
 
-	return render (request, 'learning_content_management.html', {'notifs': notifs, 'user_names': user_names, 'module_id': module_id,
+	return render (request, 'learning_topic_management.html', {'notifs': notifs, 'user_names': user_names, 'module_id': module_id,
 		'get_all_summaries': get_all_summaries})
 
 
@@ -1573,7 +1568,8 @@ def add_summary_content(request, module_id):
 	current_user = request.session['user_id']
 	user_details = User.objects.get(id = current_user)
 	module_details = Learning_Module.objects.get(id = module_id)
-	file1 = request.POST['file1']
+	# file1 = request.POST['file1']
+	file1 = request.POST.get ('file1', None)
 
 	summary_cont = Summary()
 
@@ -1658,6 +1654,13 @@ def add_summary_content(request, module_id):
 	# return HttpResponse ('ym')
 
 
+def view_messages(request):
+	current_user = request.session['user_id']
+	rec_proj = recommend_projects(current_user)
+	return HttpResponse (rec_proj)
+	
+	# return render (request, "messages_chats.html")
+
 
 #Recommend Projects
 import pandas as pd
@@ -1666,7 +1669,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 def recommend_projects(user_id):
 	# Step 1: Load the data from Django models
-	user = User.objects.get(id=user_id)
+	user = User.objects.get(id = user_id)
 	projects = list(Project.objects.all())  # Convert QuerySet to a list
 
 	# Step 2: Preprocess the data

@@ -54,7 +54,7 @@
       <section class="content-header">
         <h1>
           Learning Content Management
-          <small>Control panel</small>
+          <small> (By topic categorization) </small>
         </h1>
         <!-- <ol class="breadcrumb">
           <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -62,17 +62,175 @@
         </ol> -->
       </section>
 
-      <!-- Main content -->
-      <section class="content">
-        <!-- Small boxes (Stat box) -->
-        
-        <!-- /.row -->
-        <!-- Main row -->
-        <div class="row">
-          <div class="col-xs-12">
+      <section class="content-header">
+        <div class="nav-tabs-custom">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Summaries <span class="optional_entry"> * </span></a></li>
+            <li><a href="#tab_2" data-toggle="tab" aria-expanded="false"> Flash cards <span class="optional_entry"> * </span></a></li>
+            <li><a href="#tab_3" data-toggle="tab" aria-expanded="false"> Quizzes <span class="optional_entry"> * </span></a></li>
+          </ul>
+        </div>
 
-            <!-- /.box -->
+        <div class="tab-content">
+          <div class="tab-pane active" id="tab_1">
+            <div class="box">
+              <div class="box-header">
+                <h3 class="box-title" style="color: #306FA0;">
+                <i class="fa fa-fw fa-folder-o"></i>
+                <strong> Summary Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC;"> Summaries for study preparation </span> </h3>
+                <!-- label label-success -->
 
+                <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addSummary"> Add New Summary </button>
+              </div>
+              <!-- /.box-header -->
+
+
+              <div class="modal fade" id="modal-addSummary" style="display: none;">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                      <h4 class="modal-title"> Add New Summary </h4>
+                    </div>
+                    <form role="form" action="/add_summary_content/{{ module_id }}/" method="POST" id="addUser" enctype="multipart/form-data">
+                      {% csrf_token %}
+
+                    <div class="modal-body">
+                      <p>Please fill in details of the summary you want to upload</p>
+
+                      <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                          <!-- <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">User Details <span class="optional_entry"> * </span></a></li> -->
+                          
+                        </ul>
+                      
+                          <div class="form-group">
+                            <label for="exampleInputEmail1"> Name <span class="optional_entry"> * </span></label>
+                            <input type="text" class="form-control" placeholder="Enter Name of the file" name="name_summary" required value="James">
+                          </div>
+
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
+                            <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the summary file" rows="10" style="resize: none;" name="summary_description" required>Programming PLC and HMI using Ladder Diagrams</textarea>
+                          </div>
+
+                          <div class="form-group">
+                            <label for="exampleInputFile">File Attachment </label>
+                            <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
+                          </div>
+
+                          <style type="text/css">
+                            .optional_entry {
+                              color: red;
+                            }
+                          </style>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Add User</button>
+                    </div>
+
+                    </form>
+                  </div>
+                  <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+              </div>
+
+
+
+              <div class="box-body table-responsive">
+                <table id="example3" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th> SN </th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>File</th>
+                    <th class="text-center">Change details </th>
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                    {% for summary in get_all_summaries %}
+                      <tr>
+                        <td>
+                          {{ forloop.counter }}
+                        </td>
+
+                        <td>
+                          {{ summary.file_name }}
+                        </td>
+
+                        <td>
+                          {{ summary.file_description }}
+                        </td>
+
+                        <td>
+                          {{ summary.file_link }}
+                        </td>
+
+                        <td class="text-center"> 
+                          <div class="btn-group">
+                            <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                              <i class="fa fa-fw fa-pencil-square-o"></i>
+                            </button>
+                            <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                              <span class="caret"></span>
+                              <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+
+                            <ul class="dropdown-menu pull-right" role="menu">
+                              <!-- <li><a href="#" data-toggle="modal" data-target="#modal-editProject{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li> -->
+                              <li><a data-toggle="modal" data-target="#modal-deleteSummary{{ summary.id }}"><i class="fa fa-trash"></i> Delete </a></li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+
+                      <div class="modal modal-danger fade" id="modal-deleteSummary{{ summary.id }}" style="display: none;">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+                              <h4 class="modal-title">Delete Summary </h4>
+                            </div>
+                            <div class="modal-body">
+                              <p> Are you sure you want to delete? </p>
+                              <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                              <a href="/delete_summary/{{ summary.id }}/{{ module_id }}/" class="btn btn-outline">Confirm</a>
+                            </div>
+                          </div>
+                          <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                      </div>
+
+
+                    {% endfor %}
+                  </tbody>
+
+                  <tfoot>
+                  <tr>
+                    <th> SN </th>
+                    <th>Name</th>
+                    <th>File</th>
+                    <th class="text-center">Change details </th>
+                  </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <!-- /.box-body -->
+            </div>
+          </div>
+
+          <div class="tab-pane" id="tab_2">
             <div class="box">
               <div class="box-header">
                 <h3 class="box-title" style="color: #306FA0;">
@@ -91,81 +249,39 @@
                     <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                      <h4 class="modal-title"> Add New User </h4>
+                      <h4 class="modal-title"> Add New Flashcards topic </h4>
                     </div>
                     <form role="form" action="/admin_add_user/" method="POST" id="addUser">
                       {% csrf_token %}
 
                     <div class="modal-body">
-                      <p>Please fill in details of the module/subject</p>
+                      <p>Please fill in details of the topic</p>
 
-                      <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
-                          <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">User Details <span class="optional_entry"> * </span></a></li>
-                          
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="tab_1">
-                            
-                      <!-- form start -->
-                      
-                            <div class="form-group">
-                              <label for="exampleInputEmail1">First Name <span class="optional_entry"> * </span></label>
-                              <input type="text" class="form-control" placeholder="Enter First Name" name="first_name" required value="James">
-                            </div>
-
-                            <div class="form-group">
-                              <label for="exampleInputEmail1">Last Name <span class="optional_entry"> * </span></label>
-                              <input type="text" class="form-control" placeholder="Enter Last Name" name="last_name" required value="Bond">
-                            </div>
-
-                            <div class="form-group">
-                              <label for="exampleInputEmail1">Email address <span class="optional_entry"> * </span></label>
-                              <input type="email" class="form-control" placeholder="Enter email" name="email" autocomplete="off" required value="jbond@gmail.com">
-                            </div>
-
-                            
-
-                            <!-- <div class="form-group">
-                              <label for="exampleInputPassword1">Confirm Password <span class="optional_entry"> * </span></label>
-                              <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" required>
-                            </div> -->
-
-                            <style type="text/css">
-                              .optional_entry {
-                                color: red;
-                              }
-                            </style>
-                        <!-- <div class="form-group">
-                          <label for="exampleInputFile"> Profile Picture </label>
-                          <input type="file" id="user_profile_picture">
-                        </div> -->
-                          </div>
-
-                          <script type="text/javascript">
-                            const form = document.getElementById("addUser");
-
-                            form.addEventListener("submit", function(event) {
-                              const checkboxes = form.querySelectorAll("input[type=checkbox]:checked");
-                              if (checkboxes.length === 0) {
-                                alert("Please add Roles/Permissions");
-                                event.preventDefault();
-                              }
-                            });
-                          </script>
-
-
-                        </div>
-                        <!-- /.tab-content -->
+                      <div class="form-group">
+                        <label for="exampleInputEmail1"> Name <span class="optional_entry"> * </span></label>
+                        <input type="text" class="form-control" placeholder="Enter Name of the file" name="name_summary" required value="James">
                       </div>
 
-                      
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
+                        <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the summary file" rows="10" style="resize: none;" name="summary_description" required>Programming PLC and HMI using Ladder Diagrams</textarea>
+                      </div>
 
+                      <div class="form-group">
+                        <label for="exampleInputFile">File Attachment </label>
+                        <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
+                      </div>
+
+                      <style type="text/css">
+                        .optional_entry {
+                          color: red;
+                        }
+                      </style>
                     </div>
+
                     <div class="modal-footer">
                       <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Add Summary</button>
+                      <button type="submit" class="btn btn-primary">Add topic</button>
                     </div>
 
                     </form>
@@ -525,178 +641,29 @@
               </div>
               <!-- /.box-body -->
             </div>
+          </div>
 
-            <div class="box">
-              <div class="box-header">
-                <h3 class="box-title" style="color: #306FA0;">
-                <i class="fa fa-fw fa-folder-o"></i>
-                <strong> Summary Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC;"> Summaries for study preparation </span> </h3>
-                <!-- label label-success -->
+          <div class="tab-pane" id="tab_3">
+            <p> Quizzes </p>
+          </div>
 
-                <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addSummary"> Add New Summary </button>
-              </div>
-              <!-- /.box-header -->
+        </div>
+      </section>
 
+      <!-- Main content -->
+      <section class="content">
+        <!-- Small boxes (Stat box) -->
+        
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+          <div class="col-xs-12">
 
-              <div class="modal fade" id="modal-addSummary" style="display: none;">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span></button>
-                      <h4 class="modal-title"> Add New Summary </h4>
-                    </div>
-                    <form role="form" action="/add_summary_content/{{ module_id }}/" method="POST" id="addUser" enctype="multipart/form-data">
-                      {% csrf_token %}
+            <!-- /.box -->
 
-                    <div class="modal-body">
-                      <p>Please fill in details of the summary you want to upload</p>
+            
 
-                      <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
-                          <!-- <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">User Details <span class="optional_entry"> * </span></a></li> -->
-                          
-                        </ul>
-                      
-                          <div class="form-group">
-                            <label for="exampleInputEmail1"> Name <span class="optional_entry"> * </span></label>
-                            <input type="text" class="form-control" placeholder="Enter Name of the file" name="name_summary" required value="James">
-                          </div>
-
-                          <div class="form-group">
-                            <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
-                            <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the summary file" rows="10" style="resize: none;" name="summary_description" required>Programming PLC and HMI using Ladder Diagrams</textarea>
-                          </div>
-
-                          <div class="form-group">
-                            <label for="exampleInputFile">File Attachment </label>
-                            <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
-                          </div>
-
-                          <style type="text/css">
-                            .optional_entry {
-                              color: red;
-                            }
-                          </style>
-
-                          <script type="text/javascript">
-                            const form = document.getElementById("addUser");
-
-                            form.addEventListener("submit", function(event) {
-                              const checkboxes = form.querySelectorAll("input[type=checkbox]:checked");
-                              if (checkboxes.length === 0) {
-                                alert("Please add Roles/Permissions");
-                                event.preventDefault();
-                              }
-                            });
-                          </script>
-
-                      </div>
-
-                      
-
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Add User</button>
-                    </div>
-
-                    </form>
-                  </div>
-                  <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-              </div>
-
-
-
-              <div class="box-body table-responsive">
-                <table id="example3" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th> SN </th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>File</th>
-                    <th class="text-center">Change details </th>
-                  </tr>
-                  </thead>
-
-                  <tbody>
-                    {% for summary in get_all_summaries %}
-                      <tr>
-                        <td>
-                          {{ forloop.counter }}
-                        </td>
-
-                        <td>
-                          {{ summary.file_name }}
-                        </td>
-
-                        <td>
-                          {{ summary.file_description }}
-                        </td>
-
-                        <td>
-                          {{ summary.file_link }}
-                        </td>
-
-                        <td class="text-center"> 
-                          <div class="btn-group">
-                            <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                              <i class="fa fa-fw fa-pencil-square-o"></i>
-                            </button>
-                            <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                              <span class="caret"></span>
-                              <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-
-                            <ul class="dropdown-menu pull-right" role="menu">
-                              <!-- <li><a href="#" data-toggle="modal" data-target="#modal-editProject{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li> -->
-                              <li><a data-toggle="modal" data-target="#modal-deleteSummary{{ summary.id }}"><i class="fa fa-trash"></i> Delete </a></li>
-                            </ul>
-                          </div>
-                        </td>
-                      </tr>
-
-                      <div class="modal modal-danger fade" id="modal-deleteSummary{{ summary.id }}" style="display: none;">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span></button>
-                              <h4 class="modal-title">Delete Summary </h4>
-                            </div>
-                            <div class="modal-body">
-                              <p> Are you sure you want to delete? </p>
-                              <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-                              <a href="/delete_summary/{{ summary.id }}/{{ module_id }}/" class="btn btn-outline">Confirm</a>
-                            </div>
-                          </div>
-                          <!-- /.modal-content -->
-                        </div>
-                        <!-- /.modal-dialog -->
-                      </div>
-
-
-                    {% endfor %}
-                  </tbody>
-
-                  <tfoot>
-                  <tr>
-                    <th> SN </th>
-                    <th>Name</th>
-                    <th>File</th>
-                    <th class="text-center">Change details </th>
-                  </tr>
-                  </tfoot>
-                </table>
-              </div>
-              <!-- /.box-body -->
-            </div>
+            
             <!-- /.box -->
           </div>
           <!-- /.col -->
