@@ -54,6 +54,7 @@ urlpatterns = [
 
 
     #Learning content
+    path("learning_topic/", views.learning_topic),
     path("learning_content/", views.learning_content),
     path("add_module/", views.add_module),
 

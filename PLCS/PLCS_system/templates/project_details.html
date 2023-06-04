@@ -110,11 +110,8 @@
 
                 <!-- /.box-header -->
                 <div class="box-body">
-                  <div class="col-md-7 col-8">
-                    <!-- {{ i.project_images }} -->
-                    <!-- <i class="fa fa-file-text-o"></i> -->
-                    
-                    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="width: inherit; height: inherit;">
+                  <div class="col-md-6 col-6" style="width:100%; height: 100%;">
+                    <!-- <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="width: inherit; height: inherit;">
                       <ol class="carousel-indicators">
                         <li data-target="#carousel-example-generic" data-slide-to="0" class=""></li>
                         <li data-target="#carousel-example-generic" data-slide-to="1" class="active"></li>
@@ -144,17 +141,18 @@
                       <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
                         <span class="fa fa-angle-right"></span>
                       </a>
-                    </div>
-                    
-                    <!-- {{ get_project_details.project_images.2 }} -->
-
-                    <!-- <img src="{% static 'project_imgs/PLCS6#img1.jpg' %}" style="height: 120%; width:100%; background-color: red;"/> -->
-                    <!-- <img src="{% static 'profile_imgs/{{ i.project_images.0 }}' %}"/> -->
-                    
+                    </div> -->
                   </div>
 
-                  <div class="col-md-5 col-4">
-                    <div class="col-md-12 col-12">
+                  <div class="col-md-12 col-12">
+                    <div class="col-md-12 ">
+                      <dt>Description</dt>
+                      <dd style="justify-content: center;">
+                        {{ get_project_details.project_description }}
+                      </dd>
+                    </div>
+
+                    <div class="col-md-12 col-12 project_view_style2" style="margin-bottom: 2.5rem;">
                       <dt>Skills required</dt>
                       <dd>
                         {% for j in get_project_details.project_skills %}
@@ -164,8 +162,8 @@
                       </dd>
                     </div>
 
-                    <div class="project_view_style2" style="margin-top: 9rem;">
-                      <div class="col-md-6 col-6">
+                    <div class="project_view_style2" style="margin-top: 10rem;">
+                      <div class="col-md-3 col-6">
                         <dt>Budget</dt>
                         <dd id="project_budget">{{ get_project_details.project_budget }} TZS</dd>
                       </div>
@@ -209,6 +207,13 @@
                       <div class="col-md-12 col-12 project_view_style2">
                         <dt>Deadline</dt>
                         <dd>{{ get_project_details.project_deadline }} </dd>
+                      </div>
+
+                      <div class="col-md-12" style="margin-top: 2rem;">
+                        {% if get_project_details.user_project.id != current_user %}
+                          <a class="btn btn-primary btn-sm" id="applyButton{{ get_project_details.id }}"> Contact this user </a>
+                          <a class="btn btn-info btn-sm" id="applyButton{{ get_project_details.id }}" data-project-id="{{ get_project_details.id }}" data-toggle="modal" data-target="#applyModal{{ get_project_details.id }}"> Apply Now </a>
+                        {% endif %}
                       </div>
                     </div>
 
@@ -259,11 +264,7 @@
 
 
                   <div class="col-md-12 col-12" style="margin-top: 1.2rem;">
-                    {% if get_project_details.user_project.id != current_user %}
-                      <a class="btn btn-primary btn-sm" id="applyButton{{ get_project_details.id }}"> Contact this user </a>
-                      <a class="btn btn-info btn-sm" id="applyButton{{ get_project_details.id }}" data-project-id="{{ get_project_details.id }}" data-toggle="modal" data-target="#applyModal{{ get_project_details.id }}"> Apply Now </a>
-                    {% endif %}
-
+                    
                     <div class="modal fade" id="applyModal{{ get_project_details.id }}" style="display: none;">
                       <div class="modal-dialog">
                         <div class="modal-content">
@@ -312,12 +313,7 @@
 
 
 
-                    <div class="col-md-12 project_view_style2">
-                      <dt>Description</dt>
-                      <dd style="justify-content: center;">
-                        {{ get_project_details.project_description }}
-                      </dd>
-                    </div>
+                    
                     
                     
                     <div class="col-md-12" style="margin-top: 2rem;">

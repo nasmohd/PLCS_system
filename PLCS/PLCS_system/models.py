@@ -163,3 +163,12 @@ class Collab_Task (models.Model):
 
 	def __str__(self):
 		return "id = {}, task = {}".format(self.id, self.task_x)
+
+
+class Module_Topic (models.Model):
+	module_belongs_to = models.ForeignKey(Learning_Module, on_delete=models.CASCADE, null=True)
+	topic_name = models.CharField(max_length=150, default = '')
+	topic_tags = models.TextField(default='')
+	
+	def __str__(self):
+		return "module = {}, topic = {}".format(self.module_belongs_to, self.topic_name)

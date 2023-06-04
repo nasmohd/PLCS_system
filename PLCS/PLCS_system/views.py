@@ -1127,6 +1127,27 @@ def learning_content(request):
 
 
 
+def learning_topic(request):
+	all_modules = Learning_Module.objects.all().order_by('-module_DOR')
+	all_modules_count = Learning_Module.objects.all().count()
+
+	for obj in all_modules:
+		column_value = obj.module_tags
+		if column_value:
+			list_value = literal_eval(column_value)
+			obj.module_tags = list_value
+			obj.save()
+
+
+	logged_in_userid = request.session['user_id']
+	user_names = request.session['user_names']
+
+	roles_n_permissions = get_roles_permissions(request, logged_in_userid)
+	return render (request, "learning_module_management.html", {'roles_n_permissions': roles_n_permissions, 'user_names': user_names,
+		'all_modules': all_modules, 'all_modules_count': all_modules_count})
+
+
+
 def add_module(request):
 	if request.method == "POST":
 
@@ -1204,6 +1225,7 @@ def view_module (request, module_id):
 
 	return render (request, 'learning_topic_management.html', {'notifs': notifs, 'user_names': user_names, 'module_id': module_id,
 		'get_all_summaries': get_all_summaries})
+
 
 
 from django.http import JsonResponse
@@ -1600,6 +1622,12 @@ def add_summary_content(request, module_id):
 
 				# Rename the file
 				# img_count = index+1
+
+		else:
+			messages.success(request, 'Please add a file', extra_tags='alert-danger')
+			redir = "/view_module/" + str(module_id)
+			return redirect (redir)
+			# return redirect ('/view_module/')
 
 
 		# summary_cont = Summary()

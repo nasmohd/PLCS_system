@@ -1,0 +1,101 @@
+Project ID,Skills
+project-1,"['C++ Programming', 'Software Engineering', 'Web Application Development', 'Data Structures', 'Algorithm', 'UI/UX']"
+project-2,"['C++ Programming', 'Algorithm']"
+project-3,"['UI/UX', 'C++ Programming']"
+project-4,['C++ Programming']
+project-5,"['Algorithm', 'UI/UX', 'Software Engineering', 'C++ Programming', 'Web Application Development']"
+project-6,"['Data Structures', 'C++ Programming', 'Algorithm', 'Software Engineering', 'UI/UX', 'Web Application Development']"
+project-7,['C++ Programming']
+project-8,"['Data Structures', 'Web Application Development']"
+project-9,['Software Engineering']
+project-10,"['Web Application Development', 'C++ Programming']"
+project-11,"['Algorithm', 'C++ Programming']"
+project-12,['Data Structures']
+project-13,"['Web Application Development', 'Software Engineering']"
+project-14,"['C++ Programming', 'Web Application Development']"
+project-15,['Algorithm']
+project-16,['Software Engineering']
+project-17,"['C++ Programming', 'Data Structures']"
+project-18,"['Algorithm', 'C++ Programming', 'UI/UX']"
+project-19,"['Data Structures', 'C++ Programming', 'Algorithm', 'Software Engineering']"
+project-20,"['Software Engineering', 'Web Application Development', 'C++ Programming']"
+project-21,"['Software Engineering', 'UI/UX', 'Web Application Development', 'C++ Programming']"
+project-22,"['C++ Programming', 'Data Structures', 'Web Application Development']"
+project-23,"['Software Engineering', 'Algorithm']"
+project-24,"['C++ Programming', 'UI/UX', 'Software Engineering', 'Algorithm']"
+project-25,['Software Engineering']
+project-26,"['UI/UX', 'Software Engineering', 'Algorithm', 'Data Structures']"
+project-27,['Software Engineering']
+project-28,"['Web Application Development', 'Algorithm', 'UI/UX', 'Data Structures']"
+project-29,"['Software Engineering', 'C++ Programming', 'UI/UX', 'Algorithm', 'Web Application Development', 'Data Structures']"
+project-30,"['C++ Programming', 'Web Application Development', 'Data Structures', 'Software Engineering', 'Algorithm']"
+project-31,"['UI/UX', 'Software Engineering', 'Algorithm', 'Data Structures', 'C++ Programming', 'Web Application Development']"
+project-32,"['Software Engineering', 'Web Application Development']"
+project-33,['Data Structures']
+project-34,"['Algorithm', 'UI/UX', 'C++ Programming', 'Web Application Development', 'Data Structures']"
+project-35,"['Web Application Development', 'Data Structures']"
+project-36,['Software Engineering']
+project-37,"['Web Application Development', 'C++ Programming', 'Data Structures']"
+project-38,"['C++ Programming', 'Web Application Development', 'Algorithm', 'Software Engineering']"
+project-39,"['Data Structures', 'Web Application Development', 'Algorithm', 'UI/UX']"
+project-40,"['C++ Programming', 'Software Engineering', 'Algorithm', 'Web Application Development', 'Data Structures']"
+project-41,['UI/UX']
+project-42,"['Algorithm', 'C++ Programming', 'Software Engineering', 'Web Application Development']"
+project-43,"['Web Application Development', 'Algorithm', 'Data Structures', 'Software Engineering', 'C++ Programming', 'UI/UX']"
+project-44,"['Software Engineering', 'Algorithm']"
+project-45,"['C++ Programming', 'Algorithm', 'Web Application Development', 'UI/UX', 'Data Structures']"
+project-46,"['Data Structures', 'Software Engineering', 'UI/UX', 'Web Application Development', 'Algorithm', 'C++ Programming']"
+project-47,"['UI/UX', 'C++ Programming']"
+project-48,"['Algorithm', 'C++ Programming', 'Software Engineering', 'Data Structures', 'Web Application Development']"
+project-49,['Algorithm']
+project-50,"['UI/UX', 'Data Structures', 'Algorithm', 'Web Application Development']"
+project-51,"['Software Engineering', 'UI/UX', 'Data Structures', 'C++ Programming']"
+project-52,"['Algorithm', 'Software Engineering', 'Web Application Development', 'C++ Programming', 'UI/UX']"
+project-53,"['Data Structures', 'Web Application Development', 'Algorithm', 'C++ Programming', 'UI/UX']"
+project-54,"['UI/UX', 'Data Structures', 'Software Engineering', 'C++ Programming']"
+project-55,"['Software Engineering', 'UI/UX', 'C++ Programming', 'Algorithm', 'Web Application Development']"
+project-56,['Algorithm']
+project-57,"['Data Structures', 'C++ Programming', 'UI/UX', 'Software Engineering', 'Algorithm']"
+project-58,"['UI/UX', 'C++ Programming', 'Web Application Development', 'Software Engineering', 'Algorithm']"
+project-59,"['Algorithm', 'UI/UX', 'Software Engineering', 'C++ Programming', 'Data Structures', 'Web Application Development']"
+project-60,"['Data Structures', 'Software Engineering']"
+project-61,"['UI/UX', 'Web Application Development']"
+project-62,"['Software Engineering', 'Algorithm']"
+project-63,"['Data Structures', 'Software Engineering', 'UI/UX', 'Algorithm', 'Web Application Development']"
+project-64,"['Data Structures', 'Algorithm']"
+project-65,"['Algorithm', 'Web Application Development']"
+project-66,"['UI/UX', 'Software Engineering', 'Algorithm']"
+project-67,"['C++ Programming', 'Data Structures', 'Web Application Development', 'Software Engineering', 'UI/UX']"
+project-68,"['Software Engineering', 'C++ Programming', 'Data Structures', 'Algorithm']"
+project-69,['C++ Programming']
+project-70,"['UI/UX', 'Web Application Development', 'Algorithm', 'Data Structures']"
+project-71,"['Software Engineering', 'Algorithm']"
+project-72,['Software Engineering']
+project-73,"['C++ Programming', 'Algorithm', 'Web Application Development', 'UI/UX', 'Data Structures', 'Software Engineering']"
+project-74,"['Software Engineering', 'Web Application Development', 'Algorithm', 'C++ Programming']"
+project-75,"['UI/UX', 'Data Structures', 'C++ Programming', 'Web Application Development', 'Algorithm']"
+project-76,"['Data Structures', 'Software Engineering', 'UI/UX', 'Web Application Development', 'Algorithm']"
+project-77,"['Software Engineering', 'UI/UX', 'Algorithm', 'Data Structures', 'C++ Programming']"
+project-78,"['Software Engineering', 'Data Structures', 'UI/UX', 'Algorithm', 'Web Application Development']"
+project-79,"['Web Application Development', 'C++ Programming']"
+project-80,"['Algorithm', 'Web Application Development']"
+project-81,"['Data Structures', 'Algorithm']"
+project-82,"['Software Engineering', 'UI/UX', 'Data Structures', 'Web Application Development']"
+project-83,"['Data Structures', 'C++ Programming']"
+project-84,"['Web Application Development', 'Software Engineering', 'C++ Programming']"
+project-85,['Web Application Development']
+project-86,"['Web Application Development', 'C++ Programming', 'Algorithm', 'Data Structures', 'Software Engineering']"
+project-87,"['UI/UX', 'Algorithm', 'Software Engineering', 'Data Structures', 'Web Application Development']"
+project-88,"['Algorithm', 'UI/UX', 'Software Engineering']"
+project-89,"['UI/UX', 'Software Engineering', 'Data Structures', 'Algorithm']"
+project-90,"['UI/UX', 'C++ Programming', 'Algorithm', 'Software Engineering', 'Web Application Development', 'Data Structures']"
+project-91,['Data Structures']
+project-92,['C++ Programming']
+project-93,"['Algorithm', 'C++ Programming', 'UI/UX', 'Web Application Development', 'Software Engineering']"
+project-94,['Algorithm']
+project-95,"['Web Application Development', 'Data Structures', 'C++ Programming', 'UI/UX', 'Software Engineering']"
+project-96,['Algorithm']
+project-97,"['Algorithm', 'C++ Programming', 'Software Engineering', 'UI/UX', 'Web Application Development']"
+project-98,"['Software Engineering', 'Algorithm', 'Web Application Development', 'Data Structures']"
+project-99,"['Algorithm', 'Web Application Development', 'UI/UX', 'C++ Programming']"
+project-100,"['UI/UX', 'Algorithm', 'Data Structures']"
