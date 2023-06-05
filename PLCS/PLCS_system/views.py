@@ -1106,7 +1106,7 @@ def get_roles_permissions(request, user_id):
 # def get_permissions(request, user_id):
 # 	user_to_get_permissions = User.objects.get (id = user_id)
 
-def learning_content(request):
+def learning_content(request, topic_id):
 	all_modules = Learning_Module.objects.all().order_by('-module_DOR')
 	all_modules_count = Learning_Module.objects.all().count()
 
@@ -1122,7 +1122,7 @@ def learning_content(request):
 	user_names = request.session['user_names']
 
 	roles_n_permissions = get_roles_permissions(request, logged_in_userid)
-	return render (request, "learning_module_management.html", {'roles_n_permissions': roles_n_permissions, 'user_names': user_names,
+	return render (request, "learning_content_management.html", {'roles_n_permissions': roles_n_permissions, 'user_names': user_names,
 		'all_modules': all_modules, 'all_modules_count': all_modules_count})
 
 
@@ -1225,6 +1225,33 @@ def view_module (request, module_id):
 
 	return render (request, 'learning_topic_management.html', {'notifs': notifs, 'user_names': user_names, 'module_id': module_id,
 		'get_all_summaries': get_all_summaries})
+
+
+def view_topics (request, module_id):
+	current_user = request.session['user_id']
+	notifs = get_notifications_of_user (request, current_user)
+	user_names = request.session['user_names']
+
+	topics_for_modulex = Module_Topic.objects.filter(module_belongs_to__id = module_id)
+
+	get_all_summaries = Summary.objects.all()
+
+	# module_to_edit = Learning_Module.objects.get(id = module_id)
+
+	# if request.method == "POST":
+	# 	module_title = request.POST["module_title"]
+	# 	module_description = request.POST["module_description"]
+
+	# 	try:
+	# 		module_to_edit_title = Learning_Module.objects.get(module_title = module_title)
+
+	# 	except:
+	# 		module_to_edit.module_title = module_title
+	# 		module_to_edit.module_description = module_description
+	# 		module_to_edit.save()
+
+	return render (request, 'learning_topic_management.html', {'notifs': notifs, 'user_names': user_names, 'module_id': module_id,
+		'topics_for_modulex': topics_for_modulex})
 
 
 
@@ -1579,17 +1606,44 @@ def project_collab_tasks(request, project_id):
 		'user_names': user_names, 'collaborators_for_project': collaborators_for_project, 'get_tasks_for_project': get_tasks_for_project})
 
 
-
-def add_summary_content(request, module_id):
+def add_topic(request, module_id):
 	current_user = request.session['user_id']
-	# rec_proj = recommend_projects(current_user)
-	# return HttpResponse (rec_proj)
-
-
 
 	current_user = request.session['user_id']
 	user_details = User.objects.get(id = current_user)
 	module_details = Learning_Module.objects.get(id = module_id)
+	# file1 = request.POST['file1']
+
+
+	file1 = request.POST.get ('file1', None)
+
+	if request.method == 'POST':
+		topic_name = request.POST['topic_name'] 
+		topic_description = request.POST['topic_description'] 
+		topic_description = request.POST['topic_description'] 
+
+
+		module_topic = Module_Topic()
+		module_topic.module_belongs_to = module_details
+		module_topic.topic_name = topic_name
+		module_topic.topic_description = topic_description
+		module_topic.topic_tags = ''
+		module_topic.save()
+
+		messages.success(request, 'Topic succcessfully added', extra_tags='alert-success')
+		red = "/view_topics/" + str(module_id)
+		return redirect (red)
+
+
+
+def add_summary_content(request, topic_id):
+	current_user = request.session['user_id']
+	# rec_proj = recommend_projects(current_user)
+	# return HttpResponse (rec_proj)
+
+	current_user = request.session['user_id']
+	user_details = User.objects.get(id = current_user)
+	module_topic = Module_Topic.objects.get(id = topic_id)
 	# file1 = request.POST['file1']
 	file1 = request.POST.get ('file1', None)
 
@@ -1632,7 +1686,7 @@ def add_summary_content(request, module_id):
 
 		# summary_cont = Summary()
 		summary_cont.user = user_details
-		summary_cont.module = module_details
+		summary_cont.module_topic = module_topic
 		summary_cont.file_name = name_summary
 		summary_cont.file_description = summary_description
 		summary_cont.file_link = summary_description

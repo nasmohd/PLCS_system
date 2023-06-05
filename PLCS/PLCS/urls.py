@@ -55,8 +55,12 @@ urlpatterns = [
 
     #Learning content
     path("learning_topic/", views.learning_topic),
-    path("learning_content/", views.learning_content),
+    path("learning_content/<int:topic_id>/", views.learning_content),
     path("add_module/", views.add_module),
+    path("add_topic/<int:module_id>/", views.add_topic),
+    path("view_topics/<int:module_id>/", views.view_topics),
+
+
 
     path("delete_module/<int:module_id>/", views.delete_module),
     path("edit_module/<int:module_id>/", views.edit_module),
@@ -78,6 +82,6 @@ urlpatterns = [
     path("reject_collab/<int:collab_id>/", views.reject_collab),
 
     path("project_collab_tasks/<int:project_id>/", views.project_collab_tasks),
-    path("add_summary_content/<int:module_id>/", views.add_summary_content),
+    path("add_summary_content/<int:topic_id>/", views.add_summary_content),
     path("delete_summary/<int:summary_id>/<int:module_id>/", views.delete_summary),
 ]

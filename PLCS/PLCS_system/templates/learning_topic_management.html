@@ -63,6 +63,20 @@
       </section>
 
       <section class="content-header">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-dismissible {{ message.tags }}">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color: white;">×</button>
+                <i class="icon fa fa-check"></i> {{ message }}
+              </div>
+              <script>
+                  // Automatically close the alert after 5 seconds
+                  setTimeout(function() {
+                      $('.alert').alert('close');
+                  }, 5000);
+              </script>
+            {% endfor %}
+          {% endif %}
 
           <div class="box">
             <div class="box-header">
@@ -83,7 +97,7 @@
                       <span aria-hidden="true">×</span></button>
                     <h4 class="modal-title"> Add New Topic </h4>
                   </div>
-                  <form role="form" action="/add_summary_content/{{ module_id }}/" method="POST" id="addUser" enctype="multipart/form-data">
+                  <form role="form" action="/add_topic/{{ module_id }}/" method="POST" id="addUser" enctype="multipart/form-data">
                     {% csrf_token %}
 
                   <div class="modal-body">
@@ -91,18 +105,18 @@
 
                     <div class="form-group">
                       <label for="exampleInputEmail1"> Name <span class="optional_entry"> * </span></label>
-                      <input type="text" class="form-control" placeholder="Enter Name of the file" name="name_summary" required value="James">
+                      <input type="text" class="form-control" placeholder="Enter Name of the topic" name="topic_name" required value="Programming">
                     </div>
 
                     <div class="form-group">
                       <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
-                      <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the summary file" rows="10" style="resize: none;" name="summary_description" required>Programming PLC and HMI using Ladder Diagrams</textarea>
+                      <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the summary file" rows="10" style="resize: none;" name="topic_description" required>Programming PLC and HMI using Ladder Diagrams</textarea>
                     </div>
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                       <label for="exampleInputFile">File Attachment </label>
                       <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
-                    </div>
+                    </div> -->
 
                     <style type="text/css">
                       .optional_entry {
@@ -113,7 +127,7 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add User</button>
+                    <button type="submit" class="btn btn-primary">Add Topic</button>
                   </div>
 
                   </form>
@@ -132,28 +146,28 @@
                   <th> SN </th>
                   <th>Name</th>
                   <th>Description</th>
-                  <th>File</th>
+                  <th>Tags</th>
                   <th class="text-center">Change details </th>
                 </tr>
                 </thead>
 
                 <tbody>
-                  {% for summary in get_all_summaries %}
+                  {% for topic in topics_for_modulex %}
                     <tr>
                       <td>
-                        <a href="/learning_content/">{{ forloop.counter }} </a>
+                        <a href="/learning_content/{{ topic.id }}"> {{ forloop.counter }} </a>
                       </td>
 
                       <td>
-                        {{ summary.file_name }}
+                        <a href="/learning_content/{{ topic.id }}"> {{ topic.topic_name }} </a>
                       </td>
 
                       <td>
-                        {{ summary.file_description }}
+                        <a href="/learning_content/{{ topic.id }}"> {{ topic.topic_description }}</a>
                       </td>
 
                       <td>
-                        {{ summary.file_link }}
+                        {{ topic.topic_tags }}
                       </td>
 
                       <td class="text-center"> 
@@ -168,13 +182,13 @@
 
                           <ul class="dropdown-menu pull-right" role="menu">
                             <!-- <li><a href="#" data-toggle="modal" data-target="#modal-editProject{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li> -->
-                            <li><a data-toggle="modal" data-target="#modal-deleteSummary{{ summary.id }}"><i class="fa fa-trash"></i> Delete </a></li>
+                            <li><a data-toggle="modal" data-target="#modal-deletetopic_tags{{ topic_tags.id }}"><i class="fa fa-trash"></i> Delete </a></li>
                           </ul>
                         </div>
                       </td>
                     </tr>
 
-                    <div class="modal modal-danger fade" id="modal-deleteSummary{{ summary.id }}" style="display: none;">
+                    <div class="modal modal-danger fade" id="modal-deletetopic_tags{{ topic_tags.id }}" style="display: none;">
                       <div class="modal-dialog">
                         <div class="modal-content">
                           <div class="modal-header">

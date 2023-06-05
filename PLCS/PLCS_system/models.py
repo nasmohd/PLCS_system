@@ -140,18 +140,6 @@ class User_Project_Collab (models.Model):
 		return "id = {}, user = {}, project = {}".format(self.id, self.user, self.project)
 
 
-class Summary (models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	module = models.ForeignKey(Learning_Module, on_delete=models.CASCADE)
-
-	file_name = models.CharField(max_length=45, default = '')
-	file_description = models.TextField(default='')
-	file_link = models.CharField(max_length=100, default = '')
-
-	def __str__(self):
-		return "id = {}, file_name = {}, file_link = {}".format(self.id, self.file_name, self.file_link)
-
-
 class Collab_Task (models.Model):
 	task_x = models.CharField(max_length=150, default = '')
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
@@ -168,7 +156,20 @@ class Collab_Task (models.Model):
 class Module_Topic (models.Model):
 	module_belongs_to = models.ForeignKey(Learning_Module, on_delete=models.CASCADE, null=True)
 	topic_name = models.CharField(max_length=150, default = '')
+	topic_description = models.TextField(default='')
 	topic_tags = models.TextField(default='')
 	
 	def __str__(self):
 		return "module = {}, topic = {}".format(self.module_belongs_to, self.topic_name)
+
+
+class Summary (models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	module_topic = models.ForeignKey(Module_Topic, on_delete=models.CASCADE)
+
+	file_name = models.CharField(max_length=45, default = '')
+	file_description = models.TextField(default='')
+	file_link = models.CharField(max_length=100, default = '')
+
+	def __str__(self):
+		return "id = {}, file_name = {}, file_link = {}".format(self.id, self.file_name, self.file_link)
