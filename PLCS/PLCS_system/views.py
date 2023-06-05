@@ -1110,6 +1110,8 @@ def learning_content(request, topic_id):
 	all_modules = Learning_Module.objects.all().order_by('-module_DOR')
 	all_modules_count = Learning_Module.objects.all().count()
 
+	get_all_summaries = Summary.objects.all()
+
 	for obj in all_modules:
 		column_value = obj.module_tags
 		if column_value:
@@ -1123,11 +1125,11 @@ def learning_content(request, topic_id):
 
 	roles_n_permissions = get_roles_permissions(request, logged_in_userid)
 	return render (request, "learning_content_management.html", {'roles_n_permissions': roles_n_permissions, 'user_names': user_names,
-		'all_modules': all_modules, 'all_modules_count': all_modules_count})
+		'all_modules': all_modules, 'all_modules_count': all_modules_count, 'topic_id': topic_id, 'get_all_summaries': get_all_summaries})
 
 
 
-def learning_content(request):
+def learning_content_modules(request):
 	all_modules = Learning_Module.objects.all().order_by('-module_DOR')
 	all_modules_count = Learning_Module.objects.all().count()
 
@@ -1178,7 +1180,7 @@ def add_module(request):
 
 		check_modules = Learning_Module.objects.filter(module_title = module_title)
 		if (check_modules.exists()):
-			return redirect('/learning_content')
+			return redirect('/learning_content_modules')
 
 		else:
 			logged_in_userid = request.session['user_id']
@@ -1193,14 +1195,14 @@ def add_module(request):
 			new_module.module_tags = str(tags_list)
 
 			new_module.save()
-			return redirect('/learning_content')
+			return redirect('/learning_content_modules')
 
 
 def delete_module (request, module_id):
 	module_to_delete = Learning_Module.objects.get(id = module_id)
 	module_to_delete.delete()
 
-	return redirect ('/learning_content')
+	return redirect ('/learning_content_modules')
 
 
 
@@ -1219,7 +1221,7 @@ def edit_module (request, module_id):
 			module_to_edit.module_description = module_description
 			module_to_edit.save()
 
-	return redirect ('/learning_content')
+	return redirect ('/learning_content_modules')
 
 
 
@@ -1700,7 +1702,7 @@ def add_summary_content(request, topic_id):
 
 		else:
 			messages.success(request, 'Please add a file', extra_tags='alert-danger')
-			redir = "/view_module/" + str(module_id)
+			redir = "/learning_content/" + str(topic_id)
 			return redirect (redir)
 			# return redirect ('/view_module/')
 
@@ -1734,7 +1736,7 @@ def add_summary_content(request, topic_id):
 
 		messages.success(request, 'Summary file added', extra_tags='alert-success')
 
-		redir = "/view_module/" + str(module_id)
+		redir = "/learning_content/" + str(topic_id)
 		return redirect (redir)
 
 
