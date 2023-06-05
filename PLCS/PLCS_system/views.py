@@ -1127,6 +1127,27 @@ def learning_content(request, topic_id):
 
 
 
+def learning_content(request):
+	all_modules = Learning_Module.objects.all().order_by('-module_DOR')
+	all_modules_count = Learning_Module.objects.all().count()
+
+	for obj in all_modules:
+		column_value = obj.module_tags
+		if column_value:
+			list_value = literal_eval(column_value)
+			obj.module_tags = list_value
+			obj.save()
+
+
+	logged_in_userid = request.session['user_id']
+	user_names = request.session['user_names']
+
+	roles_n_permissions = get_roles_permissions(request, logged_in_userid)
+	return render (request, "learning_module_management.html", {'roles_n_permissions': roles_n_permissions, 'user_names': user_names,
+		'all_modules': all_modules, 'all_modules_count': all_modules_count})
+
+
+
 def learning_topic(request):
 	all_modules = Learning_Module.objects.all().order_by('-module_DOR')
 	all_modules_count = Learning_Module.objects.all().count()
@@ -1789,7 +1810,6 @@ def recommend_projects(user_id):
 		user_recommendations.append(project_id)
 
 	return user_recommendations
-
 
 
 
