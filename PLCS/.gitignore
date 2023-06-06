@@ -1,3 +1,8 @@
-PLCS_system/static/profile_imgs
-PLCS_system/static/project_imgs
-PLCS_system/static/project_files
+PLCS_system/static/profile_imgs/*.jpg
+PLCS_system/static/profile_imgs/*.png
+
+PLCS_system/static/project_imgs/*.png
+PLCS_system/static/project_imgs/*.jpg
+
+PLCS_system/static/project_files/*.doc
+PLCS_system/static/project_files/*.docx
