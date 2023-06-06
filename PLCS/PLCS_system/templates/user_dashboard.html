@@ -497,8 +497,25 @@
                 </div>
 
 
-                <!-- /.box-header -->
                 <div class="box-body">
+                  {% for i in rec_projects_details %}
+
+                    {% if forloop.counter == 1 %}
+                      <div class="col-md-12">
+
+                    {% else %}
+                      <div class="col-md-12 mt">
+                    {% endif %}
+
+                      <dt>{{ i.project_title }}</dt>
+                      <dd>{{ i.project_description }}. <a href="/project_details/{{ i.id }}/"> Read more </a> </dd>
+                    </div>
+                  {% endfor %}
+                </div>
+
+
+                <!-- /.box-header -->
+                <!-- <div class="box-body">
                   <div class="col-md-12">
                     <dt>Web Development</dt>
                     <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
@@ -524,7 +541,7 @@
                     <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
                   </div>
 
-                </div>
+                </div> -->
                 <!-- /.box-body -->
               </div>
               <!-- /.box -->

@@ -90,13 +90,13 @@
                 <div class="box-header with-border">
                   <i class="fa fa-file"></i>
 
-                  <h3 class="box-title"> PLC Programming </h3>
+                  <h3 class="box-title">{{ get_project_details.project_id }}: {{ get_project_details.project_title }} </h3>
 
                   <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" data-toggle="dropdown">
                       <i class="fa fa-ellipsis-v"></i>
                     </button>
-                    <ul class="dropdown-menu" role="menu">
+                    <ul class="dropdown-menu" role="menu">{{ current_user }}
                       {% if i.user_project.id == current_user %}
                         <li><a href="#">Edit</a></li>
                         <li><a href="#">Delete</a></li>
@@ -486,31 +486,19 @@
 
                 <!-- /.box-header -->
                 <div class="box-body">
-                  <div class="col-md-12">
-                    <dt>Web Development</dt>
-                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
-                  </div>
+                  {% for i in rec_projects_details %}
 
-                  <div class="col-md-12 mt">
-                    <dt>Mobile App Development</dt>
-                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
-                  </div>
+                    {% if forloop.counter == 1 %}
+                      <div class="col-md-12">
 
-                  <div class="col-md-12 mt">
-                    <dt>UI/UX Design</dt>
-                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
-                  </div>
+                    {% else %}
+                      <div class="col-md-12 mt">
+                    {% endif %}
 
-                  <div class="col-md-12 mt">
-                    <dt>UI/UX Design</dt>
-                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
-                  </div>
-
-                  <div class="col-md-12 mt">
-                    <dt>Web Development</dt>
-                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
-                  </div>
-
+                      <dt>{{ i.project_title }}</dt>
+                      <dd>{{ i.project_description }}. <a href="/project_details/{{ i.id }}/"> Read more </a> </dd>
+                    </div>
+                  {% endfor %}
                 </div>
                 <!-- /.box-body -->
               </div>

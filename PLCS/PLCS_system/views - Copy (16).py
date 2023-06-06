@@ -766,14 +766,9 @@ def user_management(request):
 	get_all_projects = Project.objects.all().order_by('-project_DOR')
 	user_names = request.session['user_names']
 
-
 	#Recommnend Projects
-	rec_proj = recommend_projects(current_user)
-	rec_proj = rec_proj[0]
-	# print (rec_proj[0])
-
-	# Get recommended projects from the database based on the project IDs
-	rec_projects_details = Project.objects.filter(project_id__in = rec_proj)
+	# rec_proj = recommend_projects(current_user)
+	# return HttpResponse (rec_proj)
 
 
 	get_all_project_collabs = User_Project_Collab.objects.filter(user = user_x)
@@ -869,7 +864,7 @@ def user_management(request):
 			'user_permissions': user_permissions, 'user_roles': user_roles, 'roles_for_each_user': roles_for_each_user,
 			'roles_n_permissions': roles_n_permissions, 'get_all_projects': get_all_projects, 'user_names': user_names, 
 			'current_user': current_user, 'get_all_project_collabs': user_x_collab, 'all_roles': all_roles, 
-			'permissions_for_role': permissions_for_role, 'notifs': notifs, 'rec_projects_details': rec_projects_details})
+			'permissions_for_role': permissions_for_role, 'notifs': notifs})
 		# return render (request, "dashboard.html")
 
 	else:
@@ -1326,18 +1321,6 @@ def project_details(request, project_id):
 	#Get roles in database
 	user_roles = Role.objects.all()
 	current_user = request.session['user_id']
-	user_x = User.objects.get (id = current_user)
-
-	#Recommnend Projects
-	rec_proj = recommend_projects(current_user)
-	rec_proj = rec_proj[0]
-	# print (rec_proj[0])
-
-	# Get recommended projects from the database based on the project IDs
-	rec_projects_details = Project.objects.filter(project_id__in = rec_proj)
-
-
-	# get_all_project_collabs = User_Project_Collab.objects.filter(user = user_x)
 
 
 	roles_n_permissions = request.session['roles_n_permissions']
@@ -1372,8 +1355,7 @@ def project_details(request, project_id):
 
 	# return HttpResponse (get_project_details.project_images)
 	# {% static '/project_imgs/PLCS44#img1.png' %}{% static '/project_imgs/x.pdf' %}{% static '/project_imgs/x.pdf' %}
-	return render(request, "project_details.html", {'get_project_details': get_project_details, 
-		'roles_n_permissions': roles_n_permissions, 'user_names': user_names, 'rec_projects_details': rec_projects_details})
+	return render(request, "project_details.html", {'get_project_details': get_project_details, 'roles_n_permissions': roles_n_permissions, 'user_names': user_names})
 
 
 # def user_project_likes (request, user_id, project_id):
@@ -1678,84 +1660,30 @@ def add_topic(request, module_id):
 
 
 def add_summary_content(request, topic_id):
-	# current_user = request.session['user_id']
-	# rec_proj = recommend_projects(current_user)
-	# return HttpResponse (rec_proj)
-
 	current_user = request.session['user_id']
-	user_details = User.objects.get(id = current_user)
-	module_topic = Module_Topic.objects.get(id = topic_id)
-	# file1 = request.POST['file1']
-	file1 = request.POST.get ('file1', None)
+	rec_proj = recommend_projects(current_user)
+	return HttpResponse (rec_proj)
 
-	summary_cont = Summary()
-
-	if request.method == 'POST':
-		name_summary = request.POST['name_summary'] 
-		summary_description = request.POST['summary_description'] 
-		# file1 = request.POST['file1']
-
-		destination_path = settings.STATIC_ROOT3
-
-		# Construct the full destination path
-		if (file1 != ''):
-			i = request.FILES['file1'].name
-			destination_fullpath = os.path.join(destination_path, i)
-
-			# pj = ['x', 'x', 'x']
-
-			# Copy the uploaded image to the destination directory
-			with open(destination_fullpath, 'wb') as destination_file:
-				#For the first index, check at first index of project_images list if submitted
-				uploaded_file1 = request.FILES.get('file1')
-				# source_file = uploaded_image1.file
-				# img_present[0] = ['y']
-				copyfileobj(uploaded_file1, destination_file)
-				destination_file.close()
-
-				img_extension = os.path.splitext(i)[1]
-
-				# Rename the file
-				# img_count = index+1
-
-		else:
-			messages.success(request, 'Please add a file', extra_tags='alert-danger')
-			redir = "/learning_content/" + str(topic_id)
-			return redirect (redir)
-			# return redirect ('/view_module/')
+	# z
 
 
-		# summary_cont = Summary()
-		summary_cont.user = user_details
-		summary_cont.module_topic = module_topic
-		summary_cont.file_name = name_summary
-		summary_cont.file_description = summary_description
-		summary_cont.file_link = summary_description
-		summary_cont.save()
 
 
-		if (file1 != ''):
-			new_name = 'PLCS' + str(summary_cont.id) + img_extension
 
-			# project_images[index] = new_name
-			
-			# Construct the full path to the file
-			full_path = os.path.join(destination_path, i)
+		# if 'file1' in request.FILES:
+		# 	return HttpResponse ('file added')
 
-			# Rename the file
-			os.rename(full_path, os.path.join(destination_path, new_name))
-
-		else:
-			new_name = ''
-
-		summary_cont.file_link = new_name
-		summary_cont.save()
+		# else:
+		# 	return HttpResponse ('file not added')
 
 
-		messages.success(request, 'Summary file added', extra_tags='alert-success')
+	# post_data = request.POST
 
-		redir = "/learning_content/" + str(topic_id)
-		return redirect (redir)
+ #        # Iterate over the data and print key-value pairs
+	# for key, value in post_data.items():
+	# 	print(f"{key}: {value}")
+
+	# return HttpResponse ('ym')
 
 
 def view_messages(request):
@@ -1773,16 +1701,20 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import ast
 
-
 def recommend_projects(user_id):
 	# Step 1: Load data from the database
 
-	## Load user data
-	user = User.objects.get(id=user_id)
-	users = [(user.email, user.project_interests)]
+	# Load user data
+	user = User.objects.get(id = user_id)
+	user_project_interests = ast.literal_eval(user.project_interests)
+	user_project_interests_string = ', '.join(user_project_interests)
+	users = [(user.email, user_project_interests_string)]
 
 	# Load project data
-	projects = [(project.project_id, project.project_skills) for project in Project.objects.all()]
+	projects = Project.objects.all()
+	project_skills = [ast.literal_eval(project.project_skills) for project in projects]
+	project_skills_string = [', '.join(skills) for skills in project_skills]
+	projects = list(zip(projects, project_skills_string))
 
 	# Step 2: Preprocess data and compute cosine similarity matrix
 
@@ -1812,15 +1744,15 @@ def recommend_projects(user_id):
 		sorted_indices = user_sim_scores.argsort()[::-1]
 
 		# Get top 15 recommended projects
-		num_projects = min(5, len(projects))
+		num_projects = min(15, len(projects))
 		recommended_projects = [projects[i][0] for i in sorted_indices[:num_projects]]
 
-		recommendations.append(recommended_projects)
+		recommendations.append((email, recommended_projects))
 
     # Render the recommendations in a template
 	return recommendations
 
-
+	
 
 
 def delete_summary(request, summary_id, module_id):

@@ -1,0 +1,41 @@
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Step 1: Preprocess the data
+
+# Combine the lists
+all_skills = ['UI/UX', 'Software Engineering', 'Mobile App Development', 'Java', 'UI/UX']
+
+# Create CountVectorizer and fit-transform the skills
+vectorizer = CountVectorizer()
+skills_matrix = vectorizer.fit_transform(all_skills)
+
+# Step 2: Compute the cosine similarity
+
+# Compute cosine similarity matrix
+cosine_sim_matrix = cosine_similarity(skills_matrix)
+
+# Display the cosine similarity matrix
+print(cosine_sim_matrix)
+
+
+In the cosine similarity matrix:
+
+The diagonal values are 1 because a skill is always perfectly similar to itself.
+Off-diagonal values represent the similarity between different skills.
+A value of 1 indicates the highest similarity, while 0 indicates no similarity.
+
+
+
+
+In the context of the CountVectorizer class from scikit-learn, fit_transform() specifically performs the following tasks:
+
+Fitting: It learns the vocabulary from the provided data. The vocabulary is a set of all unique words or tokens present in the data.
+
+Transforming: It transforms the input data into a matrix representation, where each row represents a document (or text sample) and each column represents a unique word from the vocabulary. The values in the matrix indicate the frequency of each word in each document.
+
+
+
+A cosine similarity matrix is a square matrix that represents the similarity between pairs of vectors using the cosine similarity measure. It is often used in information retrieval, recommendation systems, and text mining to measure the similarity between documents, items, or features.
+
+The cosine similarity between two vectors is a metric that calculates the cosine of the angle between them. It measures the similarity based on the direction, rather than the magnitude, of the vectors. The cosine similarity ranges from -1 to 1, where 1 indicates perfect similarity, 0 indicates no similarity, and -1 indicates perfect dissimilarity.
