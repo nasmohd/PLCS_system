@@ -1137,6 +1137,24 @@ def learning_content(request, topic_id):
 def learning_content_modules(request):
 	all_modules = Learning_Module.objects.all().order_by('-module_DOR')
 	all_modules_count = Learning_Module.objects.all().count()
+	current_user = request.session['user_id']
+
+	#Recommnend Learning Materials
+	rec_proj = recommend_learning_material(current_user)
+	rec_proj = rec_proj[0]
+	# print (rec_proj[0])
+
+
+	# return HttpResponse (rec_proj)
+
+
+	# Get recommended projects from the database based on the project IDs
+	# rec_projects_details = Learning_Module.objects.filter(id__in = rec_proj)
+	rec_projects_details = []
+	for id in rec_proj:
+		project_detail = Learning_Module.objects.get(id=id)
+		rec_projects_details.append(project_detail)
+
 
 	for obj in all_modules:
 		column_value = obj.module_tags
@@ -1151,7 +1169,7 @@ def learning_content_modules(request):
 
 	roles_n_permissions = get_roles_permissions(request, logged_in_userid)
 	return render (request, "learning_module_management.html", {'roles_n_permissions': roles_n_permissions, 'user_names': user_names,
-		'all_modules': all_modules, 'all_modules_count': all_modules_count})
+		'all_modules': all_modules, 'all_modules_count': all_modules_count, 'rec_projects_details': rec_projects_details})
 
 
 
@@ -1682,6 +1700,9 @@ def add_summary_content(request, topic_id):
 	# rec_proj = recommend_projects(current_user)
 	# return HttpResponse (rec_proj)
 
+	# rec_proj = recommend_projects(current_user)
+	# return HttpResponse (rec_proj)
+
 	current_user = request.session['user_id']
 	user_details = User.objects.get(id = current_user)
 	module_topic = Module_Topic.objects.get(id = topic_id)
@@ -1774,6 +1795,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import ast
 
 
+
 def recommend_projects(user_id):
 	# Step 1: Load data from the database
 
@@ -1819,6 +1841,55 @@ def recommend_projects(user_id):
 
     # Render the recommendations in a template
 	return recommendations
+
+
+
+def recommend_learning_material (user_id):
+	# Step 1: Load data from the database
+
+	## Load user data
+	user = User.objects.get(id=user_id)
+	users = [(user.email, user.learning_interests)]
+
+	# Load project data
+	projects = [(project.id, project.module_tags) for project in Learning_Module.objects.all()]
+
+	# Step 2: Preprocess data and compute cosine similarity matrix
+
+	# Preprocess skills for CountVectorizer
+	all_skills = [user[1] for user in users] + [project[1] for project in projects]
+
+	# Create CountVectorizer and fit-transform the skills
+	vectorizer = CountVectorizer()
+	skills_matrix = vectorizer.fit_transform(all_skills)
+
+	# Compute cosine similarity matrix
+	user_skills = skills_matrix[:len(users)]
+	project_skills = skills_matrix[len(users):]
+	cosine_sim_matrix = cosine_similarity(user_skills, project_skills)
+
+	# Step 3: Generate recommendations
+
+	learning_recommendations = []
+
+	for user_index, user in enumerate(users):
+		email = user[0]
+
+		# Get cosine similarity scores for the user
+		user_sim_scores = cosine_sim_matrix[user_index]
+
+		# Sort projects based on similarity scores
+		sorted_indices = user_sim_scores.argsort()[::-1]
+
+		# Get top 15 recommended projects
+		num_projects = min(5, len(projects))
+		recommended_learning_modules = [projects[i][0] for i in sorted_indices[:num_projects]]
+
+		learning_recommendations.append(recommended_learning_modules)
+
+    # Render the recommendations in a template
+	return learning_recommendations
+
 
 
 

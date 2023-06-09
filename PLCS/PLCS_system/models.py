@@ -102,7 +102,7 @@ class Learning_Module (models.Model):
 	module_DOR = models.DateTimeField(default  = datetime.today())
 	
 	def __str__(self):
-		return "title = {}, User = {}".format(self.module_title, self.module_creator)
+		return "id = {}, title = {}, User = {}".format(self.id, self.module_title, self.module_tags)
 
 
 class Notification (models.Model):

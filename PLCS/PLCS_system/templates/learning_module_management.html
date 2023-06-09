@@ -65,662 +65,776 @@
       <!-- Main content -->
       <section class="content">
         <!-- Small boxes (Stat box) -->
-        <div class="row">
-          <!-- ./col -->
-          <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box bg-light-blue">
-              <div class="inner">
-                <h3>{{ all_modules_count }}</h3>
+        <div class="col-md-8 col-8">
+          <div class="row">
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+              <!-- small box -->
+              <div class="small-box bg-light-blue">
+                <div class="inner">
+                  <h3>{{ all_modules_count }}</h3>
 
-                <p> Registered Modules </p>
+                  <p> Registered Modules </p>
+                </div>
+                <div class="icon">
+                  <i class="fa fa-fw fa-folder-o" style="margin-left: 51rem; font-size: 80%;"></i>
+                </div>
+                <!-- <a href="#" class="small-box-footer" onclick="project_view('registered_users')">More info <i class="fa fa-arrow-circle-right"></i></a> -->
               </div>
-              <div class="icon">
-                <i class="fa fa-fw fa-folder-o" style="margin-left: 51rem; font-size: 80%;"></i>
-              </div>
-              <!-- <a href="#" class="small-box-footer" onclick="project_view('registered_users')">More info <i class="fa fa-arrow-circle-right"></i></a> -->
             </div>
+
+            <!-- <div class="col-lg-3 col-xs-6">
+              <div class="small-box bg-aqua">
+                <div class="inner">
+                  <h3>150</h3>
+
+                  <p>New Projects</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-bag"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              </div>
+            </div> -->
+
+            <!-- ./col -->
           </div>
+          <!-- /.row -->
+          <!-- Main row -->
+          <div class="row">
+            <div class="col-xs-12">
 
-          <!-- <div class="col-lg-3 col-xs-6">
-            <div class="small-box bg-aqua">
-              <div class="inner">
-                <h3>150</h3>
+              <!-- /.box -->
 
-                <p>New Projects</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-bag"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-          </div> -->
+              <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title" style="color: #306FA0;">
+                  <i class="fa fa-fw fa-folder-o"></i>
+                  <strong> Module Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC;"> Showing all Registered Modules/Subjects to date </span> </h3>
+                  <!-- label label-success -->
 
-          <!-- ./col -->
-        </div>
-        <!-- /.row -->
-        <!-- Main row -->
-        <div class="row">
-          <div class="col-xs-12">
+                  <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addUser"> Add New Module </button>
 
-            <!-- /.box -->
-
-            <div class="box">
-              <div class="box-header">
-                <h3 class="box-title" style="color: #306FA0;">
-                <i class="fa fa-fw fa-folder-o"></i>
-                <strong> Module Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC;"> Showing all Registered Modules/Subjects to date </span> </h3>
-                <!-- label label-success -->
-
-                <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addUser"> Add New Module </button>
-
-                <button class="btn btn-danger" style="margin-left: 1rem;" id="delete_Btn" title="Delete Module(s) &#10;(must select at least one checkbox)" disabled> <i class="fa fa-fw fa-trash" style="color: white;"></i> </button>
-                <!-- Delete Module(s) -->
-              </div>
-              <!-- /.box-header -->
+                  <button class="btn btn-danger" style="margin-left: 1rem;" id="delete_Btn" title="Delete Module(s) &#10;(must select at least one checkbox)" disabled> <i class="fa fa-fw fa-trash" style="color: white;"></i> </button>
+                  <!-- Delete Module(s) -->
+                </div>
+                <!-- /.box-header -->
 
 
-              <div class="modal fade" id="modal-addUser" style="display: none;">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span></button>
-                      <h4 class="modal-title"> Add New Module </h4>
-                    </div>
-                    <form role="form" action="/add_module/" method="POST" id="addUser" onsubmit="return validateForm()">
-                      {% csrf_token %}
+                <div class="modal fade" id="modal-addUser" style="display: none;">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title"> Add New Module </h4>
+                      </div>
+                      <form role="form" action="/add_module/" method="POST" id="addUser" onsubmit="return validateForm()">
+                        {% csrf_token %}
 
-                    <div class="modal-body">
-                      <p>Please fill in details of the module/subject</p>
+                      <div class="modal-body">
+                        <p>Please fill in details of the module/subject</p>
 
-                      <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
-                          <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Module Details <span class="optional_entry"> * </span></a></li>
-                          
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="tab_1">
+                        <div class="nav-tabs-custom">
+                          <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Module Details <span class="optional_entry"> * </span></a></li>
                             
-                      <!-- form start -->
-                      
-                            <div class="form-group">
-                              <label for="exampleInputEmail1">Module Title <span class="optional_entry"> * </span></label>
-                              <input type="text" class="form-control" placeholder="Enter Module Title" name="module_title" required value="James">
-                            </div>
+                          </ul>
 
-                            <div class="form-group">
-                              <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
-                              <textarea class="form-control" placeholder="Module Description" name="module_description" rows="4" style="resize: none;" required>Programming PLC and HMI using Ladder Diagrams</textarea>
-                            </div>
-
-
-                            <div class="form-group">
-                              <label for="exampleInputEmail1">Tags <span class="optional_entry"> * </span></label>
-                              <input type="text" id="search-input" list="search-terms" onchange="showSelectedSearchTerms()" name="module_tags" class="form-control" placeholder="Search...">
-
-                              <datalist id="search-terms">
-                                <option value="Algorithms">
-                                <option value="Data Structures and Algorithms">
-                                <option value="Software Engineering">
-                                <option value="Web application development">
-                                <option value="Blockchain">
-                              </datalist>
-                                                          
-                              <div id="selected-search-terms">
-                                
+                          <div class="tab-content">
+                            <div class="tab-pane active" id="tab_1">
+                              
+                        <!-- form start -->
+                        
+                              <div class="form-group">
+                                <label for="exampleInputEmail1">Module Title <span class="optional_entry"> * </span></label>
+                                <input type="text" class="form-control" placeholder="Enter Module Title" name="module_title" required value="James">
                               </div>
 
-                              <style>
-                                #selected-search-terms {
-                                  display: flex;
-                                  flex-wrap: wrap;
-                                  gap: 10px;
-                                  margin-top: 10px;
-                                }
-                                #selected-search-terms div {
-                                  display: inline-block;
-                                }
+                              <div class="form-group">
+                                <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
+                                <textarea class="form-control" placeholder="Module Description" name="module_description" rows="4" style="resize: none;" required>Programming PLC and HMI using Ladder Diagrams</textarea>
+                              </div>
 
-                                .selected-term:hover {
-                                  cursor: pointer;
-                                }
-                              </style>
 
-                              <script>
-                                const labelClasses = ['label-warning', 'label-danger', 'label-success', 'label-info', 'label-primary'];
-                                const selectedTerms = new Set();
+                              <div class="form-group">
+                                <label for="exampleInputEmail1">Tags <span class="optional_entry"> * </span></label>
+                                <input type="text" id="search-input" list="search-terms" onchange="showSelectedSearchTerms()" name="module_tags" class="form-control" placeholder="Search...">
 
-                                function showSelectedSearchTerms() {
-                                  const input = document.getElementById("search-input");
-                                  const selectedTerm = input.value.trim();
+                                <datalist id="search-terms">
+                                  <option value="Algorithms">
+                                  <option value="Data Structures and Algorithms">
+                                  <option value="Software Engineering">
+                                  <option value="Web application development">
+                                  <option value="Blockchain">
+                                </datalist>
+                                                            
+                                <div id="selected-search-terms">
+                                  
+                                </div>
 
-                                  const datalist = document.getElementById("search-terms");
-
-                                  //Choose random label from those specified above
-                                  const selectedOption = datalist.querySelector(`option[value='${input.value.trim()}']`);
-
-                                  if (selectedTerm && !(selectedTerm in selectedTerms)  && !(selectedOption.value in selectedTerms) && selectedOption){
-                                    const labelClass = labelClasses[Math.floor(Math.random() * labelClasses.length)];
-                                    selectedTerms[selectedTerm] = labelClass;
-                                    input.value = "";
-                                    displaySelectedSearchTerms();
-
-                                    // Remove selected option from datalist
-                                    const selectedOption = datalist.querySelector(`option[value='${selectedTerm}']`);
-                                    if (selectedOption) {
-                                      selectedOption.remove();
-                                    }
+                                <style>
+                                  #selected-search-terms {
+                                    display: flex;
+                                    flex-wrap: wrap;
+                                    gap: 10px;
+                                    margin-top: 10px;
                                   }
-                                }
+                                  #selected-search-terms div {
+                                    display: inline-block;
+                                  }
 
-                                function displaySelectedSearchTerms() {
-                                  const selectedTermsDiv = document.getElementById("selected-search-terms");
-                                  selectedTermsDiv.innerHTML = "";
-                                  Object.keys(selectedTerms).forEach((term) => {
-                                    const termDiv = document.createElement("div");
-                                    const label = document.createElement("span");
-                                    label.className = `label ${selectedTerms[term]}`;
-                                    label.textContent = term;
-                                    label.style.marginRight = '5px';
-                                    termDiv.appendChild(label);
-                                    termDiv.className = 'selected-term';
+                                  .selected-term:hover {
+                                    cursor: pointer;
+                                  }
+                                </style>
 
-                                    // Add an 'x' icon using font awesome
-                                    const deleteIcon = document.createElement("i");
-                                    deleteIcon.className = "fa fa-fw fa-close";
-                                    deleteIcon.style.color = "white";
+                                <script>
+                                  const labelClasses = ['label-warning', 'label-danger', 'label-success', 'label-info', 'label-primary'];
+                                  const selectedTerms = new Set();
 
-                                    termDiv.onclick = function() {
-                                      delete selectedTerms[term];
+                                  function showSelectedSearchTerms() {
+                                    const input = document.getElementById("search-input");
+                                    const selectedTerm = input.value.trim();
+
+                                    const datalist = document.getElementById("search-terms");
+
+                                    //Choose random label from those specified above
+                                    const selectedOption = datalist.querySelector(`option[value='${input.value.trim()}']`);
+
+                                    if (selectedTerm && !(selectedTerm in selectedTerms)  && !(selectedOption.value in selectedTerms) && selectedOption){
+                                      const labelClass = labelClasses[Math.floor(Math.random() * labelClasses.length)];
+                                      selectedTerms[selectedTerm] = labelClass;
+                                      input.value = "";
                                       displaySelectedSearchTerms();
 
-                                      // Add option back to datalist
-                                      const datalist = document.getElementById("search-terms");
-                                      const option = document.createElement("option");
-                                      option.value = term;
-                                      datalist.appendChild(option);
+                                      // Remove selected option from datalist
+                                      const selectedOption = datalist.querySelector(`option[value='${selectedTerm}']`);
+                                      if (selectedOption) {
+                                        selectedOption.remove();
+                                      }
                                     }
-                                    label.appendChild(deleteIcon);
-                                    selectedTermsDiv.appendChild(termDiv);
-                                  });
-                                }
-
-                                function validateForm() {
-                                  const selectedTermsDiv = document.getElementById("selected-search-terms");
-                                  const selectedTagsCount = selectedTermsDiv.childElementCount;
-                                  
-                                  if (selectedTagsCount < 2) {
-                                    const errorMessage = document.createElement("div");
-                                    errorMessage.className = "error-message";
-                                    
-                                    // Create the Font Awesome icon element
-                                    const icon = document.createElement("i");
-                                    icon.className = "fa fa-fw fa-exclamation-circle";
-                                    errorMessage.appendChild(icon);
-
-                                    icon.style.color = "red";
-                                    
-                                    // Create the error message text
-                                    const messageText = document.createElement("span");
-                                    messageText.textContent = "Please select at least two search terms.";
-                                    errorMessage.appendChild(messageText);
-                                    
-                                    // Set styles for the icon and error message text
-                                    icon.style.marginRight = "5px";
-                                    messageText.style.color = "red";
-                                    
-                                    const searchInput = document.getElementById("search-input");
-                                    searchInput.parentNode.insertBefore(errorMessage, searchInput.nextSibling);
-                                    
-                                    // Remove error message after 5 seconds
-                                    setTimeout(() => {
-                                      errorMessage.remove();
-                                    }, 2000);
-                                    
-                                    return false;
                                   }
 
-                                  const input = document.getElementById("search-input");
-                                  const terms = Object.keys(selectedTerms);
-                                  input.value = terms.join(", ");
+                                  function displaySelectedSearchTerms() {
+                                    const selectedTermsDiv = document.getElementById("selected-search-terms");
+                                    selectedTermsDiv.innerHTML = "";
+                                    Object.keys(selectedTerms).forEach((term) => {
+                                      const termDiv = document.createElement("div");
+                                      const label = document.createElement("span");
+                                      label.className = `label ${selectedTerms[term]}`;
+                                      label.textContent = term;
+                                      label.style.marginRight = '5px';
+                                      termDiv.appendChild(label);
+                                      termDiv.className = 'selected-term';
 
-                                  return true;
+                                      // Add an 'x' icon using font awesome
+                                      const deleteIcon = document.createElement("i");
+                                      deleteIcon.className = "fa fa-fw fa-close";
+                                      deleteIcon.style.color = "white";
+
+                                      termDiv.onclick = function() {
+                                        delete selectedTerms[term];
+                                        displaySelectedSearchTerms();
+
+                                        // Add option back to datalist
+                                        const datalist = document.getElementById("search-terms");
+                                        const option = document.createElement("option");
+                                        option.value = term;
+                                        datalist.appendChild(option);
+                                      }
+                                      label.appendChild(deleteIcon);
+                                      selectedTermsDiv.appendChild(termDiv);
+                                    });
+                                  }
+
+                                  function validateForm() {
+                                    const selectedTermsDiv = document.getElementById("selected-search-terms");
+                                    const selectedTagsCount = selectedTermsDiv.childElementCount;
+                                    
+                                    if (selectedTagsCount < 2) {
+                                      const errorMessage = document.createElement("div");
+                                      errorMessage.className = "error-message";
+                                      
+                                      // Create the Font Awesome icon element
+                                      const icon = document.createElement("i");
+                                      icon.className = "fa fa-fw fa-exclamation-circle";
+                                      errorMessage.appendChild(icon);
+
+                                      icon.style.color = "red";
+                                      
+                                      // Create the error message text
+                                      const messageText = document.createElement("span");
+                                      messageText.textContent = "Please select at least two search terms.";
+                                      errorMessage.appendChild(messageText);
+                                      
+                                      // Set styles for the icon and error message text
+                                      icon.style.marginRight = "5px";
+                                      messageText.style.color = "red";
+                                      
+                                      const searchInput = document.getElementById("search-input");
+                                      searchInput.parentNode.insertBefore(errorMessage, searchInput.nextSibling);
+                                      
+                                      // Remove error message after 5 seconds
+                                      setTimeout(() => {
+                                        errorMessage.remove();
+                                      }, 2000);
+                                      
+                                      return false;
+                                    }
+
+                                    const input = document.getElementById("search-input");
+                                    const terms = Object.keys(selectedTerms);
+                                    input.value = terms.join(", ");
+
+                                    return true;
+                                  }
+
+                                </script>
+                              </div>
+
+                              
+
+                              <!-- <div class="form-group">
+                                <label for="exampleInputPassword1">Confirm Password <span class="optional_entry"> * </span></label>
+                                <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" required>
+                              </div> -->
+
+                              <style type="text/css">
+                                .optional_entry {
+                                  color: red;
                                 }
-
-                              </script>
+                              </style>
+                          <!-- <div class="form-group">
+                            <label for="exampleInputFile"> Profile Picture </label>
+                            <input type="file" id="user_profile_picture">
+                          </div> -->
                             </div>
-
-                            
-
-                            <!-- <div class="form-group">
-                              <label for="exampleInputPassword1">Confirm Password <span class="optional_entry"> * </span></label>
-                              <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" required>
-                            </div> -->
-
-                            <style type="text/css">
-                              .optional_entry {
-                                color: red;
-                              }
-                            </style>
-                        <!-- <div class="form-group">
-                          <label for="exampleInputFile"> Profile Picture </label>
-                          <input type="file" id="user_profile_picture">
-                        </div> -->
                           </div>
+                          <!-- /.tab-content -->
                         </div>
-                        <!-- /.tab-content -->
-                      </div>
 
-                      
-
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Add Module</button>
-                    </div>
-
-                    </form>
-                  </div>
-                  <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-              </div>
-
-
-
-              <div class="box-body table-responsive">
-                <table id="example1" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th> <input type="checkbox" class="check-all"> </th>
-                    <th style="width: 5%;"> SN </th>
-                    <th style="width: 15%;">Module title</th>
-                    <th style="width: 25%;">Description</th>
-                    <th style="width: 40%;">Tags</th>
-                    <th class="text-center" style="width: 15%;"> Change details </th>
-                  </tr>
-                  </thead>
-                  <tbody>
-
-                  {% for i in all_modules %}
-                    <tr>
-                      <td> 
-                        <input type="checkbox" class="table-checkbox" name="email[]" value="{{ i.id }}">
-                      </td>
-
-                      <td> <a href="/view_topics/{{ i.id }}/"> {{ forloop.counter }} </a></td>
-                      <td> <a href="/view_topics/{{ i.id }}/"> {{ i.module_title }} </a></td>
-                      <td class="description_column"> {{ i.module_description }} </td>
-                      <!-- <td> <a href="/view_module/{{ i.id }}/"> {{ i.module_tags }} </a></td> -->
-
-                      <td id="tagContainer">
                         
 
-                        <span class="label random-label" style="margin-right: 5px;">{{ i.module_tags }} </span>
-                      </td>
-
-                      <td class="text-center"> 
-                        <div class="btn-group">
-                          <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-fw fa-pencil-square-o"></i>
-                          </button>
-                          <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                          </button>
-
-                          <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="#" data-toggle="modal" data-target="#modal-editmodule{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li>
-
-                            <li><a data-toggle="modal" data-target="#modal-deletemodule{{ i.id }}"><i class="fa fa-trash"></i> Delete </a></li>
-
-                            <!-- <li class="divider"></li>
-                            <li><a href="#">Separated link</a></li> -->
-                          </ul>
-                        </div>
-                      </td>
-                    </tr>
-
-
-                    <div class="modal fade" id="modal-editmodule{{ i.id }}" style="display: none;">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">×</span></button>
-                            <h4 class="modal-title"> Edit Module Details </h4>
-                          </div>
-                          <form role="form" action="/edit_module/{{ i.id }}/" method="POST" id="addUser">
-                            {% csrf_token %}
-
-                          <div class="modal-body">
-                            <p>Please edit details of the module/subject</p>
-
-                            <div class="nav-tabs-custom">
-                              <ul class="nav nav-tabs">
-                                <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Module Details <span class="optional_entry"> * </span></a></li>
-                                
-                              </ul>
-
-                              <div class="tab-content">
-                                <div class="tab-pane active" id="tab_1">
-                                  
-                            <!-- form start -->
-                            
-                                  <div class="form-group">
-                                    <label for="exampleInputEmail1">Module Title <span class="optional_entry"> * </span></label>
-                                    <input type="text" class="form-control" placeholder="Enter Module Title" name="module_title" required value="{{ i.module_title }}">
-                                  </div>
-
-                                  <div class="form-group">
-                                    <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
-                                    <textarea class="form-control" placeholder="Module Description" name="module_description" rows="4" style="resize: none;" required>{{ i.module_description }}</textarea>
-                                  </div>
-
-
-                                  <div class="form-group">
-                                    <label for="exampleInputEmail1">Tags <span class="optional_entry"> * </span></label>
-                                    <input type="text" id="search-input" list="search-terms" onchange="showSelectedSearchTerms()" name="q" class="form-control" placeholder="Search...">
-
-                                    <datalist id="search-terms">
-                                      <option value="Algorithms">
-                                      <option value="Data Structures and Algorithms">
-                                      <option value="Software Engineering">
-                                      <option value="Web application development">
-                                      <option value="Blockchain">
-                                    </datalist>
-                                                                
-                                    <div id="selected-search-terms">
-                                      
-                                    </div>
-
-                                    <style>
-                                      #selected-search-terms {
-                                        display: flex;
-                                        flex-wrap: wrap;
-                                        gap: 10px;
-                                        margin-top: 10px;
-                                      }
-                                      #selected-search-terms div {
-                                        display: inline-block;
-                                      }
-
-                                      .selected-term:hover {
-                                        cursor: pointer;
-                                      }
-                                    </style>
-
-                                    <script>
-                                      const labelClasses{{ i.id }} = ['label-warning', 'label-danger', 'label-success', 'label-info', 'label-primary'];
-                                      const selectedTerms{{ i.id }} = new Set();
-
-                                      function showSelectedSearchTerms() {
-                                        const input = document.getElementById("search-input");
-                                        const selectedTerm = input.value.trim();
-
-                                        const datalist = document.getElementById("search-terms");
-
-                                        //Choose random label from those specified above
-                                        const selectedOption = datalist.querySelector(`option[value='${input.value.trim()}']`);
-
-                                        if (selectedTerm && !(selectedTerm in selectedTerms{{ i.id }})  && !(selectedOption.value in selectedTerms{{ i.id }}) && selectedOption){
-                                          const labelClass = labelClasses{{ i.id }}[Math.floor(Math.random() * labelClasses{{ i.id }}.length)];
-                                          selectedTerms{{ i.id }}[selectedTerm] = labelClass;
-                                          input.value = "";
-                                          displaySelectedSearchTerms();
-
-                                          // Remove selected option from datalist
-                                          const selectedOption = datalist.querySelector(`option[value='${selectedTerm}']`);
-                                          if (selectedOption) {
-                                            selectedOption.remove();
-                                          }
-                                        }
-                                      }
-
-                                      function displaySelectedSearchTerms() {
-                                        const selectedTermsDiv = document.getElementById("selected-search-terms");
-                                        selectedTermsDiv.innerHTML = "";
-                                        Object.keys(selectedTerms{{ i.id }}).forEach((term) => {
-                                          const termDiv = document.createElement("div");
-                                          const label = document.createElement("span");
-                                          label.className = `label ${selectedTerms{{ i.id }}[term]}`;
-                                          label.textContent = term;
-                                          label.style.marginRight = '5px';
-                                          termDiv.appendChild(label);
-                                          termDiv.className = 'selected-term';
-
-                                          // Add an 'x' icon using font awesome
-                                          const deleteIcon = document.createElement("i");
-                                          deleteIcon.className = "fa fa-fw fa-close";
-                                          deleteIcon.style.color = "white";
-
-                                          termDiv.onclick = function() {
-                                            delete selectedTerms{{ i.id }}[term];
-                                            displaySelectedSearchTerms();
-
-                                            // Add option back to datalist
-                                            const datalist = document.getElementById("search-terms");
-                                            const option = document.createElement("option");
-                                            option.value = term;
-                                            datalist.appendChild(option);
-                                          }
-                                          label.appendChild(deleteIcon);
-                                          selectedTermsDiv.appendChild(termDiv);
-                                        });
-                                      }
-
-                                      function validateForm() {
-                                        
-                                        const selectedTermsDiv = document.getElementById("selected-search-terms");
-                                        if (selectedTermsDiv.childElementCount === 0) {
-                                          var navTabs = document.querySelector('.nav.nav-tabs');
-                                          var navTabChildren = navTabs.children;
-
-                                          for (var i = 0; i < navTabChildren.length; i++) {
-                                            navTabChildren[i].classList.remove('active');
-                                          }
-
-                                          // Select the li element
-                                          let liElement = document.querySelector('li a[href="#tab_2"]').parentElement;
-
-                                          // Add a class to the li element
-                                          liElement.classList.add('active');
-                                          $('.tab-pane').removeClass('active');
-
-
-                                          const tabPane = document.getElementById("tab_2");
-                                          tabPane.classList.add("active");
-                                          // alert("Please select at least one search term.");
-                                          return false;
-                                        }
-                                        return true;
-                                      }
-                                    </script>
-                                  </div>
-
-                                  
-
-                                  <!-- <div class="form-group">
-                                    <label for="exampleInputPassword1">Confirm Password <span class="optional_entry"> * </span></label>
-                                    <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" required>
-                                  </div> -->
-
-                                  <style type="text/css">
-                                    .optional_entry {
-                                      color: red;
-                                    }
-                                  </style>
-                              <!-- <div class="form-group">
-                                <label for="exampleInputFile"> Profile Picture </label>
-                                <input type="file" id="user_profile_picture">
-                              </div> -->
-                                </div>
-                              </div>
-                              <!-- /.tab-content -->
-                            </div>
-
-                            
-
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success">Update Module</button>
-                          </div>
-
-                          </form>
-                        </div>
-                        <!-- /.modal-content -->
                       </div>
-                      <!-- /.modal-dialog -->
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Module</button>
+                      </div>
+
+                      </form>
                     </div>
+                    <!-- /.modal-content -->
+                  </div>
+                  <!-- /.modal-dialog -->
+                </div>
 
 
-                    <!-- Modal Delete User  -->
-                    {% if i.status != 2 %}
-                      <div class="modal modal-danger fade" id="modal-deletemodule{{ i.id }}" style="display: none;">
+
+                <div class="box-body table-responsive">
+                  <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                      <th> <input type="checkbox" class="check-all"> </th>
+                      <th style="width: 5%;"> SN </th>
+                      <th style="width: 15%;">Module title</th>
+                      <th style="width: 25%;">Description</th>
+                      <th style="width: 40%;">Tags</th>
+                      <th class="text-center" style="width: 15%;"> Change details </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for i in all_modules %}
+                      <tr>
+                        <td> 
+                          <input type="checkbox" class="table-checkbox" name="email[]" value="{{ i.id }}">
+                        </td>
+
+                        <td> <a href="/view_topics/{{ i.id }}/"> {{ forloop.counter }} </a></td>
+                        <td> <a href="/view_topics/{{ i.id }}/"> {{ i.module_title }} </a></td>
+                        <td class="description_column"> {{ i.module_description }} </td>
+                        <!-- <td> <a href="/view_module/{{ i.id }}/"> {{ i.module_tags }} </a></td> -->
+
+                        <td id="tagContainer">
+                          
+
+                          <span class="label random-label" style="margin-right: 5px;">{{ i.module_tags }} </span>
+                        </td>
+
+                        <td class="text-center"> 
+                          <div class="btn-group">
+                            <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                              <i class="fa fa-fw fa-pencil-square-o"></i>
+                            </button>
+                            <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                              <span class="caret"></span>
+                              <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+
+                            <ul class="dropdown-menu pull-right" role="menu">
+                              <li><a href="#" data-toggle="modal" data-target="#modal-editmodule{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li>
+
+                              <li><a data-toggle="modal" data-target="#modal-deletemodule{{ i.id }}"><i class="fa fa-trash"></i> Delete </a></li>
+
+                              <!-- <li class="divider"></li>
+                              <li><a href="#">Separated link</a></li> -->
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+
+
+                      <div class="modal fade" id="modal-editmodule{{ i.id }}" style="display: none;">
                         <div class="modal-dialog">
                           <div class="modal-content">
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span></button>
-                              <h4 class="modal-title">Delete Module </h4>
+                              <h4 class="modal-title"> Edit Module Details </h4>
                             </div>
+                            <form role="form" action="/edit_module/{{ i.id }}/" method="POST" id="addUser">
+                              {% csrf_token %}
+
                             <div class="modal-body">
-                              <p> Are you sure you want to delete this module? </p>
-                              <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
+                              <p>Please edit details of the module/subject</p>
+
+                              <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                  <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Module Details <span class="optional_entry"> * </span></a></li>
+                                  
+                                </ul>
+
+                                <div class="tab-content">
+                                  <div class="tab-pane active" id="tab_1">
+                                    
+                              <!-- form start -->
+                              
+                                    <div class="form-group">
+                                      <label for="exampleInputEmail1">Module Title <span class="optional_entry"> * </span></label>
+                                      <input type="text" class="form-control" placeholder="Enter Module Title" name="module_title" required value="{{ i.module_title }}">
+                                    </div>
+
+                                    <div class="form-group">
+                                      <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
+                                      <textarea class="form-control" placeholder="Module Description" name="module_description" rows="4" style="resize: none;" required>{{ i.module_description }}</textarea>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                      <label for="exampleInputEmail1">Tags <span class="optional_entry"> * </span></label>
+                                      <input type="text" id="search-input" list="search-terms" onchange="showSelectedSearchTerms()" name="q" class="form-control" placeholder="Search...">
+
+                                      <datalist id="search-terms">
+                                        <option value="Algorithms">
+                                        <option value="Data Structures and Algorithms">
+                                        <option value="Software Engineering">
+                                        <option value="Web application development">
+                                        <option value="Blockchain">
+                                      </datalist>
+                                                                  
+                                      <div id="selected-search-terms">
+                                        
+                                      </div>
+
+                                      <style>
+                                        #selected-search-terms {
+                                          display: flex;
+                                          flex-wrap: wrap;
+                                          gap: 10px;
+                                          margin-top: 10px;
+                                        }
+                                        #selected-search-terms div {
+                                          display: inline-block;
+                                        }
+
+                                        .selected-term:hover {
+                                          cursor: pointer;
+                                        }
+                                      </style>
+
+                                      <script>
+                                        const labelClasses{{ i.id }} = ['label-warning', 'label-danger', 'label-success', 'label-info', 'label-primary'];
+                                        const selectedTerms{{ i.id }} = new Set();
+
+                                        function showSelectedSearchTerms() {
+                                          const input = document.getElementById("search-input");
+                                          const selectedTerm = input.value.trim();
+
+                                          const datalist = document.getElementById("search-terms");
+
+                                          //Choose random label from those specified above
+                                          const selectedOption = datalist.querySelector(`option[value='${input.value.trim()}']`);
+
+                                          if (selectedTerm && !(selectedTerm in selectedTerms{{ i.id }})  && !(selectedOption.value in selectedTerms{{ i.id }}) && selectedOption){
+                                            const labelClass = labelClasses{{ i.id }}[Math.floor(Math.random() * labelClasses{{ i.id }}.length)];
+                                            selectedTerms{{ i.id }}[selectedTerm] = labelClass;
+                                            input.value = "";
+                                            displaySelectedSearchTerms();
+
+                                            // Remove selected option from datalist
+                                            const selectedOption = datalist.querySelector(`option[value='${selectedTerm}']`);
+                                            if (selectedOption) {
+                                              selectedOption.remove();
+                                            }
+                                          }
+                                        }
+
+                                        function displaySelectedSearchTerms() {
+                                          const selectedTermsDiv = document.getElementById("selected-search-terms");
+                                          selectedTermsDiv.innerHTML = "";
+                                          Object.keys(selectedTerms{{ i.id }}).forEach((term) => {
+                                            const termDiv = document.createElement("div");
+                                            const label = document.createElement("span");
+                                            label.className = `label ${selectedTerms{{ i.id }}[term]}`;
+                                            label.textContent = term;
+                                            label.style.marginRight = '5px';
+                                            termDiv.appendChild(label);
+                                            termDiv.className = 'selected-term';
+
+                                            // Add an 'x' icon using font awesome
+                                            const deleteIcon = document.createElement("i");
+                                            deleteIcon.className = "fa fa-fw fa-close";
+                                            deleteIcon.style.color = "white";
+
+                                            termDiv.onclick = function() {
+                                              delete selectedTerms{{ i.id }}[term];
+                                              displaySelectedSearchTerms();
+
+                                              // Add option back to datalist
+                                              const datalist = document.getElementById("search-terms");
+                                              const option = document.createElement("option");
+                                              option.value = term;
+                                              datalist.appendChild(option);
+                                            }
+                                            label.appendChild(deleteIcon);
+                                            selectedTermsDiv.appendChild(termDiv);
+                                          });
+                                        }
+
+                                        function validateForm() {
+                                          
+                                          const selectedTermsDiv = document.getElementById("selected-search-terms");
+                                          if (selectedTermsDiv.childElementCount === 0) {
+                                            var navTabs = document.querySelector('.nav.nav-tabs');
+                                            var navTabChildren = navTabs.children;
+
+                                            for (var i = 0; i < navTabChildren.length; i++) {
+                                              navTabChildren[i].classList.remove('active');
+                                            }
+
+                                            // Select the li element
+                                            let liElement = document.querySelector('li a[href="#tab_2"]').parentElement;
+
+                                            // Add a class to the li element
+                                            liElement.classList.add('active');
+                                            $('.tab-pane').removeClass('active');
+
+
+                                            const tabPane = document.getElementById("tab_2");
+                                            tabPane.classList.add("active");
+                                            // alert("Please select at least one search term.");
+                                            return false;
+                                          }
+                                          return true;
+                                        }
+                                      </script>
+                                    </div>
+
+                                    
+
+                                    <!-- <div class="form-group">
+                                      <label for="exampleInputPassword1">Confirm Password <span class="optional_entry"> * </span></label>
+                                      <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" required>
+                                    </div> -->
+
+                                    <style type="text/css">
+                                      .optional_entry {
+                                        color: red;
+                                      }
+                                    </style>
+                                <!-- <div class="form-group">
+                                  <label for="exampleInputFile"> Profile Picture </label>
+                                  <input type="file" id="user_profile_picture">
+                                </div> -->
+                                  </div>
+                                </div>
+                                <!-- /.tab-content -->
+                              </div>
+
+                              
+
                             </div>
                             <div class="modal-footer">
-                              <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-                              <a href="/delete_module/{{ i.id }}" class="btn btn-outline">Confirm</a>
+                              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-success">Update Module</button>
                             </div>
+
+                            </form>
                           </div>
                           <!-- /.modal-content -->
                         </div>
                         <!-- /.modal-dialog -->
-                    </div>
-                    {% endif %}
+                      </div>
 
-                  {% endfor %}
-                  
-                  </tbody>
 
-                  <tfoot>
-                  <tr>
-                    <th> </th>
-                    <th> SN </th>
-                    <th>Module title</th>
-                    <th>Description</th>
-                    <th>Tags</th>
+                      <!-- Modal Delete User  -->
+                      {% if i.status != 2 %}
+                        <div class="modal modal-danger fade" id="modal-deletemodule{{ i.id }}" style="display: none;">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">×</span></button>
+                                <h4 class="modal-title">Delete Module </h4>
+                              </div>
+                              <div class="modal-body">
+                                <p> Are you sure you want to delete this module? </p>
+                                <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                                <a href="/delete_module/{{ i.id }}" class="btn btn-outline">Confirm</a>
+                              </div>
+                            </div>
+                            <!-- /.modal-content -->
+                          </div>
+                          <!-- /.modal-dialog -->
+                      </div>
+                      {% endif %}
+
+                    {% endfor %}
                     
-                    <th class="text-center"> Change details </th>
-                  </tr>
-                  </tfoot>
-                </table>
+                    </tbody>
 
-                <script>
-                  // Get all elements with the 'random-label' class
-                  const labelElements = document.getElementsByClassName('random-label');
-
-                  // Define an array of random label classes
-                  const labelClasses2 = ['label-success', 'label-danger', 'label-info', 'label-warning', 'label-primary'];
-
-                  // Iterate over the label elements and assign random classes
-                  for (let i = 0; i < labelElements.length; i++) {
-                    const labelElement = labelElements[i];
-                    
-                    // Get a random index from the labelClasses array
-                    const randomIndex = Math.floor(Math.random() * labelClasses2.length);
-                    
-                    // Assign the random label class to the element
-                    labelElement.classList.add(labelClasses2[randomIndex]);
-                  }
-
-
-                  //Truncate columns with a lot of text
-                  // Get all elements with the specified class
-                  const desc_columnElement = document.getElementsByClassName("description_column");
-
-                  // Define the maximum number of characters to display
-                  const maxLength = 40;
-
-                  // Iterate over the column elements
-                  for (let i = 0; i < desc_columnElement.length; i++) {
-                    const columnElement = desc_columnElement[i];
-                    
-                    // Get the text content of the column
-                    const columnText = columnElement.textContent;
-
-                    // Check if the text exceeds the maximum length
-                    if (columnText.length > maxLength) {
-                      // Truncate the text to the maximum length
-                      const truncatedText = columnText.substring(0, maxLength) + "...";
+                    <tfoot>
+                    <tr>
+                      <th> </th>
+                      <th> SN </th>
+                      <th>Module title</th>
+                      <th>Description</th>
+                      <th>Tags</th>
                       
-                      // Set the truncated text as the column content
-                      columnElement.textContent = truncatedText;
+                      <th class="text-center"> Change details </th>
+                    </tr>
+                    </tfoot>
+                  </table>
+
+                  <script>
+                    // Get all elements with the 'random-label' class
+                    const labelElements = document.getElementsByClassName('random-label');
+
+                    // Define an array of random label classes
+                    const labelClasses2 = ['label-success', 'label-danger', 'label-info', 'label-warning', 'label-primary'];
+
+                    // Iterate over the label elements and assign random classes
+                    for (let i = 0; i < labelElements.length; i++) {
+                      const labelElement = labelElements[i];
+                      
+                      // Get a random index from the labelClasses array
+                      const randomIndex = Math.floor(Math.random() * labelClasses2.length);
+                      
+                      // Assign the random label class to the element
+                      labelElement.classList.add(labelClasses2[randomIndex]);
                     }
-                  }
 
 
+                    //Truncate columns with a lot of text
+                    // Get all elements with the specified class
+                    const desc_columnElement = document.getElementsByClassName("description_column");
 
-                  //Truncate tags column
-                  const tagContainer = document.getElementById('tagContainer');
-                  const labelElements_tags = tagContainer.getElementsByClassName('label');
-                  const maxVisibleLabels = 2;
-                  
-                  // Check the number of label elements
-                  if (labelElements_tags.length > maxVisibleLabels) {
-                    // Iterate over the label elements
-                    for (let i = 0; i < labelElements_tags.length; i++) {
-                      const labelElement = labelElements_tags[i];
+                    // Define the maximum number of characters to display
+                    const maxLength = 40;
+
+                    // Iterate over the column elements
+                    for (let i = 0; i < desc_columnElement.length; i++) {
+                      const columnElement = desc_columnElement[i];
                       
-                      // Hide the label if it exceeds the maximum visible labels
-                      if (i >= maxVisibleLabels) {
-                        labelElement.style.display = 'none';
+                      // Get the text content of the column
+                      const columnText = columnElement.textContent;
+
+                      // Check if the text exceeds the maximum length
+                      if (columnText.length > maxLength) {
+                        // Truncate the text to the maximum length
+                        const truncatedText = columnText.substring(0, maxLength) + "...";
+                        
+                        // Set the truncated text as the column content
+                        columnElement.textContent = truncatedText;
                       }
                     }
+
+
+
+                    //Truncate tags column
+                    const tagContainer = document.getElementById('tagContainer');
+                    const labelElements_tags = tagContainer.getElementsByClassName('label');
+                    const maxVisibleLabels = 2;
                     
-                    // Add ellipsis (...) after the last visible label
-                    const ellipsisSpan = document.createElement('span');
-                    ellipsisSpan.className = 'label';
-                    ellipsisSpan.textContent = '...';
-                    tagContainer.appendChild(ellipsisSpan);
-                  }
+                    // Check the number of label elements
+                    if (labelElements_tags.length > maxVisibleLabels) {
+                      // Iterate over the label elements
+                      for (let i = 0; i < labelElements_tags.length; i++) {
+                        const labelElement = labelElements_tags[i];
+                        
+                        // Hide the label if it exceeds the maximum visible labels
+                        if (i >= maxVisibleLabels) {
+                          labelElement.style.display = 'none';
+                        }
+                      }
+                      
+                      // Add ellipsis (...) after the last visible label
+                      const ellipsisSpan = document.createElement('span');
+                      ellipsisSpan.className = 'label';
+                      ellipsisSpan.textContent = '...';
+                      tagContainer.appendChild(ellipsisSpan);
+                    }
 
 
-                  //Disable button if checkbox is not selected
-                  const checkboxes = document.querySelectorAll('.table-checkbox');
-                  const del_Btn = document.getElementById('delete_Btn');
-                  
-                  checkboxes.forEach((checkbox) => {
-                    checkbox.addEventListener('change', () => {
-                      const checkedCheckboxes = document.querySelectorAll('.table-checkbox:checked');
-                      del_Btn.disabled = checkedCheckboxes.length === 0;
+                    //Disable button if checkbox is not selected
+                    const checkboxes = document.querySelectorAll('.table-checkbox');
+                    const del_Btn = document.getElementById('delete_Btn');
+                    
+                    checkboxes.forEach((checkbox) => {
+                      checkbox.addEventListener('change', () => {
+                        const checkedCheckboxes = document.querySelectorAll('.table-checkbox:checked');
+                        del_Btn.disabled = checkedCheckboxes.length === 0;
+                      });
                     });
-                  });
 
 
-                  //Check all checkbox
-                  const checkAllCheckbox = document.querySelector('.check-all');
-                  const checkboxes2 = document.querySelectorAll('.table-checkbox');
-                  
-                  checkAllCheckbox.addEventListener('change', function() {
+                    //Check all checkbox
+                    const checkAllCheckbox = document.querySelector('.check-all');
+                    const checkboxes2 = document.querySelectorAll('.table-checkbox');
+                    
+                    checkAllCheckbox.addEventListener('change', function() {
 
-                    checkboxes2.forEach(function(checkbox) {
-                      checkbox.checked = checkAllCheckbox.checked;
+                      checkboxes2.forEach(function(checkbox) {
+                        checkbox.checked = checkAllCheckbox.checked;
+                      });
+
+                      del_Btn.disabled = !checkAllCheckbox.checked;
                     });
-
-                    del_Btn.disabled = !checkAllCheckbox.checked;
-                  });
-                </script>
+                  </script>
+                </div>
+                <!-- /.box-body -->
               </div>
-              <!-- /.box-body -->
+
+              <!-- /.box -->
+            </div>
+            <!-- /.col -->
+          </div>
+        </div>
+
+        <div class="col-md-4 col-4">
+          <div class="row">
+
+            <div class="col-md-12" style="margin-top: 0rem;">
+              <div class="box box-solid">
+                <div class="box-header with-border">
+                  <i class="fa fa-file"></i>
+
+                  <h4 class="box-title"> Recommended Learning Material </h4>
+
+                  <!-- <i class="fa fa-file "></i> -->
+                </div>
+
+
+                <div class="box-body">
+                  {% for i in rec_projects_details %}
+
+                    {% if forloop.counter == 1 %}
+                      <div class="col-md-12">
+
+                    {% else %}
+                      <div class="col-md-12 mt">
+                    {% endif %}
+
+                      <dt>{{ i.module_title }}</dt>
+                      <dd>{{ i.module_description }}. <a href="/view_topics/{{ i.id }}/"> Read more </a> </dd>
+                    </div>
+                  {% endfor %}
+                </div>
+
+
+                <!-- /.box-header -->
+                <!-- <div class="box-body">
+                  <div class="col-md-12">
+                    <dt>Web Development</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                  <div class="col-md-12 mt">
+                    <dt>Mobile App Development</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                  <div class="col-md-12 mt">
+                    <dt>UI/UX Design</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                  <div class="col-md-12 mt">
+                    <dt>UI/UX Design</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                  <div class="col-md-12 mt">
+                    <dt>Web Development</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                </div> -->
+                <!-- /.box-body -->
+              </div>
+              <!-- /.box -->
             </div>
 
-            <!-- /.box -->
+            <div class="col-md-12" style="margin-top: 0rem;">
+              <div class="box box-solid">
+                <div class="box-header with-border">
+                  <div class="box-title" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <i class="fa fa-file"></i>
+                    <h4 style="margin-top: -0.5rem;"> Recommended Learning Material <br/> based on your Activity </h4>
+                  </div>
+
+                  <!-- <i class="fa fa-file "></i> -->
+                </div>
+
+
+                <!-- /.box-header -->
+                <div class="box-body">
+                  <div class="col-md-12">
+                    <dt>Software Engineering</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                  <div class="col-md-12 mt">
+                    <dt>Web Application Development</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                  <div class="col-md-12 mt">
+                    <dt>Software Engineering</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                  <div class="col-md-12 mt">
+                    <dt>Web Application Development</dt>
+                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                  </div>
+
+                </div>
+
+                <style type="text/css">
+                  .mt {
+                    margin-top: 2rem;
+                  }
+                </style>
+                <!-- /.box-body -->
+              </div>
+              <!-- /.box -->
+            </div>
           </div>
-          <!-- /.col -->
         </div>
         <!-- /.row (main row) -->
 
