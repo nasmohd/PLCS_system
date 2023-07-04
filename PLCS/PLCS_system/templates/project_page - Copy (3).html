@@ -335,48 +335,12 @@
                           {% csrf_token %}
                           <div class="form-group">
                             <label for="exampleInputEmail1">Title <span class="optional_entry"> * </span></label>
-                            <div class="input-container">
-                              <input type="text" class="form-control" id="project_title" placeholder="Project Title" value="PLC Programming" name="project_title" required>
-                              <span class="clear-icon" onclick="clearInput('project_title')"><i class="fa fa-fw fa-close"></i></span>
-                            </div>
+                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Project Title" value="PLC Programming" name="project_title" required>
                           </div>
-
-                          <style>
-                            .input-container {
-                              position: relative;
-                              display: inline-block;
-                              width: 100%;
-                            }
-
-                            .input-container input {
-                              padding-right: 0px;
-                            }
-
-                            .input-container .clear-icon {
-                              position: absolute;
-                              top: 50%;
-                              right: 5px;
-                              transform: translateY(-50%);
-                              cursor: pointer;
-                              color: #aaa;
-                            }
-                          </style>
-
-                          <script>
-                            function clearInput(element_to_clear) {
-                              var input = document.getElementById(element_to_clear);
-                              input.value = "";
-                            }
-                          </script>
-
-
 
                           <div class="form-group">
                             <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
-                            <div class="input-container">
-                              <textarea class="form-control" id="project_description" placeholder="Describe the project" rows="10" style="resize: none;" name="project_description" required>Programming the system</textarea>
-                              <span class="clear-icon" onclick="clearInput('project_description')"><i class="fa fa-fw fa-close"></i></span>
-                            </div>
+                            <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the project" rows="10" style="resize: none;" name="project_description" required>Programming the system</textarea>
                           </div>
 
                           <style type="text/css">
@@ -384,6 +348,14 @@
                               color: red;
                             }
                           </style>
+
+                          
+                          
+                          <!-- <div class="form-group">
+                            <label for="exampleInputFile"> Profile Picture </label>
+                            <input type="file" id="user_profile_picture">
+                          </div> -->
+                        
                         </div>
 
 
@@ -562,29 +534,12 @@
 
                           <div class="form-group">
                             <label for="exampleInputEmail1">Collaborators Required <span class="optional_entry"> * </span></label>
-                            <div class="input-container">
-                              <input type="number" id="num_collaborators" class="form-control" placeholder="Number of Collaborators" value="3" name="num_collaborators" required>
-                              <span class="clear-icon" onclick="clearInput('num_collaborators')"><i class="fa fa-fw fa-close"></i></span>
-                            </div>
-                            
+                            <input type="number" class="form-control" placeholder="Number of Collaborators" value="3" name="num_collaborators" required>
                           </div>
-
-                          <style>
-                            /* Remove up and down arrows for number input */
-                            input[type="number"]::-webkit-inner-spin-button,
-                            input[type="number"]::-webkit-outer-spin-button {
-                              -webkit-appearance: none;
-                              margin: 0;
-                            }
-                          </style>
 
                           <div class="form-group">
                             <label for="exampleInputEmail1">Budget Requirements <span class="optional_entry"> * </span></label>
-                            <div class="input-container">
-                              <input type="text" class="form-control" id="cash-amount" placeholder="Project Budget" name="project_budget" required>
-                              <span class="clear-icon" onclick="clearInput('cash-amount')"><i class="fa fa-fw fa-close"></i></span>
-                            </div>
-                            
+                            <input type="text" class="form-control" id="cash-amount" placeholder="Project Budget" name="project_budget" required>
                           </div>
 
                           <script type="text/javascript">
@@ -606,12 +561,9 @@
                             <label for="exampleInputEmail1">Deadline<span class="optional_entry"> * </span></label>
                             <div class="input-group date">
                               <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
+                              <i class="fa fa-calendar"></i>
                               </div>
-                              <div class="input-container">
-                                <input type="text" class="form-control pull-right" id="datepicker" name="project_deadline">
-                                <span class="clear-icon" onclick="clearInput('datepicker')"><i class="fa fa-fw fa-close"></i></span>
-                              </div>
+                              <input type="text" class="form-control pull-right" id="datepicker" name="project_deadline">
                             </div>
                           </div>
 
@@ -794,7 +746,7 @@
                           <p class="help-block">Tasks for this project</p>
                           <button type="button" class="btn btn-sm btn-default" style="margin-bottom: 1.2rem;" title="Add New Project" id="add_task"><i class="fa fa-fw fa-plus"></i></button>
 
-                          <ul class="todo-list ui-sortable" id="task_list">
+                          <ul class="todo-list ui-sortable">
                             <!-- <li id="original_li" style="display: none;">
                               <span class="handle ui-sortable-handle">
                                     <i class="fa fa-ellipsis-v"></i>
@@ -808,56 +760,33 @@
                             </li> -->
                           </ul>
 
-                            <script>
+                          <script>
                               document.getElementById('add_task').addEventListener('click', function() {
-                                var taskList = document.getElementById('task_list');
-                                var newTask = document.createElement('li');
-                                newTask.style.marginBottom = '0.7rem';
-                                var taskDeadlineDiv = document.createElement('div');
-
-                                taskDeadlineDiv.classList.add('task-deadline');
-                                taskDeadlineDiv.innerHTML = `
-                                  <label for="task_deadline">Task Deadline</label>
-                                  <input type="date" name="task_deadline[]" required style="margin-bottom:0.3rem;">
-                                `;
-                                newTask.appendChild(taskDeadlineDiv);
-                                newTask.innerHTML += `
-                                  <input type="text" class="text" contenteditable="true" name="task_details[]" required style="margin-bottom:0.3rem; width:inherit; display: inline-block; width: 80%;" placeholder="Task" autocomplete="off">
-                                  <div class="tools">
-                                    <i class="fa fa-plus add-sub-task"></i>
-                                    <i class="fa fa-trash-o"></i>
-                                  </div>
-                                  <ul class="sub-tasks"></ul>
-                                `;
-                                taskList.appendChild(newTask);
-
-                                // Add event listener to the trash icon to remove the task
-                                var trashIcon = newTask.querySelector('.fa-trash-o');
-                                trashIcon.addEventListener('click', function() {
-                                  newTask.remove();
-                                });
-
-                                // Add event listener to the add sub-task button
-                                var addSubTaskButton = newTask.querySelector('.add-sub-task');
-                                addSubTaskButton.addEventListener('click', function() {
-                                  var subTaskList = newTask.querySelector('.sub-tasks');
-                                  var newSubTask = document.createElement('li');
-                                  newSubTask.innerHTML = `
-                                    <input type="text" class="text" contenteditable="true" name="sub_tasks[${taskList.children.length - 1}][]" required style="display: inline-block; width: 75%; font-size: 12px;" placeholder="Deliverables" autocomplete="off">
+                                  var todoList = document.querySelector('.todo-list');
+                                  var originalLi = document.getElementById('original_li');
+                                  var newLi = document.createElement('li');
+                                  newLi.innerHTML = `
+                                    <span class="handle ui-sortable-handle">
+                                        <i class="fa fa-ellipsis-v"></i>
+                                        <i class="fa fa-ellipsis-v"></i>
+                                    </span>
+                                    <input type="checkbox" value="" style="display: none;">
+                                    <span class="text" contenteditable="true"></span>
                                     <div class="tools">
-                                      <i class="fa fa-trash-o"></i>
+                                        <i class="fa fa-trash-o"></i>
                                     </div>
                                   `;
-                                  subTaskList.appendChild(newSubTask);
+                                  todoList.appendChild(newLi);
 
-                                  // Add event listener to the trash icon to remove the sub-task
-                                  var subTrashIcon = newSubTask.querySelector('.fa-trash-o');
-                                  subTrashIcon.addEventListener('click', function() {
-                                    newSubTask.remove();
+                                  var trashIcons = newLi.querySelectorAll('.fa-trash-o');
+                                  trashIcons.forEach(function(icon) {
+                                      icon.addEventListener('click', function() {
+                                          var liToRemove = this.closest('li');
+                                          liToRemove.remove();
+                                      });
                                   });
-                                });
                               });
-                            </script>
+                          </script>
                           
                           <!-- <div class="form-group">
                             <label for="exampleInputFile">File 1 <span class="optional_entry"> (optional) </span></label>
@@ -929,7 +858,7 @@
                     
                     <td> 
                       {% if i.status == 1 %}
-                        <span class="btn-round btn btn-warning btn-xs"> Active </span>
+                        <span class="btn-round btn btn-warning btn-xs"> In Progress </span>
                       {% endif %}
 
                       {% if i.status == 2 %}
@@ -990,30 +919,24 @@
 
                           <div class="nav-tabs-custom">
                             <ul class="nav nav-tabs">
-                              <li class="active"><a href="#tab_5{{ i.id }}" data-toggle="tab" aria-expanded="true">Project Details <span class="optional_entry"> * </span></a></li>
-                              <li ><a href="#tab_6{{ i.id }}" data-toggle="tab" aria-expanded="false"> Requirements <span class="optional_entry"> * </span></a></li>
-                              <li><a href="#tab_7{{ i.id }}" data-toggle="tab">Images <span class="optional_entry"> * </span></a></li>
-                              <li><a href="#tab_8{{ i.id }}" data-toggle="tab">Other Attachments </a></li>
+                              <li class="active"><a href="#tab_5" data-toggle="tab" aria-expanded="true">Project Details <span class="optional_entry"> * </span></a></li>
+                              <li ><a href="#tab_6" data-toggle="tab" aria-expanded="false"> Requirements <span class="optional_entry"> * </span></a></li>
+                              <li><a href="#tab_7" data-toggle="tab">Images <span class="optional_entry"> * </span></a></li>
+                              <li><a href="#tab_8" data-toggle="tab">Other Attachments </a></li>
 
                             </ul>
 
                             <div class="tab-content">
-                              <div class="tab-pane active" id="tab_5{{ i.id }}">
+                              <div class="tab-pane active" id="tab_5">
                                 {% csrf_token %}
                                 <div class="form-group">
                                   <label for="exampleInputEmail1">Title <span class="optional_entry"> * </span></label>
-                                  <div class="input-container">
-                                    <input type="text" class="form-control" id="project_title{{ i.id }}" placeholder="Project Title" value="{{ i.project_title }}" name="project_title" required>
-                                    <span class="clear-icon" onclick="clearInput('project_title{{ i.id }}')"><i class="fa fa-fw fa-close"></i></span>
-                                  </div>
+                                  <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Project Title" value="{{ i.project_title }}" name="project_title" required>
                                 </div>
 
                                 <div class="form-group">
                                   <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
-                                  <div class="input-container">
-                                    <textarea class="form-control" id="project_description{{ i.id }}" placeholder="Describe the project" rows="10" style="resize: none;" name="project_description" required>{{ i.project_description }}</textarea>
-                                    <span class="clear-icon" onclick="clearInput('project_description{{ i.id }}')"><i class="fa fa-fw fa-close"></i></span>
-                                  </div>
+                                  <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the project" rows="10" style="resize: none;" name="project_description" required>{{ i.project_description }}</textarea>
                                 </div>
 
                                 <style type="text/css">
@@ -1029,7 +952,7 @@
                               </div>
 
                               <!-- /.tab-pane -->
-                              <div class="tab-pane" id="tab_6{{ i.id }}">
+                              <div class="tab-pane" id="tab_6">
                                 <div class="form-group">
                                   <label for="exampleInputEmail1"> Skills required <span class="optional_entry"> * </span></label>
                                   <input type="text" id="search-input2" list="search-terms2" onchange="showSelectedSearchTerms2()" name="skills_required" class="form-control" placeholder="Search...">
@@ -1145,20 +1068,12 @@
 
                                 <div class="form-group">
                                   <label for="exampleInputEmail1">Collaborators Required <span class="optional_entry"> * </span></label>
-
-                                  <div class="input-container">
-                                    <input type="number" id="num_collaborators{{ i.id }}" class="form-control" placeholder="Number of Collaborators" value="{{ i.project_collaborators }}" name="num_collaborators" required>
-                                    <span class="clear-icon" onclick="clearInput('num_collaborators{{ i.id }}')"><i class="fa fa-fw fa-close"></i></span>
-                                  </div>
+                                  <input type="number" class="form-control" placeholder="Number of Collaborators" value="{{ i.project_collaborators }}" name="num_collaborators" required>
                                 </div>
 
                                 <div class="form-group">
                                   <label for="exampleInputEmail1">Budget Requirements <span class="optional_entry"> * </span></label>
-                                  <div class="input-container">
-                                    <input type="text" class="form-control" id="cash-amount{{ i.id }}" placeholder="Project Budget" name="project_budget" required value="{{ i.project_budget }}">
-                                    <span class="clear-icon" onclick="clearInput('cash-amount{{ i.id }}')"><i class="fa fa-fw fa-close"></i></span>
-                                  </div>
-
+                                  <input type="text" class="form-control" id="cash-amount" placeholder="Project Budget" name="project_budget" required value="{{ i.project_budget }}">
                                 </div>
 
                                 <script type="text/javascript">
@@ -1194,7 +1109,7 @@
                               </div>
                               <!-- /.tab-pane -->
 
-                              <div class="tab-pane" id="tab_7{{ i.id }}">
+                              <div class="tab-pane" id="tab_7">
                                 <div class="boxes_container">
                                   <div class="box_project_imgs">
                                     <input type="file" class="input-file" id="image1" accept="image/*" name="image1"/>
@@ -1328,7 +1243,7 @@
                                 </style>
                               </div>
 
-                              <div class="tab-pane" id="tab_8{{ i.id }}">
+                              <div class="tab-pane" id="tab_8">
                                 
                                 <div class="form-group">
                                   <label for="exampleInputFile">File 1 <span class="optional_entry"> (optional) </span></label>
@@ -1406,17 +1321,14 @@
 
                 <tfoot>
                 <tr>
-                  <tr>
-                  <td> <input type="checkbox" class="check-all"> </td>
-                  <th style="width: 5%;">SN</th>
-                  <th style="width: 10%;">Project ID</th>
-                  <th style="width: 10%;">Title</th>
-                  <th style="width: 15%;">Description</th>
-                  <th style="width: 30%;">Required Skills</th>
-                  <th style="width: 10%;">Status</th>
-                  <th class="text-center" style="width: 10%;">Collaboration requests</th>
-                  <th class="text-center" style="width: 10%;"> Options </th>
-                </tr>
+                  <td> </td>
+                  <th>SN</th>
+                  <th>Project ID</th>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Required Skills</th>
+                  <th>Status</th>
+                  <th class="text-center"> Options </th>
                 </tr>
                 </tfoot>
               </table>

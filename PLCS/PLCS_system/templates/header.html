@@ -313,6 +313,14 @@
             <i class="fa fa-dashboard"></i> <span> Dashboard</span></a>
         </li>
 
+
+        {% if 'Administrator' in roles_n_permissions.0 %}
+          <li>
+            <a href="#">
+              <i class="ion ion-person"></i> <span> User Management </span></a>
+          </li>
+        {% endif %}
+
         <!-- <li>
           <a href="/user_management">
             <i class="fa fa-user"></i> <span> User Management</span></a>
@@ -347,7 +355,7 @@
 
         <li>
           <a href="#">
-            <i class="fa fa-fw fa-bookmark-o" style="margin-left: -0.4rem"></i> <span style="margin-left: 0.4rem"> Bookmarked Projects </span></a>
+            <i class="fa fa-fw fa-bookmark-o" style="margin-left: -0.4rem"></i> <span style="margin-left: 0.4rem"> Saved Projects </span></a>
         </li>
 
         <!-- <li>

@@ -34,13 +34,17 @@ class Project (models.Model):
 	project_id = models.CharField (max_length=15)
 	project_title = models.CharField (max_length=300)
 	project_description = models.TextField()
+	project_tasks = models.TextField(default='')
+
 	project_DOR = models.DateTimeField(default = datetime.today())
 	project_budget = models.IntegerField (default=1)
 
 	project_skills = models.TextField(default='')
 	project_collaborators = models.IntegerField (default=1)
 	accepted_project_collaborators = models.IntegerField (default=1)
-	project_deadline = models.DateTimeField(default = '')
+	# project_deadline = models.DateTimeField(default = datetime.today())
+
+	project_deadline = models.DateField(null=True)
 
 	project_images = models.TextField(default='')
 	project_files = models.TextField(default='')
@@ -144,7 +148,8 @@ class Collab_Task (models.Model):
 	task_x = models.CharField(max_length=150, default = '')
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
 	assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-	# task_deadline = models.DateTimeField(default = '')
+	task_deadline = models.DateField(null=True)
+	task_deliverables = models.TextField(default = '')
 
 	task_status = models.IntegerField (default=0)
 	op_status = models.IntegerField (default=0)

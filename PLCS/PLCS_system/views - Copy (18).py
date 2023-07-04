@@ -617,7 +617,7 @@ def add_project(request):
 		project.project_skills = str(skills_list)
 
 		input_format = '%d-%m-%Y'
-		output_format = '%Y-%m-%d'
+		output_format = '%Y-%m-%d %H:%M:%S'
 
 		# Parse the input date string to a datetime object
 		input_date = datetime.strptime(project_deadline, input_format)
@@ -628,27 +628,6 @@ def add_project(request):
 		project.project_deadline = project_deadline
 		project.user_project = User.objects.get(id = current_user)
 
-		task_deadlines = request.POST.getlist('task_deadline[]')
-		task_details = request.POST.getlist('task_details[]')
-		sub_tasks = []
-
-		for i in range(len(task_details)):
-			sub_task_key = f'sub_tasks[{i}][]'
-			sub_task_values = request.POST.getlist(sub_task_key)
-
-			# Convert the date string to a datetime object
-			task_deadline_str = datetime.strptime(task_deadlines[i], '%Y-%m-%d')
-
-			# Format the date as 'DD-MM-YYYY'
-			formatted_deadline_date = task_deadline_str.strftime('%d-%m-%Y')
-
-
-			task_data = [formatted_deadline_date, task_details[i], sub_task_values]
-			sub_tasks.append(task_data)
-
-			#For each task, add it into Collab_tasks table
-
-		project.project_tasks = sub_tasks
 		project.save()
 
 		todo_items = request.POST.get('todo_items')
@@ -1156,28 +1135,14 @@ def learning_content(request, topic_id):
 
 
 def learning_content_modules(request):
+	all_modules = Learning_Module.objects.all().order_by('-module_DOR')
+	all_modules_count = Learning_Module.objects.all().count()
 	current_user = request.session['user_id']
-	me_user = User.objects.get(id = current_user)
-
-	all_modules = Learning_Module.objects.filter(module_creator = me_user).order_by('-module_DOR')
-	all_modules_count = all_modules.count()
-	# current_user = request.session['user_id']
-
-
-
 
 	#Recommnend Learning Materials
-	# rec_proj = recommend_learning_material(current_user)
-	# rec_proj = rec_proj[0]
-
-	# rec_projects_details = []
-	# for id in rec_proj:
-	# 	project_detail = Learning_Module.objects.get(id=id)
-	# 	rec_projects_details.append(project_detail)
+	rec_proj = recommend_learning_material(current_user)
+	rec_proj = rec_proj[0]
 	# print (rec_proj[0])
-
-
-
 
 
 	# return HttpResponse (rec_proj)
@@ -1185,7 +1150,11 @@ def learning_content_modules(request):
 
 	# Get recommended projects from the database based on the project IDs
 	# rec_projects_details = Learning_Module.objects.filter(id__in = rec_proj)
-	
+	rec_projects_details = []
+	for id in rec_proj:
+		project_detail = Learning_Module.objects.get(id=id)
+		rec_projects_details.append(project_detail)
+
 
 	for obj in all_modules:
 		column_value = obj.module_tags
@@ -1200,8 +1169,8 @@ def learning_content_modules(request):
 
 	roles_n_permissions = get_roles_permissions(request, logged_in_userid)
 	return render (request, "learning_module_management.html", {'roles_n_permissions': roles_n_permissions, 'user_names': user_names,
-		'all_modules': all_modules, 'all_modules_count': all_modules_count})
-# 'rec_projects_details': rec_projects_details
+		'all_modules': all_modules, 'all_modules_count': all_modules_count, 'rec_projects_details': rec_projects_details})
+
 
 
 def learning_topic(request):
@@ -1227,14 +1196,12 @@ def learning_topic(request):
 
 def add_module(request):
 	if request.method == "POST":
-		current_user = request.session['user_id']
-		me_user = User.objects.get(id = current_user)
 
 		module_title = request.POST["module_title"]
 		module_description = request.POST["module_description"]
 		module_tags = request.POST['module_tags']
 
-		check_modules = Learning_Module.objects.filter(module_title = module_title).filter(module_creator = me_user)
+		check_modules = Learning_Module.objects.filter(module_title = module_title)
 		if (check_modules.exists()):
 			return redirect('/learning_content_modules')
 
@@ -1265,24 +1232,17 @@ def delete_module (request, module_id):
 def edit_module (request, module_id):
 	module_to_edit = Learning_Module.objects.get(id = module_id)
 
-
 	if request.method == "POST":
 		module_title = request.POST["module_title"]
 		module_description = request.POST["module_description"]
 
-		module_to_edit.module_title = module_title
-		module_to_edit.module_description = module_description
-		module_to_edit.save()
+		try:
+			module_to_edit_title = Learning_Module.objects.get(module_title = module_title)
 
-
-
-		# try:
-		# 	module_to_edit_title = Learning_Module.objects.get(module_title = module_title)
-
-		# except:
-		# 	module_to_edit.module_title = module_title
-		# 	module_to_edit.module_description = module_description
-		# 	module_to_edit.save()
+		except:
+			module_to_edit.module_title = module_title
+			module_to_edit.module_description = module_description
+			module_to_edit.save()
 
 	return redirect ('/learning_content_modules')
 
@@ -1431,8 +1391,7 @@ def project_details(request, project_id):
 	# return HttpResponse (get_project_details.project_images)
 	# {% static '/project_imgs/PLCS44#img1.png' %}{% static '/project_imgs/x.pdf' %}{% static '/project_imgs/x.pdf' %}
 	return render(request, "project_details.html", {'get_project_details': get_project_details, 
-		'roles_n_permissions': roles_n_permissions, 'user_names': user_names, 'rec_projects_details': rec_projects_details,
-		'current_user': current_user})
+		'roles_n_permissions': roles_n_permissions, 'user_names': user_names, 'rec_projects_details': rec_projects_details})
 
 
 # def user_project_likes (request, user_id, project_id):

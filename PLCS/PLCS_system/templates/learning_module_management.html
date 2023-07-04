@@ -358,8 +358,9 @@
 
                         <td id="tagContainer">
                           
-
-                          <span class="label random-label" style="margin-right: 5px;">{{ i.module_tags }} </span>
+                            {% for j in i.module_tags %}
+                              <span class="label random-label" style="margin-right: 5px;">{{ j }} </span> 
+                            {% endfor %}
                         </td>
 
                         <td class="text-center"> 
@@ -625,17 +626,17 @@
                     const labelElements = document.getElementsByClassName('random-label');
 
                     // Define an array of random label classes
-                    const labelClasses2 = ['label-success', 'label-danger', 'label-info', 'label-warning', 'label-primary'];
+                    const labelClasses_x = ['label-success', 'label-danger', 'label-info', 'label-warning', 'label-primary'];
 
                     // Iterate over the label elements and assign random classes
                     for (let i = 0; i < labelElements.length; i++) {
                       const labelElement = labelElements[i];
                       
                       // Get a random index from the labelClasses array
-                      const randomIndex = Math.floor(Math.random() * labelClasses2.length);
+                      const randomIndex = Math.floor(Math.random() * labelClasses_x.length);
                       
                       // Assign the random label class to the element
-                      labelElement.classList.add(labelClasses2[randomIndex]);
+                      labelElement.classList.add(labelClasses_x[randomIndex]);
                     }
 
 

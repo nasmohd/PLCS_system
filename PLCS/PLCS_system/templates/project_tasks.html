@@ -210,10 +210,11 @@
                 <thead>
                 <tr>
                   <th style="width: 5%;">SN</th>
-                  <th style="width: 55%;">Task</th>
-                  <th style="width: 20%">Deadline</th>
+                  <th style="width: 35%;">Task</th>
+                  <th style="width: 35%;">Deliverables</th>
+                  <th style="width: 10%">Deadline</th>
                   <!-- <th style="width: 35%;">Skills</th> -->
-                  <th class="text-center" style="width: 20%;">Assign to</th>
+                  <th class="text-center" style="width: 15%;">Assign to</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -222,6 +223,7 @@
                   <tr>
                     <td> {{ forloop.counter }} </a></td>
                     <td> {{ i.task_x }} </a></td>
+                    <td class="description_column"> {{ i.task_deadline }} </td>
                     <td class="description_column"> {{ i.task_deadline }} </td>
                     
                     <td class="text-center"> 
@@ -253,10 +255,11 @@
                 <tfoot>
                 <tr>
                   <th style="width: 5%;">SN</th>
-                  <th style="width: 55%;">Task</th>
-                  <th style="width: 20%">Deadline</th>
+                  <th style="width: 35%;">Task</th>
+                  <th style="width: 35%;">Deliverables</th>
+                  <th style="width: 10%">Deadline</th>
                   <!-- <th style="width: 35%;">Skills</th> -->
-                  <th class="text-center" style="width: 20%;">Assign to</th>
+                  <th class="text-center" style="width: 15%;">Assign to</th>
                 </tr>
                 </tfoot>
               </table>

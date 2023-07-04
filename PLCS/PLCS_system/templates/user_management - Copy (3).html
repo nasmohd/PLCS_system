@@ -291,10 +291,6 @@
                 <h3 class="box-title" style="color: #306FA0;">
                 <i class="ion ion-person-add project_color"></i>
                 <strong class="project_color"> User Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #306FA0; font-weight: normal;"> Showing all Registered Users to date </span> </h3>
-
-                {{ roles_for_each_user }}
-                {{ permissions_for_each_user }}
-                {{ permissions_for_role }}
                 <!-- label label-success -->
 
                 <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addUser"> Register New User </button>
@@ -844,9 +840,6 @@
 
                                   {% for urole in user_roles %}
                                     <!-- <div class="col-lg-12 col-12"> -->
-
-
-                                      <!-- Checked or not -->
                                       {% if urole.role_name in roles_for_each_user|get_item:forloop.parentloop.counter0 %}
                                         <div class="checkbox">
                                           <label>
@@ -856,7 +849,6 @@
                                         </div>
                                       {% endif %}
 
-
                                       {% if urole.role_name not in roles_for_each_user|get_item:forloop.parentloop.counter0 %}
                                         <div class="checkbox">
                                           <label>
@@ -865,68 +857,6 @@
                                           </label>
                                         </div>
                                       {% endif %}
-
-
-                                      <script type="text/javascript">
-                                        // Get the source checkbox and target checkboxes using their classes
-                                        var role{{ i.id }} = document.querySelector('#{{ i.role_name }}');
-                                        
-                                        // Add an event listener to the source checkbox
-                                        role{{ i.id }}.addEventListener('change', function() {
-                                          //Get value of selected User
-
-                                          var selected_role = "." + role{{ i.id }}.value
-                                          var permission_boxes = document.querySelectorAll(selected_role);
-                                          // console.log (permission_boxes);
-
-                                          // Check if the source checkbox is checked
-                                          if (role{{ i.id }}.checked) {
-
-                                            permission_boxes.forEach(function(targetCheckbox) {
-                                              if (selected_role == '.User'){
-                                                targetCheckbox.classList.add('user_disabled');
-                                              }
-
-                                              if (selected_role == '.Administrator'){
-                                                targetCheckbox.classList.add('administrator_disabled');
-                                              }
-
-                                              if (!targetCheckbox.disabled) {
-                                                //If doesn't contain disabled attribute
-                                                targetCheckbox.disabled = true;
-                                              }
-                                              if (targetCheckbox.disabled) {
-                                                //If doesn't contain disabled attribute
-                                                targetCheckbox.disabled = true;
-                                              }
-                                            });
-
-                                          } else {
-                                            var permission_boxes = document.querySelectorAll(selected_role);
-                                            permission_boxes.forEach(function(targetCheckbox) {
-
-                                              if (selected_role == '.User'){
-                                                targetCheckbox.classList.remove('user_disabled');
-                                              }
-
-                                              if (selected_role == '.Administrator'){
-                                                targetCheckbox.classList.remove('administrator_disabled');
-                                              }
-
-                                              target_userDisabled_status = targetCheckbox.classList.contains('user_disabled')
-                                              target_adminDisabled_status = targetCheckbox.classList.contains('administrator_disabled')
-
-                                              if (targetCheckbox.disabled && ((!target_userDisabled_status) && (!target_adminDisabled_status))) {
-                                                //If contains disabled attribute
-                                                targetCheckbox.disabled = false;
-                                              }
-                                            });
-                                          
-                                          }
-
-                                        });
-
-                                      </script>
 
 
                                       <script type="text/javascript">
@@ -946,46 +876,12 @@
                                   {% for user_pem in user_permissions %}
                                     <!-- <div class="col-lg-12 col-12"> -->
 
-                                      {% if user_pem.permission_action in permissions_for_each_user|get_item:forloop.parentloop.counter0 %}
-                                        <div class="checkbox">
-                                          <label>
-                                            <input class="permission_x{{ i.id }}" type="checkbox" name="{{ user_pem.permission_action }}" value="{{ i.permission_action }}" id="x{{ user_pem.id }}{{ i.id }}" checked>
-                                            {{ user_pem.permission_action }}
-                                          </label>
-                                        </div>
-                                      {% endif %}
-
-                                      {% if user_pem.permission_action not in permissions_for_each_user|get_item:forloop.parentloop.counter0 %}
-                                        <div class="checkbox">
-                                          <label>
-                                            <input class="permission_x{{ i.id }}" type="checkbox" name="{{ user_pem.permission_action }}" value="{{ i.permission_action }}" id="x{{ user_pem.id }}{{ i.id }}">
-                                            {{ user_pem.permission_action }}
-                                          </label>
-                                        </div>
-                                      {% endif %}
-
-                                      <!-- User -->
-                                      {% if user_pem.permission_action in permissions_for_role.0 %}
-                                        <script type="text/javascript">
-                                          var element_permission_x{{ user_pem.id }} = document.querySelector('#x{{ user_pem.id }}{{ i.id }}');
-                                          element_permission_x{{ user_pem.id }}.classList.add('User');
-                                        </script>
-                                      {% endif %}
-
-                                      <!-- Administrator -->
-                                      {% if user_pem.permission_action in permissions_for_role.1 %}
-                                        <script type="text/javascript">
-                                          var element_permission_x2{{ user_pem.id }} = document.querySelector('#x{{ user_pem.id }}{{ i.id }}');
-                                          element_permission_x2{{ user_pem.id }}.classList.add('Administrator');
-                                        </script>
-                                      {% endif %}
-
-                                     <!--  <div class="checkbox">
+                                      <div class="checkbox">
                                         <label>
                                           <input class="permission_x{{ i.id }}" type="checkbox" name="{{ user_pem.permission_action }}" value="{{ i.permission_action }}" id="x{{ user_pem.id }}{{ i.id }}">
                                           {{ user_pem.permission_action }}
                                         </label>
-                                      </div> -->
+                                      </div>
 
                                       <!-- User -->
                                       {% if user_pem.permission_action in permissions_for_role.0 %}
