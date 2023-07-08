@@ -808,56 +808,56 @@
                             </li> -->
                           </ul>
 
-                          <script>
-                            document.getElementById('add_task').addEventListener('click', function() {
-                              var taskList = document.getElementById('task_list');
-                              var newTask = document.createElement('li');
-                              newTask.style.marginBottom = '0.7rem';
-                              var taskDeadlineDiv = document.createElement('div');
+                            <script>
+                              document.getElementById('add_task').addEventListener('click', function() {
+                                var taskList = document.getElementById('task_list');
+                                var newTask = document.createElement('li');
+                                newTask.style.marginBottom = '0.7rem';
+                                var taskDeadlineDiv = document.createElement('div');
 
-                              taskDeadlineDiv.classList.add('task-deadline');
-                              taskDeadlineDiv.innerHTML = `
-                                <label for="task_deadline">Task Deadline</label>
-                                <input type="date" name="task_deadline[]" required style="margin-bottom:0.3rem;">
-                              `;
-                              newTask.appendChild(taskDeadlineDiv);
-                              newTask.innerHTML += `
-                                <input type="text" class="text" contenteditable="true" name="task_details[]" required style="margin-bottom:0.3rem; width:inherit; display: inline-block; width: 80%;" placeholder="Task" autocomplete="off">
-                                <div class="tools">
-                                  <i class="fa fa-plus add-sub-task"></i>
-                                  <i class="fa fa-trash-o"></i>
-                                </div>
-                                <ul class="sub-tasks"></ul>
-                              `;
-                              taskList.appendChild(newTask);
-
-                              // Add event listener to the trash icon to remove the task
-                              var trashIcon = newTask.querySelector('.fa-trash-o');
-                              trashIcon.addEventListener('click', function() {
-                                newTask.remove();
-                              });
-
-                              // Add event listener to the add sub-task button
-                              var addSubTaskButton = newTask.querySelector('.add-sub-task');
-                              addSubTaskButton.addEventListener('click', function() {
-                                var subTaskList = newTask.querySelector('.sub-tasks');
-                                var newSubTask = document.createElement('li');
-                                newSubTask.innerHTML = `
-                                  <input type="text" class="text" contenteditable="true" name="sub_tasks[${taskList.children.length - 1}][]" required style="display: inline-block; width: 75%; font-size: 12px;" placeholder="Deliverables" autocomplete="off">
+                                taskDeadlineDiv.classList.add('task-deadline');
+                                taskDeadlineDiv.innerHTML = `
+                                  <label for="task_deadline">Task Deadline</label>
+                                  <input type="date" name="task_deadline[]" required style="margin-bottom:0.3rem;">
+                                `;
+                                newTask.appendChild(taskDeadlineDiv);
+                                newTask.innerHTML += `
+                                  <input type="text" class="text" contenteditable="true" name="task_details[]" required style="margin-bottom:0.3rem; width:inherit; display: inline-block; width: 80%;" placeholder="Task" autocomplete="off">
                                   <div class="tools">
+                                    <i class="fa fa-plus add-sub-task"></i>
                                     <i class="fa fa-trash-o"></i>
                                   </div>
+                                  <ul class="sub-tasks"></ul>
                                 `;
-                                subTaskList.appendChild(newSubTask);
+                                taskList.appendChild(newTask);
 
-                                // Add event listener to the trash icon to remove the sub-task
-                                var subTrashIcon = newSubTask.querySelector('.fa-trash-o');
-                                subTrashIcon.addEventListener('click', function() {
-                                  newSubTask.remove();
+                                // Add event listener to the trash icon to remove the task
+                                var trashIcon = newTask.querySelector('.fa-trash-o');
+                                trashIcon.addEventListener('click', function() {
+                                  newTask.remove();
+                                });
+
+                                // Add event listener to the add sub-task button
+                                var addSubTaskButton = newTask.querySelector('.add-sub-task');
+                                addSubTaskButton.addEventListener('click', function() {
+                                  var subTaskList = newTask.querySelector('.sub-tasks');
+                                  var newSubTask = document.createElement('li');
+                                  newSubTask.innerHTML = `
+                                    <input type="text" class="text" contenteditable="true" name="sub_tasks[${taskList.children.length - 1}][]" required style="display: inline-block; width: 75%; font-size: 12px;" placeholder="Deliverables" autocomplete="off">
+                                    <div class="tools">
+                                      <i class="fa fa-trash-o"></i>
+                                    </div>
+                                  `;
+                                  subTaskList.appendChild(newSubTask);
+
+                                  // Add event listener to the trash icon to remove the sub-task
+                                  var subTrashIcon = newSubTask.querySelector('.fa-trash-o');
+                                  subTrashIcon.addEventListener('click', function() {
+                                    newSubTask.remove();
+                                  });
                                 });
                               });
-                            });
-                          </script>
+                            </script>
                           
                           <!-- <div class="form-group">
                             <label for="exampleInputFile">File 1 <span class="optional_entry"> (optional) </span></label>
@@ -990,20 +990,12 @@
 
                           <div class="nav-tabs-custom">
                             <ul class="nav nav-tabs">
-                              <li class="active"><a href="#tab_5{{ i.id }}" data-toggle="tab" aria-expanded="true">Details <span class="optional_entry"> * </span></a></li>
-                              <li><a href="#tab_6{{ i.id }}" data-toggle="tab" aria-expanded="false"> Requirements <span class="optional_entry"> * </span></a></li>
-                              <li><a href="#tab_tasks{{ i.id }}" data-toggle="tab" aria-expanded="false"> Tasks <span class="optional_entry"> * </span></a></li>
-                              <li><a href="#tab_7{{ i.id }}" data-toggle="tab">Images <span class="optional_entry"> * </span></a></li>
-                              <li><a href="#tab_8{{ i.id }}" data-toggle="tab">Other Attachments </a></li>
-                            </ul>
-
-                            <!-- <ul class="nav nav-tabs">
                               <li class="active"><a href="#tab_5{{ i.id }}" data-toggle="tab" aria-expanded="true">Project Details <span class="optional_entry"> * </span></a></li>
                               <li ><a href="#tab_6{{ i.id }}" data-toggle="tab" aria-expanded="false"> Requirements <span class="optional_entry"> * </span></a></li>
                               <li><a href="#tab_7{{ i.id }}" data-toggle="tab">Images <span class="optional_entry"> * </span></a></li>
                               <li><a href="#tab_8{{ i.id }}" data-toggle="tab">Other Attachments </a></li>
 
-                            </ul> -->
+                            </ul>
 
                             <div class="tab-content">
                               <div class="tab-pane active" id="tab_5{{ i.id }}">
@@ -1202,106 +1194,6 @@
                               </div>
                               <!-- /.tab-pane -->
 
-                              <div class="tab-pane" id="tab_tasks{{ i.id }}">
-                                <p class="help-block">Tasks for this project</p>
-                                <button type="button" class="btn btn-sm btn-default" style="margin-bottom: 1.2rem;" title="Add New Project" id="add_task"><i class="fa fa-fw fa-plus"></i></button>
-
-                                <ul class="todo-list ui-sortable" id="task_list">
-                                  {% for task in i.project_tasks %}
-                                    <li style="margin-bottom: 0.7rem;">
-                                      <div class="task-deadline">
-                                        <label for="task_deadline">Task Deadline</label>
-                                        <input type="date" name="task_deadline[]" required="" style="margin-bottom:0.3rem;" id="task-deadline-input{{ i.id }}">
-                                      </div>
-                                      <input type="text" class="text" contenteditable="true" name="task_details[]" required="" style="margin-bottom:0.3rem; width:inherit; display: inline-block; width: 80%;" placeholder="Task" autocomplete="off" value="{{ task.1 }}">
-
-                                      <div class="tools">
-                                        <i class="fa fa-plus add-sub-task"></i>
-                                        <i class="fa fa-trash-o"></i>
-                                      </div>
-
-                                      <ul class="sub-tasks">
-                                        {% for subtask_i in task.2 %}
-                                          <li>
-                                            <input type="text" class="text" contenteditable="true" name="sub_tasks[0][]" required="" style="display: inline-block; width: 75%; font-size: 12px;" placeholder="Deliverables" autocomplete="off" value="{{ subtask_i }}">
-                                            <div class="tools">
-                                              <i class="fa fa-trash-o"></i>
-                                            </div>
-                                          </li>
-                                        {% endfor%}
-                                      </ul>
-                                    </li>
-                                  {% endfor %}
-                                </ul>
-
-                                
-<!-- 
-                                <script>
-                                  document.getElementById('add_task').addEventListener('click', function() {
-                                    var taskList = document.getElementById('task_list');
-                                    var newTask = document.createElement('li');
-                                    newTask.style.marginBottom = '0.7rem';
-                                    var taskDeadlineDiv = document.createElement('div');
-
-                                    taskDeadlineDiv.classList.add('task-deadline');
-                                    taskDeadlineDiv.innerHTML = `
-                                      <label for="task_deadline">Task Deadline</label>
-                                      <input type="date" name="task_deadline[]" required style="margin-bottom:0.3rem;">
-                                    `;
-                                    newTask.appendChild(taskDeadlineDiv);
-                                    newTask.innerHTML += `
-                                      <input type="text" class="text" contenteditable="true" name="task_details[]" required style="margin-bottom:0.3rem; width:inherit; display: inline-block; width: 80%;" placeholder="Task" autocomplete="off">
-                                      <div class="tools">
-                                        <i class="fa fa-plus add-sub-task"></i>
-                                        <i class="fa fa-trash-o"></i>
-                                      </div>
-                                      <ul class="sub-tasks"></ul>
-                                    `;
-                                    taskList.appendChild(newTask);
-
-                                    // Add event listener to the trash icon to remove the task
-                                    var trashIcon = newTask.querySelector('.fa-trash-o');
-                                    trashIcon.addEventListener('click', function() {
-                                      newTask.remove();
-                                    });
-
-                                    // Add event listener to the add sub-task button
-                                    var addSubTaskButton = newTask.querySelector('.add-sub-task');
-                                    addSubTaskButton.addEventListener('click', function() {
-                                      var subTaskList = newTask.querySelector('.sub-tasks');
-                                      var newSubTask = document.createElement('li');
-                                      newSubTask.innerHTML = `
-                                        <input type="text" class="text" contenteditable="true" name="sub_tasks[${taskList.children.length - 1}][]" required style="display: inline-block; width: 75%; font-size: 12px;" placeholder="Deliverables" autocomplete="off">
-                                        <div class="tools">
-                                          <i class="fa fa-trash-o"></i>
-                                        </div>
-                                      `;
-                                      subTaskList.appendChild(newSubTask);
-
-                                      // Add event listener to the trash icon to remove the sub-task
-                                      var subTrashIcon = newSubTask.querySelector('.fa-trash-o');
-                                      subTrashIcon.addEventListener('click', function() {
-                                        newSubTask.remove();
-                                      });
-                                    });
-                                  });
-                                </script>
-                                 -->
-                                <!-- <div class="form-group">
-                                  <label for="exampleInputFile">File 1 <span class="optional_entry"> (optional) </span></label>
-                                  <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
-
-                                  <p class="help-block">File 1 describing the project</p>
-                                </div> -->
-
-                                <style type="text/css">
-                                  .optional_entry {
-                                    color: red;
-                                    font-weight: normal;
-                                  }
-                                </style>
-                              </div>
-
                               <div class="tab-pane" id="tab_7{{ i.id }}">
                                 <div class="boxes_container">
                                   <div class="box_project_imgs">
@@ -1470,10 +1362,6 @@
                             </div>
                             <!-- /.tab-content -->
                           </div>
-
-
-
-
                           </div>
                           
                         <div class="modal-footer">

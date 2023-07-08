@@ -242,8 +242,13 @@
                     <td class="description_column" id="deliverable{{ i.id }}"> {{ i.task_deliverables }} </td>
                     <td class="description_column"> {{ i.task_deadline }} </td>
 
-                    <td> Hello </td>
-                    
+                    {% if i.assigned_to.email|length == 0 %}
+                      <td><p style="color: red;"> None </p></td>
+                    {% else %}
+
+                      <td> {{ i.assigned_to.email }} </td>
+                    {% endif %}
+
                     <td class="text-center"> 
                       <div class="btn-group">
                         <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">

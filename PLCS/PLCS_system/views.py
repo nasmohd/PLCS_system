@@ -300,6 +300,7 @@ def view_projects(request):
 		for obj in get_all_projects:
 			column_value = obj.project_skills
 			column_value2 = obj.project_images
+			column_value3 = obj.project_tasks
 
 			if column_value:
 				list_value = literal_eval(column_value)
@@ -309,6 +310,15 @@ def view_projects(request):
 			if column_value2:
 				list_value2 = literal_eval(column_value2)
 				obj.project_images = list_value2
+				obj.save()
+
+			if column_value3:
+				list_value3 = literal_eval(column_value3)
+				print (type (list_value3))
+				task_date = datetime.strptime(list_value3[0], '%d-%m-%Y')
+				# Format the date as 'DD-MM-YYYY'
+				formatted_task_date = task_deadline_str.strftime('%Y-%m-%d')
+				obj.project_tasks = list_value3
 				obj.save()
 
 
@@ -632,8 +642,8 @@ def add_project(request):
 		task_details = request.POST.getlist('task_details[]')
 		sub_tasks = []
 
-		new_tasks = Collab_Task()
-
+		project.save()
+		
 		for i in range(len(task_details)):
 			sub_task_key = f'sub_tasks[{i}][]'
 			sub_task_values = request.POST.getlist(sub_task_key)
@@ -649,11 +659,16 @@ def add_project(request):
 
 			#Code to add each task based on user input
 			# new_tasks = Collab_Task()
+
+			new_tasks = Collab_Task()
 			new_tasks.task_x = task_details[i]
+			print (task_details[i])
 			
 			new_tasks.task_deadline = task_deadline_str
 			new_tasks.task_deliverables = sub_task_values
-			
+			new_tasks.project = project
+		# new_tasks.save()
+			new_tasks.save()
 
 
 			sub_tasks.append(task_data)
@@ -662,8 +677,7 @@ def add_project(request):
 
 		project.project_tasks = sub_tasks
 		project.save()
-		new_tasks.project = project
-		new_tasks.save()
+		
 
 		# todo_items = request.POST.get('todo_items')
 		# if todo_items:
@@ -805,6 +819,9 @@ def user_management(request):
 	get_all_project_collabs = User_Project_Collab.objects.filter(user = user_x)
 
 
+	saved_projects = Saved_Project.objects.values_list('project', flat=True)
+
+
 	user_x_collab = []
 	for collab in get_all_project_collabs:
 		user_x_collab.append(collab.project.id)
@@ -904,7 +921,7 @@ def user_management(request):
 			'roles_n_permissions': roles_n_permissions, 'get_all_projects': get_all_projects, 'user_names': user_names, 
 			'current_user': current_user, 'get_all_project_collabs': user_x_collab, 'all_roles': all_roles, 
 			'permissions_for_role': permissions_for_role, 'notifs': notifs, 'rec_projects_details': rec_projects_details, 
-			'permissions_for_each_user': permissions_for_each_user})
+			'permissions_for_each_user': permissions_for_each_user, 'saved_projects': saved_projects})
 		# return render (request, "dashboard.html")
 
 	else:
@@ -1436,6 +1453,13 @@ def project_details(request, project_id):
 	if column_value3:
 		list_value3 = literal_eval(column_value3)
 		get_project_details.project_files = list_value3
+		get_project_details.save()
+
+
+	column_value4 = get_project_details.project_tasks
+	if column_value4:
+		list_value4 = literal_eval(column_value4)
+		get_project_details.project_tasks = list_value4
 		get_project_details.save()
 
 	# for index, im in enumerate(list_value2):
@@ -1977,3 +2001,180 @@ def delete_summary(request, summary_id, module_id):
 
 	red = "/view_module/" + str(module_id)
 	return redirect (red)
+
+
+#Bookmark project
+from django.http import JsonResponse
+
+def bookmark(request):
+	current_user = request.session['user_id']
+	user = User.objects.get(id = current_user)
+
+	if request.method == 'POST':
+		project_id = request.POST.get('project_id')
+		project_to_bookmark = Project.objects.get (id = project_id)
+
+		bookmark_project = Saved_Project()
+		bookmark_project.project = project_to_bookmark
+		bookmark_project.user = user
+		bookmark_project.save()
+
+		# Perform the bookmarking logic
+		# Example: Update the 'bookmarked' field in the project model to True
+
+		return JsonResponse({'success': True})
+
+	return HttpResponse ('yl')
+
+
+def unbookmark(request):
+	current_user = request.session['user_id']
+	user_x = User.objects.get(id = current_user)
+
+	if request.method == 'POST':
+		project_id = request.POST.get('project_id')
+		project_remove_bookmark = Saved_Project.objects.filter(project__id = project_id, user = user_x).first()
+		project_remove_bookmark.delete()
+
+
+		# Perform the unbookmarking logic
+		# Example: Update the 'bookmarked' field in the project model to False
+
+		return JsonResponse({'success': True})
+
+
+def get_saved_projects(request):
+	current_user = request.session['user_id']
+	user_x = User.objects.get (id = current_user)
+	get_all_projects = Project.objects.all().order_by('-project_DOR')
+	user_names = request.session['user_names']
+
+
+	saved_projects = Saved_Project.objects.values_list('project', flat=True)
+	get_all_projects = Project.objects.filter(id__in = saved_projects)
+
+
+	#Recommnend Projects
+	rec_proj = recommend_projects(current_user)
+	rec_proj = rec_proj[0]
+	# print (rec_proj[0])
+
+	# Get recommended projects from the database based on the project IDs
+	rec_projects_details = Project.objects.filter(project_id__in = rec_proj)
+
+
+	get_all_project_collabs = User_Project_Collab.objects.filter(user = user_x)
+
+
+	user_x_collab = []
+	for collab in get_all_project_collabs:
+		user_x_collab.append(collab.project.id)
+
+
+	for obj in get_all_projects:
+		column_value = obj.project_skills
+		column_value2 = obj.project_images
+
+		if column_value:
+			list_value = literal_eval(column_value)
+			obj.project_skills = list_value
+			obj.save()
+
+		if column_value2:
+			list_value2 = literal_eval(column_value2)
+			obj.project_images = list_value2
+			obj.save()
+
+
+	roles_n_permissions = request.session['roles_n_permissions']
+
+	session_val = check_session(request, 'url_to_redirect_to')
+
+	get_all_users = User.objects.all().order_by('-date_of_registration').exclude(id = current_user)
+
+	#Count all user accounts
+	all_user_accounts_count = User.objects.all().count()
+
+	#Count how many Users are active
+	active_user_count = User.objects.filter(status = 1).count()
+
+	#Count how many Users have been deleted
+	deleted_user_count = User.objects.filter(status = 2).count()
+
+	#Count how many Users have been Disabled
+	disabled_user_count = User.objects.filter(status = 0).count()
+
+	#Get permissions in database
+	user_permissions = Permission.objects.all()
+
+	#Get roles in database
+	user_roles = Role.objects.all()
+
+	all_roles = []
+
+
+	notifs = get_notifications_of_user (request, current_user)
+
+
+	#Get permissions for Roles
+	#user_roles = "id = 1, role = Userid = 2, role = Administrator"
+	permissions_for_role = []
+	permissions_each_role = []
+	for r in user_roles:
+		all_roles.append(r.role_name)
+		permissions_for_role_queryset = Role_Permission.objects.filter(role = r)
+
+		for role_perm in permissions_for_role_queryset:
+			permissions_each_role.append (role_perm.permission.permission_action)
+
+		#Role index 0, has permissions in list at index 0
+		permissions_for_role.append(permissions_each_role)
+		permissions_each_role = []
+
+	#roles = ['User', 'Administrator'], 
+	#permissions = [['track progress', 'comment on users'], 
+	#['manage users', 'manage projects', 'manage learning content', 'manage comments', 'comment on projects', 'track progress', 'comment on users']]
+
+
+	#Get all roles of each user
+	roles_for_each_user = []
+	permissions_for_each_user = []
+
+	for i in get_all_users:
+		roles_of_this_user = User_Role.objects.filter(user_x = i)
+
+		permissions_for_this_user = User_Permission.objects.filter(user_p = i)
+
+		permissions_for_user_i = []
+		for k in permissions_for_this_user:
+			permissions_for_user_i.append (k.permission.permission_action)
+		permissions_for_each_user.append (permissions_for_user_i)
+
+		roles_for_user_i = []
+		#Loop through each role found
+		for j in roles_of_this_user:
+			roles_for_user_i.append(j.role_x.role_name)
+
+		roles_for_each_user.append(roles_for_user_i)
+
+
+	if (session_val == 'session_true'):
+		return render (request, "saved_projects_management.html", {'all_users': get_all_users, 
+			'user_summary': [all_user_accounts_count, active_user_count, disabled_user_count, deleted_user_count],
+			'user_permissions': user_permissions, 'user_roles': user_roles, 'roles_for_each_user': roles_for_each_user,
+			'roles_n_permissions': roles_n_permissions, 'get_all_projects': get_all_projects, 'user_names': user_names, 
+			'current_user': current_user, 'get_all_project_collabs': user_x_collab, 'all_roles': all_roles, 
+			'permissions_for_role': permissions_for_role, 'notifs': notifs, 'rec_projects_details': rec_projects_details, 
+			'permissions_for_each_user': permissions_for_each_user})
+		# return render (request, "dashboard.html")
+
+	else:
+		return redirect ('/')
+	# return render (request, "user_management.html")
+
+
+
+
+
+
+

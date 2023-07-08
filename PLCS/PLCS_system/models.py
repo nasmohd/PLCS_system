@@ -146,7 +146,7 @@ class User_Project_Collab (models.Model):
 
 class Collab_Task (models.Model):
 	task_x = models.CharField(max_length=150, default = '')
-	project = models.ForeignKey(Project, on_delete=models.CASCADE)
+	project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
 	assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 	task_deadline = models.DateField(null=True)
 	task_deliverables = models.TextField(default = '')
@@ -188,3 +188,13 @@ class User_Project_Collabs_Approved (models.Model):
 
 	def __str__(self):
 		return "id = {}".format(self.id)
+
+
+class Saved_Project (models.Model):	
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	project = models.ForeignKey(Project, on_delete=models.CASCADE)
+	
+	def __str__(self):
+		return "id = {}, user = {}".format(self.id, self.user)
+
+

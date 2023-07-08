@@ -64,14 +64,21 @@
                         <span style="color: red; font-size: 13px;"> (Submitted by you!) </span>
                       {% endif %}
                     </h3>
-
+                      {% csrf_token %}
                     <div class="box-tools pull-right">
                       <button type="button" class="btn btn-box-tool" data-toggle="dropdown">
                         <i class="fa fa-ellipsis-v"></i>
                       </button>
                       <ul class="dropdown-menu" role="menu">
                         <!-- <li><a href="#">Edit</a></li> -->
-                        <li><a href="#"><i class="fa fa-fw fa-bookmark"></i> Bookmark</a></li>
+
+                        {% if i.id in saved_projects %}
+                          <li id="bookmark{{ i.id }}"><a href="#" id="bookmark-link{{ i.id }}" onclick="toggleBookmark('bookmark-link{{ i.id }}', '{{ i.id }}')"><i class="fa fa-fw fa-bookmark" style="color: #F39C12;"></i> <span id="bookmark-text{{ i.id }}"> Bookmarked </span></a></li>
+
+                        {% else %}
+                          <li id="bookmark{{ i.id }}"><a href="#" id="bookmark-link{{ i.id }}" onclick="toggleBookmark('bookmark-link{{ i.id }}', '{{ i.id }}')"><i class="fa fa-fw fa-bookmark"></i> <span id="bookmark-text{{ i.id }}"> Bookmark </span></a></li>
+                        {% endif %}
+
 
                         {% if i.user_project.id == current_user %}
                           <li><a href="#"><i class="fa fa-fw fa-trash" style="color: black;"></i> Delete</a></li>
@@ -79,6 +86,67 @@
 
                       </ul>
                     </div>
+
+                    <script type="text/javascript">
+                      function getCookie(name) {
+                        var cookieValue = null;
+                        if (document.cookie && document.cookie !== '') {
+                          var cookies = document.cookie.split(';');
+                          for (var i = 0; i < cookies.length; i++) {
+                            var cookie = cookies[i].trim();
+                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                              break;
+                            }
+                          }
+                        }
+                        return cookieValue;
+                      }
+                    
+                      // var bookmark_text = document.getElementById('bookmark-link{{ i.id }}');
+                      
+                      function toggleBookmark(linkId, projectId) {
+                        var linkElement = document.getElementById(linkId);
+                        var bookmarkTextElement = document.getElementById('bookmark-text' + projectId);
+
+                        var csrftoken = getCookie('csrftoken');
+
+                        if (bookmarkTextElement.innerText === 'Bookmark') {
+                          // Call the bookmark view function using AJAX
+                          $.ajax({
+                            url: '/bookmark/',
+                            type: 'POST',
+                            data: { project_id: projectId },
+                            headers: { 'X-CSRFToken': csrftoken },
+                            success: function(response) {
+                              if (response.success) {
+                                bookmarkTextElement.innerText = 'Bookmarked';
+                              }
+                            },
+                            error: function(xhr, status, error) {
+                              console.error(error);
+                            }
+                          });
+                        } else {
+                          // Call the unbookmark view function using AJAX
+                          $.ajax({
+                            url: '/unbookmark/',
+                            type: 'POST',
+                            data: { project_id: projectId },
+                            headers: { 'X-CSRFToken': csrftoken },
+                            success: function(response) {
+                              if (response.success) {
+                                bookmarkTextElement.innerText = 'Bookmark';
+                              }
+                            },
+                            error: function(xhr, status, error) {
+                              console.error(error);
+                            }
+                          });
+                        }
+                      }
+
+                    </script>
 
                     <!-- <i class="fa fa-file "></i> -->
                   </div>
@@ -100,7 +168,7 @@
                     <div class="col-md-7 col-7">
                       <div class="col-md-12 col-12">
                         <dt>Description</dt>
-                        <dd>{{ i.project_description }} <a href="#"> Read more </a> </dd>
+                        <dd>{{ i.project_description }} <a href="/project_details/{{ i.id }}"> Read more </a> </dd>
                       </div>
 
                       <div class="project_view_style2">

@@ -175,10 +175,10 @@
 
                 {% for i in collab_applications %}
                   <tr>
-                    <td> {{ forloop.counter }} </td>
-                    <td> {{ i.project.project_id }} </td>
-                    <td> {{ i.project.project_title }} </td>
-                    <td class="description_column"> {{ i.project.project_description }} </td>
+                    <td><a href="/project_details/{{ i.project.id }}/"> {{ forloop.counter }} </td>
+                    <td><a href="/project_details/{{ i.project.id }}/"> {{ i.project.project_id }} </td>
+                    <td><a href="/project_details/{{ i.project.id }}/"> {{ i.project.project_title }} </td>
+                    <td class="description_column"><a href="/project_details/{{ i.project.id }}/"> {{ i.project.project_description }} </td>
 
                     <td id="tagContainer"> 
                       {% for j in i.project.project_skills %}

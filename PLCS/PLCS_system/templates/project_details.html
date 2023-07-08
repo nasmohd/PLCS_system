@@ -53,8 +53,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Projects
-        <small>Control panel</small>
+        Project Details
+        <!-- <small>Control panel</small> -->
       </h1>
       <!-- <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -400,14 +400,41 @@
                   <div class="col-md-12 col-12">
                     <div class="nav-tabs-custom">
                       <ul class="nav nav-tabs">
-                        <li class="active"><a href="#tab_5" data-toggle="tab" aria-expanded="true">Project Images </a></li>
+                        <li class="active"><a href="#tab_4" data-toggle="tab" aria-expanded="true">Tasks and Deliverables </a></li>
+                        <li><a href="#tab_5" data-toggle="tab" aria-expanded="false">Project Images </a></li>
                         <li ><a href="#tab_6" data-toggle="tab" aria-expanded="false"> Project Files </a></li>
-
                       </ul>
 
                       <div class="tab-content">
-                        <div class="tab-pane active" id="tab_5">
-                          <p> Images Here </p>
+                        <div class="tab-pane active" id="tab_4">
+                          <h5 style="font-weight: bold;"> Tasks and Deliverables </h5>
+                          <div style="display: flex;">
+                          <table class="table table-bordered table-striped" style="width: 100%; border-color: #333;">
+                            <tr>
+                              <th>Deadline</th>
+                              <th>Task</th>
+                              <th>Deliverables</th>
+                            </tr>
+                            {% for item in get_project_details.project_tasks %}
+                              <tr>
+                                <td>{{ item.0 }}</td>
+                                <td>{{ item.1 }}</td>
+                                <td>
+                                  <ul>
+                                    {% for deliverable in item.2 %}
+                                      <li>{{ deliverable }}</li>
+                                    {% endfor %}
+                                  </ul>
+                                </td>
+                              </tr>
+                            {% endfor %}
+                          </table>
+
+                          </div>
+                        </div>
+
+                        <div class="tab-pane" id="tab_5">
+                          <p style="font-weight: bold;"> Images for this project </p>
                           <div style="display: flex;">
                           {% for im in get_project_details.project_images %}
                             {% if im != 'x.pdf' %}
@@ -422,8 +449,10 @@
 
                         <!-- /.tab-pane -->
                         <div class="tab-pane" id="tab_6">
+                          <p style="font-weight: bold;"> Files for this project </p>
                           {% for im in get_project_details.project_files %}
                             {% if im != 'x.jpg' %}
+                              <i class="file-icon fa fa-file-pdf-o" style="font-size: 50px;"></i>
                               <a href="#"> {{ im }} </a>
                             {% endif %}
                           {% endfor %}

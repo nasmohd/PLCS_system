@@ -101,9 +101,9 @@
 
 
                 <tr>
-                  <td> {{ project_details.project_id }} </td>
-                  <td> {{ project_details.project_title }} </td>
-                  <td class="description_column"> {{ project_details.project_description }} </td>
+                  <td><a href="/project_details/{{ project_details.id }}"> {{ project_details.project_id }} </a></td>
+                  <td><a href="/project_details/{{ project_details.id }}"> {{ project_details.project_title }} </a></td>
+                  <td class="description_column"><a href="/project_details/{{ project_details.id }}"> {{ project_details.project_description }} </a></td>
 
                   <td id="tagContainer"> 
                     {% for j in project_details.project_skills %}
