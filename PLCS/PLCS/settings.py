@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['cf89-197-186-19-66.ngrok-free.app', '127.0.0.1', '192.168.43.205', '192.168.49.118']
 
-
+DATE_INPUT_FORMATS = ['%d-%m-%Y']
 # Application definition
 
 INSTALLED_APPS = [

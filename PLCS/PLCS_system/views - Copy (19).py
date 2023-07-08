@@ -1677,21 +1677,13 @@ def view_collab_requests(request, project_id):
 		'user_names': user_names, 'collab_applications': collab_applications})
 
 
-#Accept Requests to Collab
-def accept_collab (request, collab_id, requester_id, project_id):
+def accept_collab (request, collab_id):
 	get_exact_collab_details = User_Project_Collab.objects.get(id = collab_id)
 
 	project_id_of_this_collab = get_exact_collab_details.project.id
 
 	get_exact_collab_details.status = 1
 	get_exact_collab_details.save()
-
-	new_collab_approval = User_Project_Collabs_Approved()
-	
-	new_collab_approval.user = User.objects.get(id = requester_id)
-	new_collab_approval.project = Project.objects.get(id = project_id)
-	new_collab_approval.collab_status = 0
-	new_collab_approval.save()
 
 	redirect_link = "/view_collab_requests/{}/".format(project_id_of_this_collab)
 
@@ -1719,19 +1711,13 @@ def project_collab_tasks(request, project_id):
 
 	# collaborators_for_project = User_Project_Collab.objects.filter (user__id = current_user).filter(project__id = project_id).exclude(status=0)
 	# collaborators_for_project = User_Project_Collab.objects.filter (user__id = current_user).filter(project__id = project_id).exclude(status=0)
-	
-
-	# collaborators_for_project = User_Project_Collab.objects.filter(project__user_project = user_collabs).filter(project__id = project_id).exclude(status = 0)
-	collaborators_for_project = User_Project_Collabs_Approved.objects.filter(project = project_details).filter(collab_status = 0)
-
+	collaborators_for_project = User_Project_Collab.objects.filter(project__user_project = user_collabs).filter(project__id = project_id).exclude(status = 0)
 
 	get_tasks_for_project = Collab_Task.objects.filter(project__id = project_id)
 
 
 	return render (request, "project_tasks.html", {'project_details': project_details, 'notifs': notifs, 
-		'user_names': user_names, 'collaborators_for_project': collaborators_for_project, 'get_tasks_for_project': get_tasks_for_project,
-		'project_id': project_id})
-
+		'user_names': user_names, 'collaborators_for_project': collaborators_for_project, 'get_tasks_for_project': get_tasks_for_project})
 
 
 def add_topic(request, module_id):
@@ -1870,22 +1856,15 @@ def recommend_projects(user_id):
 
 	## Load user data
 	user = User.objects.get(id=user_id)
-	users = [(user.email, eval(user.project_interests))]
+	users = [(user.email, user.project_interests)]
 
 	# Load project data
-	projects = [(project.project_id, eval(project.project_skills)) for project in Project.objects.all().exclude(user_project = user)]
-
-
-	#eval() is used to evaluate the string representation of a list and convert it back into a list object.
-	#By applying eval() on user.project_interests and project.project_skills, the code can correctly extract the individual skills or interests from the strings.
+	projects = [(project.project_id, project.project_skills) for project in Project.objects.all()]
 
 	# Step 2: Preprocess data and compute cosine similarity matrix
 
 	# Preprocess skills for CountVectorizer
-	#all_skills = [user[1] for user in users] + [project[1] for project in projects]
-	# Preprocess skills for CountVectorizer
-	all_skills = [','.join(user[1]) for user in users] + [','.join(project[1]) for project in projects]
-
+	all_skills = [user[1] for user in users] + [project[1] for project in projects]
 
 	# Create CountVectorizer and fit-transform the skills
 	vectorizer = CountVectorizer()
@@ -1895,6 +1874,7 @@ def recommend_projects(user_id):
 	user_skills = skills_matrix[:len(users)]
 	project_skills = skills_matrix[len(users):]
 	cosine_sim_matrix = cosine_similarity(user_skills, project_skills)
+	print (cosine_sim_matrix)
 
 	# Step 3: Generate recommendations
 
@@ -1908,7 +1888,6 @@ def recommend_projects(user_id):
 
 		# Sort projects based on similarity scores
 		sorted_indices = user_sim_scores.argsort()[::-1]
-		# print (user_sim_scores)
 
 		# Get top 15 recommended projects
 		num_projects = min(5, len(projects))
@@ -1916,7 +1895,7 @@ def recommend_projects(user_id):
 
 		recommendations.append(recommended_projects)
 
-	# Render the recommendations in a template
+    # Render the recommendations in a template
 	return recommendations
 
 

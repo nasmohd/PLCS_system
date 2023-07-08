@@ -23,7 +23,7 @@
         <div class="col-md-8 col-8">
           <div class="row">
 
-            <!-- <div class="col-md-12 col-12" style="margin-bottom: 3rem;">
+            <div class="col-md-12 col-12" style="margin-bottom: 3rem;">
               <form action="#" method="get" class="">
                 <div class="input-group">
                   <input type="text" name="q" class="form-control" placeholder="Search...">
@@ -33,7 +33,7 @@
                   </span>
                 </div>
               </form>
-            </div> -->
+            </div>
             
             <!-- ./col -->
             {% if messages %}
@@ -507,7 +507,7 @@
                       <div class="col-md-12 mt">
                     {% endif %}
 
-                      <dt>{{ i.project_title }}</dt>
+                      <dt>{{ i.project_id }}: {{ i.project_title }}</dt>
                       <dd>{{ i.project_description }}. <a href="/project_details/{{ i.id }}/"> Read more </a> </dd>
                     </div>
                   {% endfor %}

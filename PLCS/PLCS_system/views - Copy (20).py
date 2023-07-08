@@ -1870,22 +1870,15 @@ def recommend_projects(user_id):
 
 	## Load user data
 	user = User.objects.get(id=user_id)
-	users = [(user.email, eval(user.project_interests))]
+	users = [(user.email, user.project_interests)]
 
 	# Load project data
-	projects = [(project.project_id, eval(project.project_skills)) for project in Project.objects.all().exclude(user_project = user)]
-
-
-	#eval() is used to evaluate the string representation of a list and convert it back into a list object.
-	#By applying eval() on user.project_interests and project.project_skills, the code can correctly extract the individual skills or interests from the strings.
+	projects = [(project.project_id, project.project_skills) for project in Project.objects.all()]
 
 	# Step 2: Preprocess data and compute cosine similarity matrix
 
 	# Preprocess skills for CountVectorizer
-	#all_skills = [user[1] for user in users] + [project[1] for project in projects]
-	# Preprocess skills for CountVectorizer
-	all_skills = [','.join(user[1]) for user in users] + [','.join(project[1]) for project in projects]
-
+	all_skills = [user[1] for user in users] + [project[1] for project in projects]
 
 	# Create CountVectorizer and fit-transform the skills
 	vectorizer = CountVectorizer()
@@ -1908,7 +1901,6 @@ def recommend_projects(user_id):
 
 		# Sort projects based on similarity scores
 		sorted_indices = user_sim_scores.argsort()[::-1]
-		# print (user_sim_scores)
 
 		# Get top 15 recommended projects
 		num_projects = min(5, len(projects))
@@ -1916,7 +1908,7 @@ def recommend_projects(user_id):
 
 		recommendations.append(recommended_projects)
 
-	# Render the recommendations in a template
+    # Render the recommendations in a template
 	return recommendations
 
 

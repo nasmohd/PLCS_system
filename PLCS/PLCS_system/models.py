@@ -178,3 +178,13 @@ class Summary (models.Model):
 
 	def __str__(self):
 		return "id = {}, file_name = {}, file_link = {}".format(self.id, self.file_name, self.file_link)
+
+
+class User_Project_Collabs_Approved (models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+	collab_status = models.IntegerField (default=0)
+
+	def __str__(self):
+		return "id = {}".format(self.id)
