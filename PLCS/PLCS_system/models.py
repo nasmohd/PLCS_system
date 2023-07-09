@@ -98,6 +98,7 @@ class User_Role (models.Model):
 
 
 class Learning_Module (models.Model):
+	module_ID = models.CharField (max_length=50, default='')
 	module_title = models.CharField (max_length=50, default='')
 	module_description = models.TextField(default='')
 	module_tags = models.TextField(default='')
@@ -198,3 +199,12 @@ class Saved_Project (models.Model):
 		return "id = {}, user = {}".format(self.id, self.user)
 
 
+class Quiz (models.Model):
+	quiz_id = models.CharField (max_length=15)
+	quiz_title = models.CharField (max_length=300)
+	quiz_description = models.TextField()
+	user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+	module_topic = models.ForeignKey(Module_Topic, on_delete=models.CASCADE, null=True)
+	
+	def __str__(self):
+		return "id = {}, user = {}".format(self.id, self.user)

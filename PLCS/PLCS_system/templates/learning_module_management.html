@@ -54,7 +54,7 @@
       <section class="content-header">
         <h1>
           Learning Content Management
-          <small>Control panel</small>
+          <!-- <small>Control panel</small> -->
         </h1>
         <!-- <ol class="breadcrumb">
           <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -741,19 +741,21 @@
 
 
                 <div class="box-body">
-                  {% for i in rec_projects_details %}
+                  {% if rec_projects_details.0 != 'None' %}
+                    {% for i in rec_projects_details %}
 
-                    {% if forloop.counter == 1 %}
-                      <div class="col-md-12">
+                      {% if forloop.counter == 1 %}
+                        <div class="col-md-12">
 
-                    {% else %}
-                      <div class="col-md-12 mt">
-                    {% endif %}
+                      {% else %}
+                        <div class="col-md-12 mt">
+                      {% endif %}
 
-                      <dt>{{ i.module_title }}</dt>
-                      <dd>{{ i.module_description }}. <a href="/view_topics/{{ i.id }}/"> Read more </a> </dd>
-                    </div>
-                  {% endfor %}
+                        <dt>{{ i.module_title }}</dt>
+                        <dd>{{ i.module_description }}. <a href="/view_topics/{{ i.id }}/"> Read more </a> </dd>
+                      </div>
+                    {% endfor %}
+                  {% endif %}
                 </div>
 
 

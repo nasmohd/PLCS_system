@@ -313,7 +313,7 @@
                     <td> {{ forloop.counter }} </td>
                     <td><a href="/project_collab_tasks/{{ i.project.id }}"> {{ i.project.project_id }} </a></td>
                     <td><a href="/project_collab_tasks/{{ i.project.id }}"> {{ i.project.project_title }} </a> </td>
-                    <td class="description_column"> {{ i.project.project_description }} </td>
+                    <td class="description_column"><a href="/project_collab_tasks/{{ i.project.id }}"> {{ i.project.project_description }} </a></td>
 
                     <td id="tagContainer"> 
                       {% for j in i.project.project_skills %}
@@ -322,15 +322,15 @@
                     </td>
                     
                     <td> 
-                      {% if i.status == 0 %}
+                      {% if i.collab_status == 0 %}
                         <span class="btn-round btn btn-info btn-xs"> Pending Approval </span>
                       {% endif %}
 
-                      {% if i.status == 1 %}
+                      {% if i.collab_status == 1 %}
                         <span class="btn-round btn btn-warning btn-xs"> Active </span>
                       {% endif %}
 
-                      {% if i.status == 2 %}
+                      {% if i.collab_status == 2 %}
                         <span class="btn-round btn btn-success btn-xs"> Completed </span>
                       {% endif %}
 

@@ -93,7 +93,10 @@
                 <tr>
                   <th style="width: 5%;">SN</th>
                   <th style="width: 75%;">Email</th>
-                  <th style="width: 20%;" class="text-center">Action</th>
+
+                  {% if i.project.user_project.id == current_user %}
+                    <th style="width: 20%;" class="text-center">Action</th>
+                  {% endif %}
                 </tr>
                 </thead>
                 <tbody>
@@ -102,21 +105,24 @@
                   <tr>
                     <td><a href="/profile_history/{{ i.user.id }}/"> {{ forloop.counter }} </a></td>
                     <td><a href="/profile_history/{{ i.user.id }}/"> {{ i.user.email }} </a></td>
-                    <td class="text-center">
-                      <div class="btn-group">
-                        <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                          <i class="fa fa-fw fa-pencil-square-o"></i>
-                        </button>
-                        <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                          <span class="caret"></span>
-                          <span class="sr-only">Toggle Dropdown</span>
-                        </button>
 
-                        <ul class="dropdown-menu pull-right" role="menu">
-                          <li><a href="#"> Item 1 Dropdown </a></li>
-                        </ul>
-                      </div>
-                    </td>
+                    {% if i.project.user_project.id == current_user %}
+                      <td class="text-center">
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-fw fa-pencil-square-o"></i>
+                          </button>
+                          <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                          </button>
+
+                          <ul class="dropdown-menu pull-right" role="menu">
+                            <li><a href="#"> Item 1 Dropdown </a></li>
+                          </ul>
+                        </div>
+                      </td>
+                    {% endif %}
                   </tr>
 
                  
@@ -128,7 +134,10 @@
                 <tr>
                   <th style="width: 5%;">SN</th>
                   <th style="width: 75%;">Email</th>
-                  <th style="width: 20%;" class="text-center">Action</th>
+
+                  {% if i.project.user_project.id == current_user %}
+                    <th style="width: 20%;" class="text-center">Action</th>
+                  {% endif %}
                 </tr>
                 </tfoot>
               </table>
@@ -219,6 +228,10 @@
               <h3 class="box-title" style="color: #306FA0;">
               <i class="fa fa-file-text-o project_color"></i>
               <strong class="project_color"> Task Assignment for this project </strong><br/> <span class="type_of_project_view" id="type_of_project_view" style="font-size:13px; font-weight: normal"> Showing tasks distribution for this project </span></h3>
+
+              {% if project_details.user_project.id == current_user %}
+                <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addUser"> Add Task </button>
+              {% endif %}
             </div>
 
             <div class="box-body table-responsive">
@@ -230,12 +243,21 @@
                   <th style="width: 20%;">Deliverables</th>
                   <th style="width: 10%">Deadline</th>
                   <th style="width: 25%;">Assigned to</th>
-                  <th class="text-center" style="width: 10%;">Assign to</th>
+
+                  <th class="text-center table_th2" style="width: 10%; display: none;">Assign to</th>
+                  <th class="text-center table_th" style="width: 10%; display: none;">Upload</th>
                 </tr>
                 </thead>
                 <tbody>
 
                 {% for i in get_tasks_for_project %}
+                  {% if i.project.user_project.id == current_user %}
+                    <script type="text/javascript">
+                      var t_th2 = document.querySelector (".table_th2");
+                      t_th2.style.display = "inline";
+                    </script>
+                  {% endif %}
+
                   <tr>
                     <td> {{ forloop.counter }} </td>
                     <td> {{ i.task_x }} </td>
@@ -249,25 +271,39 @@
                       <td> {{ i.assigned_to.email }} </td>
                     {% endif %}
 
-                    <td class="text-center"> 
-                      <div class="btn-group">
-                        <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                          <i class="fa fa-fw fa-pencil-square-o"></i>
-                        </button>
-                        <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                          <span class="caret"></span>
-                          <span class="sr-only">Toggle Dropdown</span>
-                        </button>
+                    {% if i.project.user_project.id == current_user %}
+                      <td class="text-center"> 
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-fw fa-pencil-square-o"></i>
+                          </button>
+                          <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                          </button>
 
-                        <ul class="dropdown-menu pull-right" role="menu">
-                          {% for i in collaborators_for_project %}
-                            <li><a href="#"> {{ i.user.email }} </a></li>
-                          {% endfor %}
-                          
-                          
-                        </ul>
-                      </div>
-                    </td>
+                          <ul class="dropdown-menu pull-right" role="menu">
+                            {% for i in collaborators_for_project %}
+                              <li><a href="#"> {{ i.user.email }} </a></li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      </td>
+
+                    {% else %}
+                      {% if user_collabs.email == i.assigned_to.email %}
+                        <td class="text-center">
+                          <div class="form-group">
+                            <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
+                          </div>
+                        </td>
+
+                        <script type="text/javascript">
+                          var t_th = document.querySelector (".table_th");
+                          t_th.style.display = "inline";
+                        </script>
+                      {% endif %}
+                    {% endif %}
                   </tr>
 
                  
@@ -282,7 +318,12 @@
                   <th style="width: 20%;">Deliverables</th>
                   <th style="width: 10%">Deadline</th>
                   <th style="width: 35%;">Assigned to</th>
-                  <th class="text-center" style="width: 10%;">Assign to</th>
+
+                  
+                    <th class="text-center table_th2" style="width: 10%; display: none;">Assign to</th>
+                  
+                    <th class="text-center table_th" style="width: 10%; display: none;">Upload</th>
+                  
                 </tr>
                 </tfoot>
               </table>

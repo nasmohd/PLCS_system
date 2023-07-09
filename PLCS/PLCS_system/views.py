@@ -314,10 +314,11 @@ def view_projects(request):
 
 			if column_value3:
 				list_value3 = literal_eval(column_value3)
-				print (type (list_value3))
-				task_date = datetime.strptime(list_value3[0], '%d-%m-%Y')
+				# print (type (list_value3))
+				# task_date = datetime.strptime(list_value3[0], '%d-%m-%Y')
+				# task_date = datetime.strptime(list_value3[0], '%d-%m-%Y')
 				# Format the date as 'DD-MM-YYYY'
-				formatted_task_date = task_deadline_str.strftime('%Y-%m-%d')
+				# formatted_task_date = task_deadline_str.strftime('%Y-%m-%d')
 				obj.project_tasks = list_value3
 				obj.save()
 
@@ -355,6 +356,10 @@ def add_project(request):
 	# skills = request.POST['skills_required']
 	# skills_list = skills.split(", ")
 
+	current_user = request.session['user_id']
+	user_proj = User.objects.get(id = current_user)
+
+
 	# return HttpResponse (skills_list[2])
 	uploaded_image1 = None
 	uploaded_image2 = None
@@ -375,8 +380,6 @@ def add_project(request):
 
 
 	if request.method == "POST":
-		current_user = request.session['user_id']
-
 
 		# if 'image1' in request.FILES or 'image2' in request.FILES or 'image3' in request.FILES:
 		project_images = ['x.pdf', 'x.pdf', 'x.pdf']
@@ -636,7 +639,7 @@ def add_project(request):
 		project_deadline = input_date.strftime(output_format)
 
 		project.project_deadline = project_deadline
-		project.user_project = User.objects.get(id = current_user)
+		project.user_project = user_proj
 
 		task_deadlines = request.POST.getlist('task_deadline[]')
 		task_details = request.POST.getlist('task_details[]')
@@ -677,6 +680,14 @@ def add_project(request):
 
 		project.project_tasks = sub_tasks
 		project.save()
+
+		appr_collab = User_Project_Collabs_Approved()
+		appr_collab.user = user_proj
+		appr_collab.project = project
+		appr_collab.project = project
+		appr_collab.save()
+
+		
 		
 
 		# todo_items = request.POST.get('todo_items')
@@ -1169,6 +1180,11 @@ def learning_content(request, topic_id):
 
 	get_all_summaries = Summary.objects.all()
 
+	learning_topic = Module_Topic.objects.get (id = topic_id)
+
+
+	get_all_quizzes = Quiz.objects.all()
+
 	for obj in all_modules:
 		column_value = obj.module_tags
 		if column_value:
@@ -1182,7 +1198,8 @@ def learning_content(request, topic_id):
 
 	roles_n_permissions = get_roles_permissions(request, logged_in_userid)
 	return render (request, "learning_content_management.html", {'roles_n_permissions': roles_n_permissions, 'user_names': user_names,
-		'all_modules': all_modules, 'all_modules_count': all_modules_count, 'topic_id': topic_id, 'get_all_summaries': get_all_summaries})
+		'all_modules': all_modules, 'all_modules_count': all_modules_count, 'topic_id': topic_id, 'get_all_summaries': get_all_summaries,
+		'get_all_quizzes': get_all_quizzes, 'learning_topic': learning_topic})
 
 
 
@@ -1193,23 +1210,22 @@ def learning_content_modules(request):
 	all_modules = Learning_Module.objects.filter(module_creator = me_user).order_by('-module_DOR')
 	all_modules_count = all_modules.count()
 	# current_user = request.session['user_id']
+	rec_projects_details = []
 
+	# Recommnend Learning Materials
+	if (all_modules_count > 0):
+		rec_proj = recommend_learning_material(current_user)
+		rec_proj = rec_proj[0]
 
+		for id in rec_proj:
+			project_detail = Learning_Module.objects.get(id=id)
+			rec_projects_details.append(project_detail)
 
+	else:
+		rec_projects_details.append('None')
 
-	#Recommnend Learning Materials
-	# rec_proj = recommend_learning_material(current_user)
-	# rec_proj = rec_proj[0]
-
-	# rec_projects_details = []
-	# for id in rec_proj:
-	# 	project_detail = Learning_Module.objects.get(id=id)
-	# 	rec_projects_details.append(project_detail)
+	
 	# print (rec_proj[0])
-
-
-
-
 
 	# return HttpResponse (rec_proj)
 
@@ -1231,7 +1247,7 @@ def learning_content_modules(request):
 
 	roles_n_permissions = get_roles_permissions(request, logged_in_userid)
 	return render (request, "learning_module_management.html", {'roles_n_permissions': roles_n_permissions, 'user_names': user_names,
-		'all_modules': all_modules, 'all_modules_count': all_modules_count})
+		'all_modules': all_modules, 'all_modules_count': all_modules_count, 'rec_projects_details': rec_projects_details})
 # 'rec_projects_details': rec_projects_details
 
 
@@ -1281,6 +1297,9 @@ def add_module(request):
 			tags_list = module_tags.split(", ")
 			new_module.module_tags = str(tags_list)
 
+			new_module.save()
+
+			new_module.module_ID = 'LM' + str(new_module.id)
 			new_module.save()
 			return redirect('/learning_content_modules')
 
@@ -1539,7 +1558,8 @@ def view_projects_collaborations(request):
 	#Get user
 	user_collabs = User.objects.get (id = current_user)
 
-	user_project_collabs = User_Project_Collab.objects.filter(project__user_project = user_collabs).exclude(status = 0)
+	# user_project_collabs = User_Project_Collab.objects.filter(project__user_project = user_collabs).exclude(status = 0)
+	user_project_collabs = User_Project_Collabs_Approved.objects.filter(user = user_collabs).exclude(collab_status = 0)
 
 	unique_projects = set()
 	filtered_collabs = []
@@ -1714,7 +1734,7 @@ def accept_collab (request, collab_id, requester_id, project_id):
 	
 	new_collab_approval.user = User.objects.get(id = requester_id)
 	new_collab_approval.project = Project.objects.get(id = project_id)
-	new_collab_approval.collab_status = 0
+	new_collab_approval.collab_status = 1
 	new_collab_approval.save()
 
 	redirect_link = "/view_collab_requests/{}/".format(project_id_of_this_collab)
@@ -1746,15 +1766,16 @@ def project_collab_tasks(request, project_id):
 	
 
 	# collaborators_for_project = User_Project_Collab.objects.filter(project__user_project = user_collabs).filter(project__id = project_id).exclude(status = 0)
-	collaborators_for_project = User_Project_Collabs_Approved.objects.filter(project = project_details).filter(collab_status = 0)
+	collaborators_for_project = User_Project_Collabs_Approved.objects.filter(project = project_details).exclude(collab_status = 0)
 
 
+	get_tasks_for_project = Collab_Task.objects.filter(project__id = project_id)
 	get_tasks_for_project = Collab_Task.objects.filter(project__id = project_id)
 
 
 	return render (request, "project_tasks.html", {'project_details': project_details, 'notifs': notifs, 
 		'user_names': user_names, 'collaborators_for_project': collaborators_for_project, 'get_tasks_for_project': get_tasks_for_project,
-		'project_id': project_id})
+		'project_id': project_id, 'current_user': current_user, 'user_collabs': user_collabs})
 
 
 
@@ -1953,12 +1974,14 @@ def recommend_learning_material (user_id):
 	users = [(user.email, user.learning_interests)]
 
 	# Load project data
-	projects = [(project.id, project.module_tags) for project in Learning_Module.objects.all()]
+	projects = [(project.id, eval(project.module_tags)) for project in Learning_Module.objects.all().exclude(module_creator = user)]
+	# projects = [(project.project_id, eval(project.project_skills)) for project in Project.objects.all().exclude(user_project = user)]
 
 	# Step 2: Preprocess data and compute cosine similarity matrix
 
 	# Preprocess skills for CountVectorizer
-	all_skills = [user[1] for user in users] + [project[1] for project in projects]
+	# all_skills = [user[1] for user in users] + [project[1] for project in projects]
+	all_skills = [','.join(user[1]) for user in users] + [','.join(project[1]) for project in projects]
 
 	# Create CountVectorizer and fit-transform the skills
 	vectorizer = CountVectorizer()
@@ -2174,7 +2197,65 @@ def get_saved_projects(request):
 
 
 
+def create_quiz(request, topic_id):
+	current_user = request.session['user_id']
+	user_x = User.objects.get (id = current_user)
+
+	topic_x = Module_Topic.objects.get (id = topic_id)
+
+	if request.method == 'POST':
+		quiz_title = request.POST['quiz_title']
+		quiz_description = request.POST['quiz_description']
+
+		qz = Quiz()
+		qz.quiz_title = quiz_title
+		qz.quiz_description = quiz_description
+		qz.user = user_x
+		qz.module_topic = topic_x
+		qz.save()
+
+		qz.quiz_id = "Quiz_" + str(qz.id)
+		qz.save()
 
 
+		rec_projects_details = []
+
+		all_modules = Learning_Module.objects.filter(module_creator = user_x).order_by('-module_DOR')
+		all_modules_count = all_modules.count()
+		if (all_modules_count > 0):
+			rec_proj = recommend_learning_material(current_user)
+			rec_proj = rec_proj[0]
+
+			for id in rec_proj:
+				project_detail = Learning_Module.objects.get(id=id)
+				rec_projects_details.append(project_detail)
+
+		else:
+			rec_projects_details.append('None')
+
+		messages.success(request, 'Quiz has been added', extra_tags='alert-success')
+		return render (request, "learning_content_quiz_creation.html", {'qz': qz, 'rec_projects_details': rec_projects_details})
+
+		# redir = "/learning_content/" + str(topic_id)
+		# return redirect (redir)
+
+	else:
+		messages.success(request, 'Quiz not created', extra_tags='alert-danger')
+		redir = "/learning_content/" + str(topic_id)
+		return redirect (redir) 
+
+
+
+def delete_quiz(request, topic_id, quiz_id):
+	current_user = request.session['user_id']
+	user_x = User.objects.get (id = current_user)
+
+	qz = Quiz.objects.get(id = quiz_id)
+	qz.delete()
+
+	messages.success(request, 'Quiz has been deleted', extra_tags='alert-danger')
+
+	redir = "/learning_content/" + str(topic_id)
+	return redirect (redir)
 
 
