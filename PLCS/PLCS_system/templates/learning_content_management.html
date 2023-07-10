@@ -103,7 +103,9 @@
                   <strong> Summary Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC;"> Summaries for study preparation </span> </h3>
                   <!-- label label-success -->
 
-                  <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addSummary"> Add New Summary </button>
+                  {% if current_user in content_to_this_user_list %}
+                    <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addSummary"> Add New Summary </button>
+                  {% endif %}
                 </div>
                 <!-- /.box-header -->
 
@@ -172,7 +174,10 @@
                       <th>Name</th>
                       <th>Description</th>
                       <th>File</th>
-                      <th class="text-center">Change details </th>
+
+                      {% if current_user in content_to_this_user_list %}
+                        <th class="text-center">Change details </th>
+                      {% endif %}
                     </tr>
                     </thead>
 
@@ -203,6 +208,7 @@
                             </style>
                           </td>
 
+                        {% if current_user in content_to_this_user_list %}
                           <td class="text-center"> 
                             <div class="btn-group">
                               <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
@@ -219,6 +225,7 @@
                               </ul>
                             </div>
                           </td>
+                        {% endif %}
                         </tr>
 
                         <div class="modal modal-danger fade" id="modal-deleteSummary{{ summary.id }}" style="display: none;">
@@ -251,8 +258,12 @@
                     <tr>
                       <th> SN </th>
                       <th>Name</th>
+                      <th>Description</th>
                       <th>File</th>
-                      <th class="text-center">Change details </th>
+
+                      {% if current_user in content_to_this_user_list %}
+                        <th class="text-center">Change details </th>
+                      {% endif %}
                     </tr>
                     </tfoot>
                   </table>
@@ -269,7 +280,9 @@
                   <strong> Flashcard Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC;"> Flashcards for study preparation </span> </h3>
                   <!-- label label-success -->
 
-                  <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addUser"> Add New Flashcards </button>
+                  {% if current_user in content_to_this_user_list %}
+                    <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addUser"> Add New Flashcards </button>
+                  {% endif %}
                 </div>
                 <!-- /.box-header -->
 
@@ -333,7 +346,10 @@
                       <th style="width: 40%;">Answer</th>
                       <!-- <th>Date Registered</th>
                       <th>Status</th> -->
-                      <th class="text-center" style="width: 15%;"> Change details </th>
+
+                      {% if current_user in content_to_this_user_list %}
+                        <th class="text-center" style="width: 15%;"> Change details </th>
+                      {% endif %}
                     </tr>
                     </thead>
                     <tbody>
@@ -665,7 +681,10 @@
                       <th style="width: 40%;">Answer</th>
                       <!-- <th>Date Registered</th>
                       <th>Status</th> -->
-                      <th class="text-center" style="width: 15%;"> Options </th>
+
+                      {% if current_user in content_to_this_user_list %}
+                        <th class="text-center" style="width: 15%;"> Change details </th>
+                      {% endif %}
                     </tr>
                     </tfoot>
                   </table>
@@ -682,7 +701,9 @@
                   <strong> Quizzes Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC;"> Quizzes to test your knowledge </span> </h3>
                   <!-- label label-success -->
 
-                  <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-createQuiz"> Create new Quiz </button>
+                  {% if current_user in content_to_this_user_list %}
+                    <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-createQuiz"> Create new Quiz </button>
+                  {% endif %}
                 </div>
                 <!-- /.box-header -->
 
@@ -751,7 +772,10 @@
                       <th style="width: 20%;">Quiz ID</th>
                       <th style="width: 20%;">Name</th>
                       <th style="width: 30%;">Description</th>
-                      <th class="text-center" style="width: 25%;"> Options </th>
+
+                      {% if current_user in content_to_this_user_list %}
+                        <th class="text-center" style="width: 25%;"> Options </th>
+                      {% endif %}
                     </tr>
                     </thead>
 
@@ -774,22 +798,24 @@
                             {{ quiz.quiz_description }}
                           </td>
 
-                          <td class="text-center"> 
-                            <div class="btn-group">
-                              <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                                <i class="fa fa-fw fa-pencil-square-o"></i>
-                              </button>
-                              <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                                <span class="caret"></span>
-                                <span class="sr-only">Toggle Dropdown</span>
-                              </button>
+                          {% if current_user in content_to_this_user_list %}
+                            <td class="text-center"> 
+                              <div class="btn-group">
+                                <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                                  <i class="fa fa-fw fa-pencil-square-o"></i>
+                                </button>
+                                <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                                  <span class="caret"></span>
+                                  <span class="sr-only">Toggle Dropdown</span>
+                                </button>
 
-                              <ul class="dropdown-menu pull-right" role="menu">
-                                <!-- <li><a href="#" data-toggle="modal" data-target="#modal-editProject{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li> -->
-                                <li><a data-toggle="modal" data-target="#modal-deleteQuiz{{ quiz.id }}"><i class="fa fa-trash"></i> Delete </a></li>
-                              </ul>
-                            </div>
-                          </td>
+                                <ul class="dropdown-menu pull-right" role="menu">
+                                  <!-- <li><a href="#" data-toggle="modal" data-target="#modal-editProject{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li> -->
+                                  <li><a data-toggle="modal" data-target="#modal-deleteQuiz{{ quiz.id }}"><i class="fa fa-trash"></i> Delete </a></li>
+                                </ul>
+                              </div>
+                            </td>
+                          {% endif %}
                         </tr>
 
                         <div class="modal modal-danger fade" id="modal-deleteQuiz{{ quiz.id }}" style="display: none;">
@@ -824,7 +850,10 @@
                       <th style="width: 20%;">Quiz ID</th>
                       <th style="width: 20%;">Name</th>
                       <th style="width: 30%;">Description</th>
-                      <th class="text-center" style="width: 25%;"> Options </th>
+
+                      {% if current_user in content_to_this_user_list %}
+                        <th class="text-center" style="width: 25%;"> Options </th>
+                      {% endif %}
                     </tr>
                     </tfoot>
                   </table>

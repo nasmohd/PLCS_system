@@ -388,7 +388,197 @@
                       </tr>
 
 
-                      
+                      <div class="modal fade" id="modal-editmodule{{ i.id }}" style="display: none;">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+                              <h4 class="modal-title"> Edit Module Details </h4>
+                            </div>
+                            <form role="form" action="/edit_module/{{ i.id }}/" method="POST" id="addUser">
+                              {% csrf_token %}
+
+                              <div class="modal-body">
+                                <p>Please edit details of the module/subject</p>
+
+                                <div class="nav-tabs-custom">
+                                  <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Module Details <span class="optional_entry"> * </span></a></li>
+                                    
+                                  </ul>
+
+                                  <div class="tab-content">
+                                    <div class="tab-pane active" id="tab_1">
+                                      
+                                <!-- form start -->
+                                
+                                      <div class="form-group">
+                                        <label for="exampleInputEmail1">Module Title <span class="optional_entry"> * </span></label>
+                                        <input type="text" class="form-control" placeholder="Enter Module Title" name="module_title" required value="{{ i.module_title }}">
+                                      </div>
+
+                                      <div class="form-group">
+                                        <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
+                                        <textarea class="form-control" placeholder="Module Description" name="module_description" rows="4" style="resize: none;" required>{{ i.module_description }}</textarea>
+                                      </div>
+
+
+                                      <div class="form-group">
+                                        <label for="exampleInputEmail1">Tags <span class="optional_entry"> * </span></label>
+                                        <!-- <input type="text" id="search-input" list="search-terms" onchange="showSelectedSearchTerms()" name="q" class="form-control" placeholder="Search..."> -->
+
+                                        <datalist id="search-terms">
+                                          <option value="Algorithms">
+                                          <option value="Data Structures and Algorithms">
+                                          <option value="Software Engineering">
+                                          <option value="Web application development">
+                                          <option value="Blockchain">
+                                        </datalist>
+                                                                    
+                                        <div id="selected-search-terms">
+                                          
+                                        </div>
+
+                                        <style>
+                                          #selected-search-terms {
+                                            display: flex;
+                                            flex-wrap: wrap;
+                                            gap: 10px;
+                                            margin-top: 10px;
+                                          }
+                                          #selected-search-terms div {
+                                            display: inline-block;
+                                          }
+
+                                          .selected-term:hover {
+                                            cursor: pointer;
+                                          }
+                                        </style>
+
+                                        <script>
+                                          const labelClasses{{ i.id }} = ['label-warning', 'label-danger', 'label-success', 'label-info', 'label-primary'];
+                                          const selectedTerms{{ i.id }} = new Set();
+
+                                          function showSelectedSearchTerms() {
+                                            const input = document.getElementById("search-input");
+                                            const selectedTerm = input.value.trim();
+
+                                            const datalist = document.getElementById("search-terms");
+
+                                            //Choose random label from those specified above
+                                            const selectedOption = datalist.querySelector(`option[value='${input.value.trim()}']`);
+
+                                            if (selectedTerm && !(selectedTerm in selectedTerms{{ i.id }})  && !(selectedOption.value in selectedTerms{{ i.id }}) && selectedOption){
+                                              const labelClass = labelClasses{{ i.id }}[Math.floor(Math.random() * labelClasses{{ i.id }}.length)];
+                                              selectedTerms{{ i.id }}[selectedTerm] = labelClass;
+                                              input.value = "";
+                                              displaySelectedSearchTerms();
+
+                                              // Remove selected option from datalist
+                                              const selectedOption = datalist.querySelector(`option[value='${selectedTerm}']`);
+                                              if (selectedOption) {
+                                                selectedOption.remove();
+                                              }
+                                            }
+                                          }
+
+                                          function displaySelectedSearchTerms() {
+                                            const selectedTermsDiv = document.getElementById("selected-search-terms");
+                                            selectedTermsDiv.innerHTML = "";
+                                            Object.keys(selectedTerms{{ i.id }}).forEach((term) => {
+                                              const termDiv = document.createElement("div");
+                                              const label = document.createElement("span");
+                                              label.className = `label ${selectedTerms{{ i.id }}[term]}`;
+                                              label.textContent = term;
+                                              label.style.marginRight = '5px';
+                                              termDiv.appendChild(label);
+                                              termDiv.className = 'selected-term';
+
+                                              // Add an 'x' icon using font awesome
+                                              const deleteIcon = document.createElement("i");
+                                              deleteIcon.className = "fa fa-fw fa-close";
+                                              deleteIcon.style.color = "white";
+
+                                              termDiv.onclick = function() {
+                                                delete selectedTerms{{ i.id }}[term];
+                                                displaySelectedSearchTerms();
+
+                                                // Add option back to datalist
+                                                const datalist = document.getElementById("search-terms");
+                                                const option = document.createElement("option");
+                                                option.value = term;
+                                                datalist.appendChild(option);
+                                              }
+                                              label.appendChild(deleteIcon);
+                                              selectedTermsDiv.appendChild(termDiv);
+                                            });
+                                          }
+
+                                          function validateForm() {
+                                            
+                                            const selectedTermsDiv = document.getElementById("selected-search-terms");
+                                            if (selectedTermsDiv.childElementCount === 0) {
+                                              var navTabs = document.querySelector('.nav.nav-tabs');
+                                              var navTabChildren = navTabs.children;
+
+                                              for (var i = 0; i < navTabChildren.length; i++) {
+                                                navTabChildren[i].classList.remove('active');
+                                              }
+
+                                              // Select the li element
+                                              let liElement = document.querySelector('li a[href="#tab_2"]').parentElement;
+
+                                              // Add a class to the li element
+                                              liElement.classList.add('active');
+                                              $('.tab-pane').removeClass('active');
+
+
+                                              const tabPane = document.getElementById("tab_2");
+                                              tabPane.classList.add("active");
+                                              // alert("Please select at least one search term.");
+                                              return false;
+                                            }
+                                            return true;
+                                          }
+                                        </script>
+                                      </div>
+
+                                      
+
+                                      <!-- <div class="form-group">
+                                        <label for="exampleInputPassword1">Confirm Password <span class="optional_entry"> * </span></label>
+                                        <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" required>
+                                      </div> -->
+
+                                      <style type="text/css">
+                                        .optional_entry {
+                                          color: red;
+                                        }
+                                      </style>
+                                  <!-- <div class="form-group">
+                                    <label for="exampleInputFile"> Profile Picture </label>
+                                    <input type="file" id="user_profile_picture">
+                                  </div> -->
+                                    </div>
+                                  </div>
+                                  <!-- /.tab-content -->
+                                </div>
+
+                                
+
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-success">Update Module</button>
+                              </div>
+
+                            </form>
+                          </div>
+                          <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                      </div>
 
 
                       <!-- Modal Delete User  -->

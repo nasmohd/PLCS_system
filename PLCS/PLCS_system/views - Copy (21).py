@@ -819,33 +819,6 @@ def user_management(request):
 
 
 	all_modules = Learning_Module.objects.all().exclude(module_creator = user_x).order_by('-module_DOR')
-	for obj in all_modules:
-		column_value = obj.module_tags
-
-		if column_value:
-			list_value = literal_eval(column_value)
-			obj.module_tags = list_value
-			obj.save()
-
-
-	all_mod_otr = Learning_Module.objects.all().exclude(module_creator = user_x)
-	all_modules_count_rec = all_mod_otr.count()
-	rec_learning_content_details = []
-
-	# Recommnend Learning Materials
-	if (all_modules_count_rec > 0):
-		rec_learning = recommend_learning_material(current_user)
-		rec_learning = rec_learning[0]
-
-		for id in rec_learning:
-			project_detail = Learning_Module.objects.get(id=id)
-			rec_learning_content_details.append(project_detail)
-
-	else:
-		rec_learning_content_details.append('None')
-
-	# Get recommended projects from the database based on the project IDs
-	rec_learning_details = Learning_Module.objects.filter(id__in = rec_learning)
 
 
 	#Recommnend Projects
@@ -962,7 +935,7 @@ def user_management(request):
 			'roles_n_permissions': roles_n_permissions, 'get_all_projects': get_all_projects, 'user_names': user_names, 
 			'current_user': current_user, 'get_all_project_collabs': user_x_collab, 'all_roles': all_roles, 
 			'permissions_for_role': permissions_for_role, 'notifs': notifs, 'rec_projects_details': rec_projects_details, 
-			'permissions_for_each_user': permissions_for_each_user, 'saved_projects': saved_projects, 'all_modules': all_modules, 'rec_learning_details': rec_learning_details})
+			'permissions_for_each_user': permissions_for_each_user, 'saved_projects': saved_projects})
 		# return render (request, "dashboard.html")
 
 	else:
@@ -1204,24 +1177,13 @@ def get_roles_permissions(request, user_id):
 # def get_permissions(request, user_id):
 # 	user_to_get_permissions = User.objects.get (id = user_id)
 
-def learning_content(request, topic_id, module_id):
+def learning_content(request, topic_id):
 	all_modules = Learning_Module.objects.all().order_by('-module_DOR')
 	all_modules_count = Learning_Module.objects.all().count()
 
 	get_all_summaries = Summary.objects.all()
 
 	learning_topic = Module_Topic.objects.get (id = topic_id)
-
-
-
-	current_user = request.session['user_id']
-	user_x = User.objects.get (id = current_user)
-
-	get_all_summaries = Summary.objects.all()
-
-	content_to_this_user = Learning_Module.objects.filter(id = module_id).values_list('module_creator', flat=True)
-	module_details = Learning_Module.objects.get(id = module_id)
-	content_to_this_user_list = list(content_to_this_user)
 
 
 	get_all_quizzes = Quiz.objects.all()
@@ -1240,8 +1202,7 @@ def learning_content(request, topic_id, module_id):
 	roles_n_permissions = get_roles_permissions(request, logged_in_userid)
 	return render (request, "learning_content_management.html", {'roles_n_permissions': roles_n_permissions, 'user_names': user_names,
 		'all_modules': all_modules, 'all_modules_count': all_modules_count, 'topic_id': topic_id, 'get_all_summaries': get_all_summaries,
-		'get_all_quizzes': get_all_quizzes, 'learning_topic': learning_topic, 'content_to_this_user_list': content_to_this_user_list,
-		'current_user': current_user})
+		'get_all_quizzes': get_all_quizzes, 'learning_topic': learning_topic})
 
 
 
@@ -1250,17 +1211,12 @@ def learning_content_modules(request):
 	me_user = User.objects.get(id = current_user)
 
 	all_modules = Learning_Module.objects.filter(module_creator = me_user).order_by('-module_DOR')
-
-	all_mod_otr = Learning_Module.objects.all().exclude(module_creator = me_user)
-
-
 	all_modules_count = all_modules.count()
-	all_modules_count_rec = all_mod_otr.count()
 	# current_user = request.session['user_id']
 	rec_projects_details = []
 
 	# Recommnend Learning Materials
-	if (all_modules_count_rec > 0):
+	if (all_modules_count > 0):
 		rec_proj = recommend_learning_material(current_user)
 		rec_proj = rec_proj[0]
 
@@ -1278,7 +1234,7 @@ def learning_content_modules(request):
 
 
 	# Get recommended projects from the database based on the project IDs
-	rec_projects_details = Learning_Module.objects.filter(id__in = rec_proj)
+	# rec_projects_details = Learning_Module.objects.filter(id__in = rec_proj)
 	
 
 	for obj in all_modules:
@@ -1412,8 +1368,6 @@ def view_module (request, module_id):
 
 def view_topics (request, module_id):
 	current_user = request.session['user_id']
-	user_x = User.objects.get (id = current_user)
-
 	notifs = get_notifications_of_user (request, current_user)
 	user_names = request.session['user_names']
 
@@ -1421,12 +1375,6 @@ def view_topics (request, module_id):
 
 	get_all_summaries = Summary.objects.all()
 
-	topics_to_this_user = Learning_Module.objects.filter(id = module_id).values_list('module_creator', flat=True)
-	module_details = Learning_Module.objects.get(id = module_id)
-	topics_to_this_user_list = list(topics_to_this_user)
-	# module_to_edit = Learning_Module.objects.get(id = module_id)
-
-	# return HttpResponse (topics_to_this_user_list)
 	# module_to_edit = Learning_Module.objects.get(id = module_id)
 
 	# if request.method == "POST":
@@ -1442,8 +1390,7 @@ def view_topics (request, module_id):
 	# 		module_to_edit.save()
 
 	return render (request, 'learning_topic_management.html', {'notifs': notifs, 'user_names': user_names, 'module_id': module_id,
-		'topics_for_modulex': topics_for_modulex, 'current_user': current_user, 'topics_to_this_user_list': topics_to_this_user_list,
-		'module_details': module_details})
+		'topics_for_modulex': topics_for_modulex})
 
 
 

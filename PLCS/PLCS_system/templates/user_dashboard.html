@@ -13,7 +13,7 @@
     
     <div class="col-md-12 col-12" style="margin-top: 2rem; margin-bottom: 2rem;">
       <form action="#" method="get" class="">
-        <div class="input-group" style="padding-left: 1.5rem; padding-right: 1.5rem;">
+        <div class="input-group col-md-8" style="padding-left: 1.5rem; padding-right: 1.5rem;">
           <input type="text" name="q" class="form-control" placeholder="Search..." style="background-color: #ecf4f9;">
           <span class="input-group-btn">
             <button type="submit" name="search" id="search-btn" class="btn btn-flat btn-primary"><i class="fa fa-search"></i>
@@ -700,14 +700,14 @@
                   {% endfor %}
                 {% endif %}
 
-                {% for i in get_all_projects %}
+                {% for i in all_modules %}
                   <div class="col-md-12 col-12" style="margin-top: 0rem;">
                     <div class="box box-solid">
                       <div class="box-header with-border">
                         <i class="fa fa-file"></i>
 
-                        <h3 class="box-title"> {{ i.project_id }}: {{ i.project_title }} 
-                          {% if i.user_project.id == current_user %}
+                        <h3 class="box-title"> {{ i.module_ID }}: {{ i.module_title }} 
+                          {% if i.module_creator.id == current_user %}
                             <span style="color: red; font-size: 13px;"> (Submitted by you!) </span>
                           {% endif %}
                         </h3>
@@ -734,67 +734,6 @@
                           </ul>
                         </div>
 
-                        <script type="text/javascript">
-                          function getCookie(name) {
-                            var cookieValue = null;
-                            if (document.cookie && document.cookie !== '') {
-                              var cookies = document.cookie.split(';');
-                              for (var i = 0; i < cookies.length; i++) {
-                                var cookie = cookies[i].trim();
-                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                  break;
-                                }
-                              }
-                            }
-                            return cookieValue;
-                          }
-                        
-                          // var bookmark_text = document.getElementById('bookmark-link{{ i.id }}');
-                          
-                          function toggleBookmark(linkId, projectId) {
-                            var linkElement = document.getElementById(linkId);
-                            var bookmarkTextElement = document.getElementById('bookmark-text' + projectId);
-
-                            var csrftoken = getCookie('csrftoken');
-
-                            if (bookmarkTextElement.innerText === 'Bookmark') {
-                              // Call the bookmark view function using AJAX
-                              $.ajax({
-                                url: '/bookmark/',
-                                type: 'POST',
-                                data: { project_id: projectId },
-                                headers: { 'X-CSRFToken': csrftoken },
-                                success: function(response) {
-                                  if (response.success) {
-                                    bookmarkTextElement.innerText = 'Bookmarked';
-                                  }
-                                },
-                                error: function(xhr, status, error) {
-                                  console.error(error);
-                                }
-                              });
-                            } else {
-                              // Call the unbookmark view function using AJAX
-                              $.ajax({
-                                url: '/unbookmark/',
-                                type: 'POST',
-                                data: { project_id: projectId },
-                                headers: { 'X-CSRFToken': csrftoken },
-                                success: function(response) {
-                                  if (response.success) {
-                                    bookmarkTextElement.innerText = 'Bookmark';
-                                  }
-                                },
-                                error: function(xhr, status, error) {
-                                  console.error(error);
-                                }
-                              });
-                            }
-                          }
-
-                        </script>
-
                         <!-- <i class="fa fa-file "></i> -->
                       </div>
 
@@ -815,7 +754,7 @@
                         <div class="col-md-7 col-7">
                           <div class="col-md-12 col-12">
                             <dt>Description</dt>
-                            <dd>{{ i.project_description }} <a href="/project_details/{{ i.id }}"> Read more </a> </dd>
+                            <dd>{{ i.module_description }} <a href="/project_details/{{ i.id }}"> Read more </a> </dd>
                           </div>
 
                           <div class="" style="margin-top: 6rem;">
@@ -827,9 +766,9 @@
 
                           <div class="" style="margin-top:12rem;">
                             <div class="col-md-12 col-12">
-                              <dt>Skills required</dt>
+                              <dt>Tags</dt>
                               <dd>
-                                {% for j in i.project_skills %}
+                                {% for j in i.module_tags %}
 
                                   <span class="badge" id="skill{{ i.id }}_{{ forloop.counter }}"> {{ j }} </span>
 
@@ -1038,7 +977,7 @@
 
 
                     <div class="box-body">
-                      {% for i in rec_projects_details %}
+                      {% for i in rec_learning_details %}
 
                         {% if forloop.counter == 1 %}
                           <div class="col-md-12">
@@ -1047,42 +986,11 @@
                           <div class="col-md-12 mt">
                         {% endif %}
 
-                          <dt>{{ i.project_id }}: {{ i.project_title }}</dt>
-                          <dd>{{ i.project_description }}. <a href="/project_details/{{ i.id }}/"> Read more </a> </dd>
+                          <dt>{{ i.module_ID }}: {{ i.module_title }}</dt>
+                          <dd>{{ i.module_description }}. <a href="/view_topics/{{ i.id }}/"> Read more </a> </dd>
                         </div>
                       {% endfor %}
                     </div>
-
-
-                    <!-- /.box-header -->
-                    <!-- <div class="box-body">
-                      <div class="col-md-12">
-                        <dt>Web Development</dt>
-                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
-                      </div>
-
-                      <div class="col-md-12 mt">
-                        <dt>Mobile App Development</dt>
-                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
-                      </div>
-
-                      <div class="col-md-12 mt">
-                        <dt>UI/UX Design</dt>
-                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
-                      </div>
-
-                      <div class="col-md-12 mt">
-                        <dt>UI/UX Design</dt>
-                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
-                      </div>
-
-                      <div class="col-md-12 mt">
-                        <dt>Web Development</dt>
-                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
-                      </div>
-
-                    </div> -->
-                    <!-- /.box-body -->
                   </div>
                   <!-- /.box -->
                 </div>
