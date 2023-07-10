@@ -2403,33 +2403,3 @@ def remove_collaborator(request, project_id, approved_collab_id):
 
 	redir = "/project_collab_tasks/" + str(project_id)
 	return redirect (redir)
-
-
-def update_user(request, user_id):
-
-	if request.method == 'POST':
-		project_interests = request.POST['project_interests']
-		learning_interests = request.POST['learning_interests']
-
-		# skills = request.POST['skills_required']
-		project_interests_list = project_interests.split(", ")
-		learning_interests_list = learning_interests.split(", ")
-
-		first_name_input = request.POST["first_name"]
-		last_name_input = request.POST["last_name"]
-		email_input = request.POST["email"]
-		password_input = request.POST["password"]
-
-		get_user = User.objects.get(id = user_id)
-		get_user.first_name = first_name_input
-		get_user.last_name = last_name_input
-		get_user.email = email_input
-		get_user.password = password_input
-		get_user.project_interests = str(project_interests_list)
-		get_user.learning_interests = str(learning_interests_list)
-		get_user.save()
-	
-		messages.success(request, 'Profile has been updated', extra_tags='alert-success')
-
-		redir = "/profile/"
-		return redirect (redir)

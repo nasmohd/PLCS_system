@@ -93,6 +93,7 @@ urlpatterns = [
     path("bookmark/", views.bookmark),
     path("unbookmark/", views.unbookmark),
     path("get_saved_projects/", views.get_saved_projects),
+    path("update_user_details/<int:user_id>/", views.update_user),
 
 
     path("create_quiz/<int:topic_id>/", views.create_quiz),

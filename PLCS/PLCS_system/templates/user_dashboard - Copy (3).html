@@ -1,0 +1,1061 @@
+  {% load static %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <!-- <section class="content-header">
+      <h1>
+        Projects
+      </h1>
+    </section> -->
+
+    <!-- Main content -->
+    
+    <div class="col-md-12 col-12" style="margin-top: 2rem; margin-bottom: 2rem;">
+      <form action="#" method="get" class="">
+        <div class="input-group col-md-8" style="padding-left: 1.5rem; padding-right: 1.5rem;">
+          <input type="text" name="q" class="form-control" placeholder="Search..." style="background-color: #ecf4f9;">
+          <span class="input-group-btn">
+            <button type="submit" name="search" id="search-btn" class="btn btn-flat btn-primary"><i class="fa fa-search"></i>
+            </button>
+          </span>
+        </div>
+      </form>
+    </div>
+   
+    <section class="content">
+      <!-- Small boxes (Stat box) -->
+      <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Projects <span class="optional_entry"> * </span></a></li>
+          <li><a href="#tab_2" data-toggle="tab" aria-expanded="false"> Learning Content <span class="optional_entry"> * </span></a></li>
+          <!-- <li><a href="#tab_3" data-toggle="tab" aria-expanded="false"> Quizzes <span class="optional_entry"> * </span></a></li> -->
+        </ul>
+      </div>
+
+      <div class="tab-content">
+        <div class="tab-pane active" id="tab_1">
+          <div class="row">
+            <!-- RECOMMEND BASED ON USER INTERESTS -->
+            <div class="col-md-8 col-8">
+              <div class="row">
+
+                <!-- ./col -->
+                {% if messages %}
+                  {% for message in messages %}
+                    <div class="col-md-12">
+                      <div class="alert alert-dismissible {{ message.tags }}">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color: white;">×</button>
+                        <i class="icon fa fa-check"></i> {{ message }}
+                      </div>
+                      <script>
+                          // Automatically close the alert after 5 seconds
+                          setTimeout(function() {
+                              $('.alert').alert('close');
+                          }, 5000);
+                      </script>
+                    </div>
+                  {% endfor %}
+                {% endif %}
+
+                {% for i in get_all_projects %}
+                  <div class="col-md-12 col-12" style="margin-top: 0rem;">
+                    <div class="box box-solid">
+                      <div class="box-header with-border">
+                        <i class="fa fa-file"></i>
+
+                        <h3 class="box-title"> {{ i.project_id }}: {{ i.project_title }} 
+                          {% if i.user_project.id == current_user %}
+                            <span style="color: red; font-size: 13px;"> (Submitted by you!) </span>
+                          {% endif %}
+                        </h3>
+                          {% csrf_token %}
+                        <div class="box-tools pull-right">
+                          <button type="button" class="btn btn-box-tool" data-toggle="dropdown">
+                            <i class="fa fa-ellipsis-v"></i>
+                          </button>
+                          <ul class="dropdown-menu" role="menu">
+                            <!-- <li><a href="#">Edit</a></li> -->
+
+                            {% if i.id in saved_projects %}
+                              <li id="bookmark{{ i.id }}"><a href="#" id="bookmark-link{{ i.id }}" onclick="toggleBookmark('bookmark-link{{ i.id }}', '{{ i.id }}')"><i class="fa fa-fw fa-bookmark" style="color: #F39C12;"></i> <span id="bookmark-text{{ i.id }}"> Bookmarked </span></a></li>
+
+                            {% else %}
+                              <li id="bookmark{{ i.id }}"><a href="#" id="bookmark-link{{ i.id }}" onclick="toggleBookmark('bookmark-link{{ i.id }}', '{{ i.id }}')"><i class="fa fa-fw fa-bookmark"></i> <span id="bookmark-text{{ i.id }}"> Bookmark </span></a></li>
+                            {% endif %}
+
+
+                            {% if i.user_project.id == current_user %}
+                              <li><a href="#"><i class="fa fa-fw fa-trash" style="color: black;"></i> Delete</a></li>
+                            {% endif %}
+
+                          </ul>
+                        </div>
+
+                        <script type="text/javascript">
+                          function getCookie(name) {
+                            var cookieValue = null;
+                            if (document.cookie && document.cookie !== '') {
+                              var cookies = document.cookie.split(';');
+                              for (var i = 0; i < cookies.length; i++) {
+                                var cookie = cookies[i].trim();
+                                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                  break;
+                                }
+                              }
+                            }
+                            return cookieValue;
+                          }
+                        
+                          // var bookmark_text = document.getElementById('bookmark-link{{ i.id }}');
+                          
+                          function toggleBookmark(linkId, projectId) {
+                            var linkElement = document.getElementById(linkId);
+                            var bookmarkTextElement = document.getElementById('bookmark-text' + projectId);
+
+                            var csrftoken = getCookie('csrftoken');
+
+                            if (bookmarkTextElement.innerText === 'Bookmark') {
+                              // Call the bookmark view function using AJAX
+                              $.ajax({
+                                url: '/bookmark/',
+                                type: 'POST',
+                                data: { project_id: projectId },
+                                headers: { 'X-CSRFToken': csrftoken },
+                                success: function(response) {
+                                  if (response.success) {
+                                    bookmarkTextElement.innerText = 'Bookmarked';
+                                  }
+                                },
+                                error: function(xhr, status, error) {
+                                  console.error(error);
+                                }
+                              });
+                            } else {
+                              // Call the unbookmark view function using AJAX
+                              $.ajax({
+                                url: '/unbookmark/',
+                                type: 'POST',
+                                data: { project_id: projectId },
+                                headers: { 'X-CSRFToken': csrftoken },
+                                success: function(response) {
+                                  if (response.success) {
+                                    bookmarkTextElement.innerText = 'Bookmark';
+                                  }
+                                },
+                                error: function(xhr, status, error) {
+                                  console.error(error);
+                                }
+                              });
+                            }
+                          }
+
+                        </script>
+
+                        <!-- <i class="fa fa-file "></i> -->
+                      </div>
+
+
+                      <!-- /.box-header -->
+                      <div class="box-body"> 
+                        <div class="col-md-5 col-5" style="height: 200px;">
+                          <!-- {{ i.project_images }} -->
+                          <!-- <i class="fa fa-file-text-o"></i> -->
+                          
+
+                          <img src="{% static 'imgs/project_.png' %}" style="height: 100%; background-color: red;"/>
+                          <!-- <img src="{% static 'project_imgs/PLCS6#img1.jpg' %}" style="height: 100%; background-color: red;"/> -->
+                          <!-- <img src="{% static 'profile_imgs/{{ i.project_images.0 }}' %}"/> -->
+                          
+                        </div>
+
+                        <div class="col-md-7 col-7">
+                          <div class="col-md-12 col-12">
+                            <dt>Description</dt>
+                            <dd>{{ i.project_description }} <a href="/project_details/{{ i.id }}"> Read more </a> </dd>
+                          </div>
+
+                          <div class="project_view_style2">
+                            <div class="col-md-4 col-4">
+                              <dt>Budget</dt>
+                              <dd id="project_budget{{ i.id }}">TZS {{ i.project_budget }} </dd>
+                            </div>
+
+                            <script>
+                              document.addEventListener('DOMContentLoaded', function() {
+                                var budgetElement = document.getElementById('project_budget{{ i.id }}');
+                                var budgetValue = budgetElement.innerText;
+                                var formattedBudget = addCommasToNumber(budgetValue);
+                                budgetElement.innerText = formattedBudget;
+                              });
+
+                              function addCommasToNumber(value) {
+                                return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                              }
+                            </script>
+                            
+                            <div class="col-md-4 col-4">
+                              <dt>Collaborators</dt>
+                              <dd> {{ i.project_collaborators }} </dd>
+                            </div>
+
+                            <div class="col-md-4 col-4">
+                              <dt>Deadline</dt>
+                              <dd>{{ i.project_deadline }} </dd>
+                            </div>
+                          </div>
+                          
+
+                          <div class="project_view_style1">
+                            <div class="col-md-12 col-12">
+                              <dt>Skills required</dt>
+                              <dd>
+                                {% for j in i.project_skills %}
+
+                                  <span class="badge" id="skill{{ i.id }}_{{ forloop.counter }}"> {{ j }} </span>
+
+                                {% endfor %}
+                                <!-- <span class="badge bg-red">Adobe XD</span>
+                                <span class="badge bg-blue">UI/UX design</span>
+                                <span class="badge bg-yellow">Wireframing</span> -->
+                              </dd>
+                            </div>
+                          </div>
+
+                          <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                              var skillCount = {{ i.project_skills|length }};
+                              
+                              for (var i = 1; i <= skillCount; i++) {
+                                var skillElement = document.getElementById('skill{{ i.id }}_' + i);
+                                var randomClass = getRandomClass();
+                                skillElement.classList.add(randomClass);
+                              }
+                            });
+                            
+                            function getRandomClass() {
+                              var classes = ['bg-green', 'bg-red', 'bg-yellow', 'bg-aqua']; // Add more classes if needed
+                              var randomIndex = Math.floor(Math.random() * classes.length);
+                              return classes[randomIndex];
+                            }
+                          </script>
+
+                          <div class="col-md-12" style="margin-top: 2rem;">
+                            <a class="btn btn-primary btn-sm" href="/project_details/{{ i.id }}/"> More details </a>
+
+                            {% if i.user_project.id != current_user %}
+                              {% if i.id in get_all_project_collabs %}
+                                <a class="btn btn-success btn-sm" id="applyButton{{ i.id }}" data-project-id="{{ i.id }}" data-toggle="modal" data-target="#remove_applyModal{{ i.id }}"><i class="fa fa-fw fa-check" style="color:white;"> </i>Applied </a>
+                              {% endif %}
+                            {% endif %}
+
+                            {% if i.user_project.id != current_user %}
+                              {% if i.id not in get_all_project_collabs %}
+                                <a class="btn btn-info btn-sm" id="applyButton{{ i.id }}" data-project-id="{{ i.id }}" data-toggle="modal" data-target="#applyModal{{ i.id }}"> Apply Now </a>
+                              {% endif %}
+                            {% endif %}
+
+                            
+                            <!-- {{ i.id }} -->
+
+                            <!-- If not my project, then apply -->
+                            <!-- {% if i.user_project.id != current_user %}
+                              {% for collab in get_all_project_collabs %}
+                                  {% if collab.user.id == 7 and collab.project.id == i.id %}
+                                      <a class="btn btn-success btn-sm" id="applyButton{{ i.id }}" data-project-id="{{ i.id }}" data-toggle="modal" data-target="#applyModal{{ i.id }}"><i class="fa fa-fw fa-check" style="color:white;"> </i>Applied </a>
+
+                                  {% else %}
+                                      <a class="btn btn-info btn-sm" id="applyButton{{ i.id }}" data-project-id="{{ i.id }}" data-toggle="modal" data-target="#applyModal{{ i.id }}"> Apply Now </a>
+                                  {% endif %}
+                              {% endfor %}
+                            {% endif %} -->
+
+                            <div class="modal fade" id="applyModal{{ i.id }}" style="display: none;">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <form method="POST" action="apply_to_project/{{ i.id }}/{{ i.user_project.id }}">
+                                    {% csrf_token %}
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">×</span></button>
+                                    <h4 class="modal-title">Apply as Collaborator to this project</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                    <p> Are you sure you want to apply as a collaborator? </p>
+
+                                    <div class="form-group">
+                                      <label for="exampleInputEmail1">Send a message with your application <span class="optional_entry"> (optional) </span></label>
+                                      <textarea class="form-control" id="exampleInputEmail1" placeholder="Message (Optional)" rows="10" style="resize: none;" name="msg_project_application" required>Programming PLC and HMI using Ladder Diagrams</textarea>
+                                    </div>
+
+                                    <style type="text/css">
+                                      .optional_entry {
+                                        color: red;
+                                      }
+                                    </style>
+
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-info">Apply Now</button>
+                                  </div>
+
+                                  </form>
+                                </div>
+                                <!-- /.modal-content -->
+                              </div>
+                              <!-- /.modal-dialog -->
+                            </div>
+
+                            <div class="modal modal-danger fade" id="remove_applyModal{{ i.id }}" style="display: none;">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <form method="POST" action="apply_to_project/{{ i.id }}/{{ i.user_project.id }}">
+                                    {% csrf_token %}
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">×</span></button>
+                                    <h4 class="modal-title">Remove application as Collaborator to this project</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                    <p> Are you sure you want to remove your application as a collaborator? </p>
+
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-outline">Confirm</button>
+                                  </div>
+
+                                  </form>
+                                </div>
+                                <!-- /.modal-content -->
+                              </div>
+                              <!-- /.modal-dialog -->
+                            </div>
+
+                            
+
+                            <div class="pull-right">
+                              <button class="btn btn-sm btn-link likeButton" data-project-id="{{ i.id }}" id="like{{ i.id }}" style="text-decoration: none;">
+                                <i class="fa fa-fw fa-thumbs-o-up"></i> Like
+                              </button>
+                              <button class="btn btn-sm btn-link" data-project-id="{{ i.id }}" id="dislike{{ i.id }}">
+                                <i class="fa fa-fw fa-thumbs-o-down"></i> Dislike
+                              </button>
+                            </div>
+
+                            <script type="text/javascript">
+                              //For Like Button
+                              document.addEventListener('DOMContentLoaded', function() {
+                                var likeButton = document.getElementById('like{{ i.id }}');
+                                var icon_like = likeButton.querySelector('i');
+                                var projectId = likeButton.getAttribute('data-project-id');
+
+
+                                //Dislike btn
+                                var dislikeButton = document.getElementById('dislike{{ i.id }}');
+                                var icon_dislike = dislikeButton.querySelector('i');
+                                var projectId = dislikeButton.getAttribute('data-project-id');
+                                
+                                likeButton.addEventListener('click', function() {
+                                  if (icon_like.classList.contains('fa-thumbs-up')) {
+                                    icon_like.classList.remove('fa-thumbs-up');
+                                    icon_like.classList.add('fa-thumbs-o-up');
+                                    updateLikeStatus(projectId, false);
+                                    // Make an AJAX request to update the like status for the project with the given projectId
+                                    // Example:
+                                    // updateLikeStatus(projectId, false);
+                                  } else {
+                                    icon_like.classList.remove('fa-thumbs-o-up');
+                                    icon_like.classList.add('fa-thumbs-up');
+                                    updateLikeStatus(projectId, true);
+                                    // Make an AJAX request to update the like status for the project with the given projectId
+                                    // Example:
+                                    // updateLikeStatus(projectId, true);
+                                  }
+                                });
+
+                                //when dislike button is clicked
+                                dislikeButton.addEventListener('click', function() {
+                                  if (icon_dislike.classList.contains('fa-thumbs-down')) {
+                                    icon_dislike.classList.remove('fa-thumbs-down');
+                                    icon_dislike.classList.add('fa-thumbs-o-down');
+                                    updateDislikeStatus(projectId, false);
+                                    // Make an AJAX request to update the like status for the project with the given projectId
+                                    // Example:
+                                    // updateLikeStatus(projectId, false);
+                                  } else {
+                                    icon_dislike.classList.remove('fa-thumbs-o-down');
+                                    icon_dislike.classList.add('fa-thumbs-down');
+                                    updateDislikeStatus(projectId, true);
+                                    // Make an AJAX request to update the like status for the project with the given projectId
+                                    // Example:
+                                    // updateLikeStatus(projectId, true);
+                                  }
+                                });
+
+                                function getCookie(name) {
+                                  var cookieValue = null;
+                                  if (document.cookie && document.cookie !== '') {
+                                    var cookies = document.cookie.split(';');
+                                    for (var i = 0; i < cookies.length; i++) {
+                                      var cookie = cookies[i].trim();
+                                      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                      }
+                                    }
+                                  }
+                                  return cookieValue;
+                                }
+
+
+                                function updateLikeStatus(projectId, isLiked) {
+                                  var csrftoken = getCookie('csrftoken');
+
+                                  var xhr = new XMLHttpRequest();
+                                  xhr.open('POST', '/like_project/');
+                                  xhr.setRequestHeader('Content-Type', 'application/json');
+                                  xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                                  xhr.onload = function() {
+                                    if (xhr.status === 200) {
+                                      // Handle the success response
+                                      console.log('Request successful!');
+                                    } else {
+                                      // Handle the error response
+                                      console.log('Request failed!');
+                                    }
+                                  };
+                                  var data = JSON.stringify({ projectId: projectId, isLiked: isLiked });
+                                  xhr.send(data);
+                                }
+
+                                //For Dislike button
+                                function updateDislikeStatus(projectId, isDisliked) {
+                                  var csrftoken = getCookie('csrftoken');
+
+                                  var xhr = new XMLHttpRequest();
+                                  xhr.open('POST', '/like_project/');
+                                  xhr.setRequestHeader('Content-Type', 'application/json');
+                                  xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                                  xhr.onload = function() {
+                                    if (xhr.status === 200) {
+                                      // Handle the success response
+                                      console.log('Request successful!');
+                                    } else {
+                                      // Handle the error response
+                                      console.log('Request failed!');
+                                    }
+                                  };
+                                  var data = JSON.stringify({ projectId: projectId, isLiked: isLiked });
+                                  xhr.send(data);
+                                }
+
+
+                              });
+
+                              //For Dislike Button
+                            </script>
+                          </div>
+
+                          <!-- <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                              var applyButton = document.getElementById('applyButton{{ i.id }}');
+                              var projectId = applyButton.getAttribute('data-project-id');
+
+                              
+                              applyButton.addEventListener('click', function() {
+                                  this.classList.toggle('btn-success');
+                                  this.classList.toggle('btn-info');
+                                  var icon = this.querySelector('i');
+                                  if (icon) {
+                                    this.removeChild(icon);
+                                    this.innerHTML = 'Apply Now';
+                                  } else {
+                                    var newIcon = document.createElement('i');
+                                    newIcon.classList.add('fa', 'fa-fw', 'fa-check');
+                                    newIcon.style.color = 'white';
+                                    this.innerHTML = '';
+                                    this.appendChild(newIcon);
+                                    this.innerHTML += ' Applied';
+
+                                    function getCookie(name) {
+                                      var cookieValue = null;
+                                      if (document.cookie && document.cookie !== '') {
+                                        var cookies = document.cookie.split(';');
+                                        for (var i = 0; i < cookies.length; i++) {
+                                          var cookie = cookies[i].trim();
+                                          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                            break;
+                                          }
+                                        }
+                                      }
+                                      return cookieValue;
+                                    }
+
+
+                                    var csrftoken = getCookie('csrftoken');
+                                    //Apply to the project
+                                    var xhr = new XMLHttpRequest();
+                                    xhr.open('POST', '/like_project/');
+                                    xhr.setRequestHeader('Content-Type', 'application/json');
+                                    xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                                    xhr.onload = function() {
+                                      if (xhr.status === 200) {
+                                        // Handle the success response
+                                        console.log('Request successful!');
+                                      } else {
+                                        // Handle the error response
+                                        console.log('Request failed!');
+                                      }
+                                    };
+                                    var data = JSON.stringify({ projectId: projectId, isLiked: "isLiked" });
+                                    xhr.send(data);
+                                  }
+                              });
+                            });
+                          </script> -->
+
+                        </div>
+
+                        <style type="text/css">
+                          @media screen and (min-width: 993px){
+                            .project_view_style1{
+                              margin-top:12rem;
+                            }
+
+                            .project_view_style2{
+                              margin-top:7rem;
+                            }
+                          }
+
+                          @media screen and (max-width: 993px){
+                            .project_view_style1{
+                              margin-top:2rem;
+                            }
+
+                            .project_view_style2{
+                              margin-top:2rem;
+                            }
+                          }
+                          
+                        </style>
+
+                      </div>
+                      <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                  </div>
+
+                {% endfor %}
+
+              </div>
+
+            </div>
+
+            <!-- RECOMMEND BASED ON USER ACTIVITY -->
+            <div class="col-md-4 col-4">
+              <div class="row">
+
+                <div class="col-md-12" style="margin-top: 0rem;">
+                  <div class="box box-solid">
+                    <div class="box-header with-border">
+                      <i class="fa fa-file"></i>
+
+                      <h4 class="box-title"> Recommended Projects </h4>
+
+                      <!-- <i class="fa fa-file "></i> -->
+                    </div>
+
+
+                    <div class="box-body">
+                      {% for i in rec_projects_details %}
+
+                        {% if forloop.counter == 1 %}
+                          <div class="col-md-12">
+
+                        {% else %}
+                          <div class="col-md-12 mt">
+                        {% endif %}
+
+                          <dt>{{ i.project_id }}: {{ i.project_title }}</dt>
+                          <dd>{{ i.project_description }}. <a href="/project_details/{{ i.id }}/"> Read more </a> </dd>
+                        </div>
+                      {% endfor %}
+                    </div>
+
+
+                    <!-- /.box-header -->
+                    <!-- <div class="box-body">
+                      <div class="col-md-12">
+                        <dt>Web Development</dt>
+                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                      </div>
+
+                      <div class="col-md-12 mt">
+                        <dt>Mobile App Development</dt>
+                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                      </div>
+
+                      <div class="col-md-12 mt">
+                        <dt>UI/UX Design</dt>
+                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                      </div>
+
+                      <div class="col-md-12 mt">
+                        <dt>UI/UX Design</dt>
+                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                      </div>
+
+                      <div class="col-md-12 mt">
+                        <dt>Web Development</dt>
+                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                      </div>
+
+                    </div> -->
+                    <!-- /.box-body -->
+                  </div>
+                  <!-- /.box -->
+                </div>
+
+                <div class="col-md-12" style="margin-top: 0rem;">
+                  <div class="box box-solid">
+                    <div class="box-header with-border">
+                      <div class="box-title" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <i class="fa fa-file"></i>
+                        <h4 style="margin-top: -0.5rem;"> Recommended Projects <br/> based on your Activity </h4>
+                      </div>
+
+                      <!-- <i class="fa fa-file "></i> -->
+                    </div>
+
+
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                      <div class="col-md-12">
+                        <dt>Web Development</dt>
+                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                      </div>
+
+                      <div class="col-md-12 mt">
+                        <dt>Mobile App Development</dt>
+                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                      </div>
+
+                      <div class="col-md-12 mt">
+                        <dt>UI/UX Design</dt>
+                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                      </div>
+
+                      <div class="col-md-12 mt">
+                        <dt>Web Development</dt>
+                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                      </div>
+
+                      <div class="col-md-12 mt">
+                        <dt>Mobile App Development</dt>
+                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                      </div>
+
+                    </div>
+                    <!-- /.box-body -->
+                  </div>
+                  <!-- /.box -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <style type="text/css">
+            .mt {
+              margin-top: 2rem;
+            }
+          </style>
+        </div>
+
+        <div class="tab-pane active" id="tab_2">
+          <div class="row">
+            <!-- RECOMMEND BASED ON USER INTERESTS -->
+            <div class="col-md-8 col-8">
+              <div class="row">
+
+                <!-- ./col -->
+                {% if messages %}
+                  {% for message in messages %}
+                    <div class="col-md-12">
+                      <div class="alert alert-dismissible {{ message.tags }}">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color: white;">×</button>
+                        <i class="icon fa fa-check"></i> {{ message }}
+                      </div>
+                      <script>
+                          // Automatically close the alert after 5 seconds
+                          setTimeout(function() {
+                              $('.alert').alert('close');
+                          }, 5000);
+                      </script>
+                    </div>
+                  {% endfor %}
+                {% endif %}
+
+                {% for i in all_modules %}
+                  <div class="col-md-12 col-12" style="margin-top: 0rem;">
+                    <div class="box box-solid">
+                      <div class="box-header with-border">
+                        <i class="fa fa-file"></i>
+
+                        <h3 class="box-title"> {{ i.module_ID }}: {{ i.module_title }} 
+                          {% if i.module_creator.id == current_user %}
+                            <span style="color: red; font-size: 13px;"> (Submitted by you!) </span>
+                          {% endif %}
+                        </h3>
+                          {% csrf_token %}
+                        <div class="box-tools pull-right">
+                          <button type="button" class="btn btn-box-tool" data-toggle="dropdown">
+                            <i class="fa fa-ellipsis-v"></i>
+                          </button>
+                          <ul class="dropdown-menu" role="menu">
+                            <!-- <li><a href="#">Edit</a></li> -->
+
+                            {% if i.id in saved_projects %}
+                              <li id="bookmark{{ i.id }}"><a href="#" id="bookmark-link{{ i.id }}" onclick="toggleBookmark('bookmark-link{{ i.id }}', '{{ i.id }}')"><i class="fa fa-fw fa-bookmark" style="color: #F39C12;"></i> <span id="bookmark-text{{ i.id }}"> Bookmarked </span></a></li>
+
+                            {% else %}
+                              <li id="bookmark{{ i.id }}"><a href="#" id="bookmark-link{{ i.id }}" onclick="toggleBookmark('bookmark-link{{ i.id }}', '{{ i.id }}')"><i class="fa fa-fw fa-bookmark"></i> <span id="bookmark-text{{ i.id }}"> Bookmark </span></a></li>
+                            {% endif %}
+
+
+                            {% if i.user_project.id == current_user %}
+                              <li><a href="#"><i class="fa fa-fw fa-trash" style="color: black;"></i> Delete</a></li>
+                            {% endif %}
+
+                          </ul>
+                        </div>
+
+                        <!-- <i class="fa fa-file "></i> -->
+                      </div>
+
+
+                      <!-- /.box-header -->
+                      <div class="box-body"> 
+                        <div class="col-md-5 col-5" style="height: 200px;">
+                          <!-- {{ i.project_images }} -->
+                          <!-- <i class="fa fa-file-text-o"></i> -->
+                          
+
+                          <img src="{% static 'imgs/lc_icon.png' %}" style="height: 100%; background-color: red;"/>
+                          <!-- <img src="{% static 'project_imgs/PLCS6#img1.jpg' %}" style="height: 100%; background-color: red;"/> -->
+                          <!-- <img src="{% static 'profile_imgs/{{ i.project_images.0 }}' %}"/> -->
+                          
+                        </div>
+
+                        <div class="col-md-7 col-7">
+                          <div class="col-md-12 col-12">
+                            <dt>Description</dt>
+                            <dd>{{ i.module_description }} <a href="/project_details/{{ i.id }}"> Read more </a> </dd>
+                          </div>
+
+                          <div class="" style="margin-top: 6rem;">
+                            <div class="col-md-4 col-4">
+                              <dt> Topics </dt>
+                              <dd id="project_budget{{ i.id }}">TZS {{ i.project_budget }} </dd>
+                            </div>
+                          </div>
+
+                          <div class="" style="margin-top:12rem;">
+                            <div class="col-md-12 col-12">
+                              <dt>Tags</dt>
+                              <dd>
+                                {% for j in i.module_tags %}
+
+                                  <span class="badge" id="skill{{ i.id }}_{{ forloop.counter }}"> {{ j }} </span>
+
+                                {% endfor %}
+                                <!-- <span class="badge bg-red">Adobe XD</span>
+                                <span class="badge bg-blue">UI/UX design</span>
+                                <span class="badge bg-yellow">Wireframing</span> -->
+                              </dd>
+                            </div>
+                          </div>
+
+                          <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                              var skillCount = {{ i.project_skills|length }};
+                              
+                              for (var i = 1; i <= skillCount; i++) {
+                                var skillElement = document.getElementById('skill{{ i.id }}_' + i);
+                                var randomClass = getRandomClass();
+                                skillElement.classList.add(randomClass);
+                              }
+                            });
+                            
+                            function getRandomClass() {
+                              var classes = ['bg-green', 'bg-red', 'bg-yellow', 'bg-aqua']; // Add more classes if needed
+                              var randomIndex = Math.floor(Math.random() * classes.length);
+                              return classes[randomIndex];
+                            }
+                          </script>
+
+                          <div class="col-md-12" style="margin-top: 2rem;">
+                            <a class="btn btn-primary btn-sm" href="/project_details/{{ i.id }}/"> More details </a>
+
+                            <div class="pull-right">
+                              <button class="btn btn-sm btn-link likeButton" data-project-id="{{ i.id }}" id="like{{ i.id }}" style="text-decoration: none;">
+                                <i class="fa fa-fw fa-thumbs-o-up"></i> Like
+                              </button>
+                              <button class="btn btn-sm btn-link" data-project-id="{{ i.id }}" id="dislike{{ i.id }}">
+                                <i class="fa fa-fw fa-thumbs-o-down"></i> Dislike
+                              </button>
+                            </div>
+
+                            <script type="text/javascript">
+                              //For Like Button
+                              document.addEventListener('DOMContentLoaded', function() {
+                                var likeButton = document.getElementById('like{{ i.id }}');
+                                var icon_like = likeButton.querySelector('i');
+                                var projectId = likeButton.getAttribute('data-project-id');
+
+
+                                //Dislike btn
+                                var dislikeButton = document.getElementById('dislike{{ i.id }}');
+                                var icon_dislike = dislikeButton.querySelector('i');
+                                var projectId = dislikeButton.getAttribute('data-project-id');
+                                
+                                likeButton.addEventListener('click', function() {
+                                  if (icon_like.classList.contains('fa-thumbs-up')) {
+                                    icon_like.classList.remove('fa-thumbs-up');
+                                    icon_like.classList.add('fa-thumbs-o-up');
+                                    updateLikeStatus(projectId, false);
+                                    // Make an AJAX request to update the like status for the project with the given projectId
+                                    // Example:
+                                    // updateLikeStatus(projectId, false);
+                                  } else {
+                                    icon_like.classList.remove('fa-thumbs-o-up');
+                                    icon_like.classList.add('fa-thumbs-up');
+                                    updateLikeStatus(projectId, true);
+                                    // Make an AJAX request to update the like status for the project with the given projectId
+                                    // Example:
+                                    // updateLikeStatus(projectId, true);
+                                  }
+                                });
+
+                                //when dislike button is clicked
+                                dislikeButton.addEventListener('click', function() {
+                                  if (icon_dislike.classList.contains('fa-thumbs-down')) {
+                                    icon_dislike.classList.remove('fa-thumbs-down');
+                                    icon_dislike.classList.add('fa-thumbs-o-down');
+                                    updateDislikeStatus(projectId, false);
+                                    // Make an AJAX request to update the like status for the project with the given projectId
+                                    // Example:
+                                    // updateLikeStatus(projectId, false);
+                                  } else {
+                                    icon_dislike.classList.remove('fa-thumbs-o-down');
+                                    icon_dislike.classList.add('fa-thumbs-down');
+                                    updateDislikeStatus(projectId, true);
+                                    // Make an AJAX request to update the like status for the project with the given projectId
+                                    // Example:
+                                    // updateLikeStatus(projectId, true);
+                                  }
+                                });
+
+                                function getCookie(name) {
+                                  var cookieValue = null;
+                                  if (document.cookie && document.cookie !== '') {
+                                    var cookies = document.cookie.split(';');
+                                    for (var i = 0; i < cookies.length; i++) {
+                                      var cookie = cookies[i].trim();
+                                      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                      }
+                                    }
+                                  }
+                                  return cookieValue;
+                                }
+
+
+                                function updateLikeStatus(projectId, isLiked) {
+                                  var csrftoken = getCookie('csrftoken');
+
+                                  var xhr = new XMLHttpRequest();
+                                  xhr.open('POST', '/like_project/');
+                                  xhr.setRequestHeader('Content-Type', 'application/json');
+                                  xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                                  xhr.onload = function() {
+                                    if (xhr.status === 200) {
+                                      // Handle the success response
+                                      console.log('Request successful!');
+                                    } else {
+                                      // Handle the error response
+                                      console.log('Request failed!');
+                                    }
+                                  };
+                                  var data = JSON.stringify({ projectId: projectId, isLiked: isLiked });
+                                  xhr.send(data);
+                                }
+
+                                //For Dislike button
+                                function updateDislikeStatus(projectId, isDisliked) {
+                                  var csrftoken = getCookie('csrftoken');
+
+                                  var xhr = new XMLHttpRequest();
+                                  xhr.open('POST', '/like_project/');
+                                  xhr.setRequestHeader('Content-Type', 'application/json');
+                                  xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                                  xhr.onload = function() {
+                                    if (xhr.status === 200) {
+                                      // Handle the success response
+                                      console.log('Request successful!');
+                                    } else {
+                                      // Handle the error response
+                                      console.log('Request failed!');
+                                    }
+                                  };
+                                  var data = JSON.stringify({ projectId: projectId, isLiked: isLiked });
+                                  xhr.send(data);
+                                }
+
+
+                              });
+
+                              //For Dislike Button
+                            </script>
+                          </div>
+
+                        </div>
+
+                        <style type="text/css">
+                          @media screen and (min-width: 993px){
+                            .project_view_style1{
+                              margin-top:12rem;
+                            }
+
+                            .project_view_style2{
+                              margin-top:7rem;
+                            }
+                          }
+
+                          @media screen and (max-width: 993px){
+                            .project_view_style1{
+                              margin-top:2rem;
+                            }
+
+                            .project_view_style2{
+                              margin-top:2rem;
+                            }
+                          }
+                          
+                        </style>
+
+                      </div>
+                      <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                  </div>
+
+                {% endfor %}
+
+              </div>
+
+            </div>
+
+            <!-- RECOMMEND BASED ON USER ACTIVITY -->
+            <div class="col-md-4 col-4">
+              <div class="row">
+
+                <div class="col-md-12" style="margin-top: 0rem;">
+                  <div class="box box-solid">
+                    <div class="box-header with-border">
+                      <i class="fa fa-file"></i>
+
+                      <h4 class="box-title"> Recommended Learning Content </h4>
+
+                      <!-- <i class="fa fa-file "></i> -->
+                    </div>
+
+
+                    <div class="box-body">
+                      {% for i in rec_learning_details %}
+
+                        {% if forloop.counter == 1 %}
+                          <div class="col-md-12">
+
+                        {% else %}
+                          <div class="col-md-12 mt">
+                        {% endif %}
+
+                          <dt>{{ i.module_ID }}: {{ i.module_title }}</dt>
+                          <dd>{{ i.module_description }}. <a href="/view_topics/{{ i.id }}/"> Read more </a> </dd>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <!-- /.box -->
+                </div>
+
+                <div class="col-md-12" style="margin-top: 0rem;">
+                  <div class="box box-solid">
+                    <div class="box-header with-border">
+                      <div class="box-title" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <i class="fa fa-file"></i>
+                        <h4 style="margin-top: -0.5rem;"> Recommended Learning Content <br/> based on your Activity </h4>
+                      </div>
+
+                      <!-- <i class="fa fa-file "></i> -->
+                    </div>
+
+
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                      <div class="col-md-12">
+                        <dt>Web Development</dt>
+                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                      </div>
+
+                      <div class="col-md-12 mt">
+                        <dt>Mobile App Development</dt>
+                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                      </div>
+
+                      <div class="col-md-12 mt">
+                        <dt>UI/UX Design</dt>
+                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                      </div>
+
+                      <div class="col-md-12 mt">
+                        <dt>Web Development</dt>
+                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                      </div>
+
+                      <div class="col-md-12 mt">
+                        <dt>Mobile App Development</dt>
+                        <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
+                      </div>
+
+                    </div>
+                    <!-- /.box-body -->
+                  </div>
+                  <!-- /.box -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <style type="text/css">
+            .mt {
+              margin-top: 2rem;
+            }
+          </style>
+        </div>
+        </div>
+      </div>
+      
+
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->

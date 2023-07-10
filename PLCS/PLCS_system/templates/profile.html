@@ -159,7 +159,7 @@
                         <span aria-hidden="true">×</span></button>
                       <h4 class="modal-title"> Edit Your Profile </h4>
                     </div>
-                    <form role="form" action="/admin_add_user/" method="POST" id="addUser">
+                    <form role="form" action="/update_user_details/{{ user_x_details.id }}/" method="POST" id="addUser" onsubmit="return validateForm()">
                       {% csrf_token %}
 
                     <div class="modal-body">
@@ -406,14 +406,14 @@
                         });
                       }
 
-                      // function validateForm() {
+                      function validateForm() {
 
-                      //   const input2 = document.getElementById("search-input2");
-                      //   const terms = Object.keys(selectedTerms2);
-                      //   input2.value = terms.join(', ');
+                        const input2 = document.getElementById("search-input2");
+                        const terms = Object.keys(selectedTerms2);
+                        input2.value = terms.join(', ');
 
-                      //   return true;
-                      // }
+                        return true;
+                      }
                     </script>
 
 
