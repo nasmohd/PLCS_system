@@ -73,133 +73,293 @@
             <li><a href="#tab_2" data-toggle="tab" aria-expanded="false"> Flash cards <span class="optional_entry"> * </span></a></li>
             <li><a href="#tab_3" data-toggle="tab" aria-expanded="false"> Quizzes <span class="optional_entry"> * </span></a></li>
           </ul>
-        </div>
 
-        <div class="tab-content">
-          {% if messages %}
-            {% for message in messages %}
-              <div class="alert alert-dismissible {{ message.tags }}">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color: white;">×</button>
+          <div class="tab-content">
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-dismissible {{ message.tags }}">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color: white;">×</button>
 
-                {% if message.tags == 'alert-danger' %}
-                  <i class="icon fa fa-fw fa-close"></i> {{ message }}
-                {% else %}
-                  <i class="icon fa fa-fw fa-check"></i> {{ message }}
-                {% endif %}
-              </div>
-              <script>
-                  // Automatically close the alert after 5 seconds
-                  setTimeout(function() {
-                      $('.alert').alert('close');
-                  }, 5000);
-              </script>
-            {% endfor %}
-          {% endif %}
-          
-          <div class="tab-pane active" id="tab_1">
-            <div class="box">
-              <div class="box-header">
-                <h3 class="box-title" style="color: #306FA0;">
-                <i class="fa fa-fw fa-folder-o"></i>
-                <strong> Summary Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC;"> Summaries for study preparation </span> </h3>
-                <!-- label label-success -->
+                  {% if message.tags == 'alert-danger' %}
+                    <i class="icon fa fa-fw fa-close"></i> {{ message }}
+                  {% else %}
+                    <i class="icon fa fa-fw fa-check"></i> {{ message }}
+                  {% endif %}
+                </div>
+                <script>
+                    // Automatically close the alert after 5 seconds
+                    setTimeout(function() {
+                        $('.alert').alert('close');
+                    }, 5000);
+                </script>
+              {% endfor %}
+            {% endif %}
+            
+            <div class="tab-pane active" id="tab_1">
+              <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title" style="color: #306FA0;">
+                  <i class="fa fa-fw fa-folder-o"></i>
+                  <strong> Summary Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC;"> Summaries for study preparation </span> </h3>
+                  <!-- label label-success -->
 
-                <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addSummary"> Add New Summary </button>
-              </div>
-              <!-- /.box-header -->
+                  <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addSummary"> Add New Summary </button>
+                </div>
+                <!-- /.box-header -->
 
 
-              <div class="modal fade" id="modal-addSummary" style="display: none;">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span></button>
-                      <h4 class="modal-title"> Add New Summary </h4>
+                <div class="modal fade" id="modal-addSummary" style="display: none;">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title"> Add New Summary </h4>
+                      </div>
+                      <form role="form" action="/add_summary_content/{{ topic_id }}/" method="POST" id="addUser" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                      <div class="modal-body">
+                        <p>Please fill in details of the summary you want to upload</p>
+
+                        <div class="nav-tabs-custom">
+                          <ul class="nav nav-tabs">
+                            <!-- <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">User Details <span class="optional_entry"> * </span></a></li> -->
+                            
+                          </ul>
+                        
+                            <div class="form-group">
+                              <label for="exampleInputEmail1"> Name <span class="optional_entry"> * </span></label>
+                              <input type="text" class="form-control" placeholder="Enter Name of the file" name="name_summary" required value="James">
+                            </div>
+
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
+                              <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the summary file" rows="10" style="resize: none;" name="summary_description" required>Programming PLC and HMI using Ladder Diagrams</textarea>
+                            </div>
+
+                            <div class="form-group">
+                              <label for="exampleInputFile">File Attachment </label>
+                              <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
+                            </div>
+
+                            <style type="text/css">
+                              .optional_entry {
+                                color: red;
+                              }
+                            </style>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Summary</button>
+                      </div>
+
+                      </form>
                     </div>
-                    <form role="form" action="/add_summary_content/{{ topic_id }}/" method="POST" id="addUser" enctype="multipart/form-data">
-                      {% csrf_token %}
+                    <!-- /.modal-content -->
+                  </div>
+                  <!-- /.modal-dialog -->
+                </div>
 
-                    <div class="modal-body">
-                      <p>Please fill in details of the summary you want to upload</p>
 
-                      <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
-                          <!-- <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">User Details <span class="optional_entry"> * </span></a></li> -->
-                          
-                        </ul>
-                      
-                          <div class="form-group">
-                            <label for="exampleInputEmail1"> Name <span class="optional_entry"> * </span></label>
-                            <input type="text" class="form-control" placeholder="Enter Name of the file" name="name_summary" required value="James">
+
+                <div class="box-body table-responsive">
+                  <table id="example3" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                      <th> SN </th>
+                      <th>Name</th>
+                      <th>Description</th>
+                      <th>File</th>
+                      <th class="text-center">Change details </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                      {% for summary in get_all_summaries %}
+                        <tr>
+                          <td>
+                            {{ forloop.counter }}
+                          </td>
+
+                          <td>
+                            {{ summary.file_name }}
+                          </td>
+
+                          <td>
+                            {{ summary.file_description }}
+                          </td>
+
+                          <td>
+                            {{ summary.file_link }}
+                            <a href="{% static 'summary_files/'|add:summary.file_link %}"><i class="fa fa-fw fa-download"></i></a>
+                            
+                            <style>
+                              .preview {
+                                width: 100%;
+                                height: 500px;
+                              }
+                            </style>
+                          </td>
+
+                          <td class="text-center"> 
+                            <div class="btn-group">
+                              <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-fw fa-pencil-square-o"></i>
+                              </button>
+                              <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                              </button>
+
+                              <ul class="dropdown-menu pull-right" role="menu">
+                                <!-- <li><a href="#" data-toggle="modal" data-target="#modal-editProject{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li> -->
+                                <li><a data-toggle="modal" data-target="#modal-deleteSummary{{ summary.id }}"><i class="fa fa-trash"></i> Delete </a></li>
+                              </ul>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <div class="modal modal-danger fade" id="modal-deleteSummary{{ summary.id }}" style="display: none;">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">×</span></button>
+                                <h4 class="modal-title">Delete Summary </h4>
+                              </div>
+                              <div class="modal-body">
+                                <p> Are you sure you want to delete? </p>
+                                <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                                <a href="/delete_summary/{{ summary.id }}/{{ module_id }}/" class="btn btn-outline">Confirm</a>
+                              </div>
+                            </div>
+                            <!-- /.modal-content -->
                           </div>
+                          <!-- /.modal-dialog -->
+                        </div>
 
-                          <div class="form-group">
-                            <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
-                            <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the summary file" rows="10" style="resize: none;" name="summary_description" required>Programming PLC and HMI using Ladder Diagrams</textarea>
-                          </div>
 
-                          <div class="form-group">
-                            <label for="exampleInputFile">File Attachment </label>
-                            <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
-                          </div>
+                      {% endfor %}
+                    </tbody>
+
+                    <tfoot>
+                    <tr>
+                      <th> SN </th>
+                      <th>Name</th>
+                      <th>File</th>
+                      <th class="text-center">Change details </th>
+                    </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                <!-- /.box-body -->
+              </div>
+            </div>
+
+            <div class="tab-pane" id="tab_2">
+              <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title" style="color: #306FA0;">
+                  <i class="fa fa-fw fa-folder-o"></i>
+                  <strong> Flashcard Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC;"> Flashcards for study preparation </span> </h3>
+                  <!-- label label-success -->
+
+                  <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addUser"> Add New Flashcards </button>
+                </div>
+                <!-- /.box-header -->
+
+
+                <div class="modal fade" id="modal-addUser" style="display: none;">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title"> Add New Flashcards topic </h4>
+                      </div>
+                      <form role="form" action="/admin_add_user/" method="POST" id="addUser">
+                        {% csrf_token %}
+
+                      <div class="modal-body">
+                        <p>Please fill in details of the topic</p>
+
+                        <div class="form-group">
+                          <label for="exampleInputEmail1"> Name <span class="optional_entry"> * </span></label>
+                          <input type="text" class="form-control" placeholder="Enter Name of the file" name="name_summary" required value="James">
+                        </div>
+
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
+                          <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the summary file" rows="10" style="resize: none;" name="summary_description" required>Programming PLC and HMI using Ladder Diagrams</textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="exampleInputFile">File Attachment </label>
+                          <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
+                        </div>
+
+                        <style type="text/css">
+                          .optional_entry {
+                            color: red;
+                          }
+                        </style>
+                      </div>
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add topic</button>
+                      </div>
+
+                      </form>
+                    </div>
+                    <!-- /.modal-content -->
+                  </div>
+                  <!-- /.modal-dialog -->
+                </div>
+
+
+
+                <div class="box-body table-responsive">
+                  <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                      <th style="width: 5%;"> SN </th>
+                      <th style="width: 40%;">Question</th>
+                      <th style="width: 40%;">Answer</th>
+                      <!-- <th>Date Registered</th>
+                      <th>Status</th> -->
+                      <th class="text-center" style="width: 15%;"> Change details </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for i in all_users %}
+                      <tr>
+                        <td> {{ forloop.counter }}  </td>
+                        <td> {{ i.first_name }} {{ i.last_name }} </td>
+                        <td> {{ i.email }} </td>
+                        <td> {{ i.date_of_registration }} </td>
+                        <td> 
+                          {% if i.status == 1 %}
+                            <span class="btn-round btn btn-success btn-xs"> Active </span>
+                          {% endif %}
+
+                          {% if i.status == 0 %}
+                            <span class="btn-round btn btn-warning btn-xs"> Disabled </span>
+                          {% endif %}
+
+                          {% if i.status == 2 %}
+                            <span class="btn-round btn btn-danger btn-xs"> Deleted </span>
+                          {% endif %}
 
                           <style type="text/css">
-                            .optional_entry {
-                              color: red;
-                            }
-                          </style>
-                      </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Add Summary</button>
-                    </div>
-
-                    </form>
-                  </div>
-                  <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-              </div>
-
-
-
-              <div class="box-body table-responsive">
-                <table id="example3" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th> SN </th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>File</th>
-                    <th class="text-center">Change details </th>
-                  </tr>
-                  </thead>
-
-                  <tbody>
-                    {% for summary in get_all_summaries %}
-                      <tr>
-                        <td>
-                          {{ forloop.counter }}
-                        </td>
-
-                        <td>
-                          {{ summary.file_name }}
-                        </td>
-
-                        <td>
-                          {{ summary.file_description }}
-                        </td>
-
-                        <td>
-                          {{ summary.file_link }}
-                          <a href="{% static 'summary_files/'|add:summary.file_link %}"><i class="fa fa-fw fa-download"></i></a>
-                          
-                          <style>
-                            .preview {
-                              width: 100%;
-                              height: 500px;
+                            .btn-round{
+                              border-radius: 100px;
                             }
                           </style>
                         </td>
@@ -215,28 +375,198 @@
                             </button>
 
                             <ul class="dropdown-menu pull-right" role="menu">
-                              <!-- <li><a href="#" data-toggle="modal" data-target="#modal-editProject{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li> -->
-                              <li><a data-toggle="modal" data-target="#modal-deleteSummary{{ summary.id }}"><i class="fa fa-trash"></i> Delete </a></li>
+                              <li><a href="#" data-toggle="modal" data-target="#modal-editUser{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li>
+                              <li><a data-toggle="modal" data-target="#modal-disableUser{{ i.id }}"><i class="fa fa-ban"></i> Enable/Disable </a></li>
+                              <li><a data-toggle="modal" data-target="#modal-permissions{{ i.id }}"><i class="fa fa-lock"></i> Roles/Permissions </a></li>
+
+                              {% if i.status == 2 %}
+                                <li><a data-toggle="modal" data-target="#modal-deleteUser{{ i.id }}"><i class="fa fa-fw fa-refresh" style="width:10%;"></i> Re-Activate </a></li>
+                              {% endif %}
+
+                              {% if i.status != 2 %}
+                                <li><a data-toggle="modal" data-target="#modal-deleteUser{{ i.id }}"><i class="fa fa-trash"></i> Delete </a></li>
+                              {% endif %}
+
+                              <!-- <li class="divider"></li>
+                              <li><a href="#">Separated link</a></li> -->
                             </ul>
                           </div>
                         </td>
                       </tr>
 
-                      <div class="modal modal-danger fade" id="modal-deleteSummary{{ summary.id }}" style="display: none;">
+                      <!-- Modal Edit User Details  -->
+                      <div class="modal fade" id="modal-editUser{{ i.id }}" style="display: none;">
                         <div class="modal-dialog">
                           <div class="modal-content">
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span></button>
-                              <h4 class="modal-title">Delete Summary </h4>
+                              <h4 class="modal-title"><i class="ion ion-person"></i> Edit User Details </h4>
+                            </div>
+
+                            <form role="form" action="/update_user/{{ i.id }}/" method="POST">
+                              {% csrf_token %}
+                            <div class="modal-body">
+                              <p>Change user details as required </p>
+
+                        <!-- form start -->
+                        
+                              <div class="form-group">
+                                <label for="exampleInputEmail1">First Name <span class="optional_entry"> * </span></label>
+                                <input type="text" class="form-control" placeholder="Enter First Name" name="first_name" value="{{ i.first_name }}">
+                              </div>
+
+                              <div class="form-group">
+                                <label for="exampleInputEmail1">Last Name <span class="optional_entry"> * </span></label>
+                                <input type="text" class="form-control" placeholder="Enter Last Name" name="last_name" value="{{ i.last_name }}">
+                              </div>
+
+                              <div class="form-group">
+                                <label for="exampleInputEmail1">Email address <span class="optional_entry"> * </span></label>
+                                <input type="email" class="form-control" placeholder="Enter email" name="email" value="{{ i.email }}">
+                              </div>
+
+                              <div class="form-group password-wrapper">
+                                <label for="exampleInputPassword1">Password <span class="optional_entry"> * </span></label>
+                                <input type="password" class="form-control" placeholder="Password" name="password" value="{{ i.password }}" id="password_input">
+                                <button id="toggle-password" type="button" aria-label="Toggle password visibility">
+                                  <i class="fa fa-fw fa-eye"></i>
+                                </button>
+                              </div>
+
+                              <!-- <div class="form-group">
+                                <label for="exampleInputPassword1">Confirm Password <span class="optional_entry"> * </span></label>
+                                <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" value="">
+                              </div> -->
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+
+                            <style type="text/css">
+                              .optional_entry {
+                                color: red;
+                              }
+
+                              .password-wrapper {
+                                position: relative;
+                              }
+
+                              #toggle-password {
+                                position: absolute;
+                                top: 70%;
+                                right: 10px;
+                                transform: translateY(-50%);
+                                background-color: transparent;
+                                border: none;
+                                cursor: pointer;
+                              }
+
+                              #toggle-password:focus {
+                                outline: none;
+                              }
+
+                              #toggle-password i {
+                                color: #999;
+                              }
+
+                              #password:focus + #toggle-password i {
+                                color: #000;
+                              }
+
+                              }
+                            </style>
+
+                            <script type="text/javascript">
+                              const passwordInput = document.getElementById('password_input');
+                              const passwordInput2 = document.getElementById('password_input2');
+                              const togglePasswordButton = document.getElementById('toggle-password');
+
+                              togglePasswordButton.addEventListener('click', () => {
+                                const passwordType = passwordInput.getAttribute('type');
+                                passwordInput.setAttribute('type', passwordType === 'password' ? 'text' : 'password');
+                                
+                                const icon = togglePasswordButton.querySelector('i');
+                                icon.classList.toggle('fa-eye-slash');
+                              });
+
+                            </script>
+
+                            </form>
+                          </div>
+                          <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                      </div>
+
+
+                      <!-- Modal Delete User  -->
+                      {% if i.status != 2 %}
+                        <div class="modal modal-danger fade" id="modal-deleteUser{{ i.id }}" style="display: none;">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">×</span></button>
+                                <h4 class="modal-title">Delete User </h4>
+                              </div>
+                              <div class="modal-body">
+                                <p> Are you sure you want to delete this user? </p>
+                                <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                                <a href="/delete_user/{{ i.id }}" class="btn btn-outline">Confirm</a>
+                              </div>
+                            </div>
+                            <!-- /.modal-content -->
+                          </div>
+                          <!-- /.modal-dialog -->
+                      </div>
+                      {% endif %}
+
+                      {% if i.status == 2 %}
+                        <div class="modal modal-success fade" id="modal-deleteUser{{ i.id }}" style="display: none;">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">×</span></button>
+                                <h4 class="modal-title">Re-Active User </h4>
+                              </div>
+                              <div class="modal-body">
+                                <p> Are you sure you want to Re-Activate this user? </p>
+                                <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                                <a href="/delete_user/{{ i.id }}" class="btn btn-outline">Confirm</a>
+                              </div>
+                            </div>
+                            <!-- /.modal-content -->
+                          </div>
+                          <!-- /.modal-dialog -->
+                        </div>
+                        
+                      {% endif %}
+
+                      <!-- Modal Disable User -->
+                      <div class="modal modal-warning fade" id="modal-disableUser{{ i.id }}" style="display: none;">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+                              <h4 class="modal-title">Enable/Disable User </h4>
                             </div>
                             <div class="modal-body">
-                              <p> Are you sure you want to delete? </p>
+                              <p> Are you sure you want to enable/disable this user? </p>
                               <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-                              <a href="/delete_summary/{{ summary.id }}/{{ module_id }}/" class="btn btn-outline">Confirm</a>
+                              <a href="/disable_user/{{ i.id }}" class="btn btn-outline">Confirm</a>
                             </div>
                           </div>
                           <!-- /.modal-content -->
@@ -245,569 +575,78 @@
                       </div>
 
 
-                    {% endfor %}
-                  </tbody>
-
-                  <tfoot>
-                  <tr>
-                    <th> SN </th>
-                    <th>Name</th>
-                    <th>File</th>
-                    <th class="text-center">Change details </th>
-                  </tr>
-                  </tfoot>
-                </table>
-              </div>
-              <!-- /.box-body -->
-            </div>
-          </div>
-
-          <div class="tab-pane" id="tab_2">
-            <div class="box">
-              <div class="box-header">
-                <h3 class="box-title" style="color: #306FA0;">
-                <i class="fa fa-fw fa-folder-o"></i>
-                <strong> Flashcard Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC;"> Flashcards for study preparation </span> </h3>
-                <!-- label label-success -->
-
-                <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addUser"> Add New Flashcards </button>
-              </div>
-              <!-- /.box-header -->
-
-
-              <div class="modal fade" id="modal-addUser" style="display: none;">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span></button>
-                      <h4 class="modal-title"> Add New Flashcards topic </h4>
-                    </div>
-                    <form role="form" action="/admin_add_user/" method="POST" id="addUser">
-                      {% csrf_token %}
-
-                    <div class="modal-body">
-                      <p>Please fill in details of the topic</p>
-
-                      <div class="form-group">
-                        <label for="exampleInputEmail1"> Name <span class="optional_entry"> * </span></label>
-                        <input type="text" class="form-control" placeholder="Enter Name of the file" name="name_summary" required value="James">
-                      </div>
-
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
-                        <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the summary file" rows="10" style="resize: none;" name="summary_description" required>Programming PLC and HMI using Ladder Diagrams</textarea>
-                      </div>
-
-                      <div class="form-group">
-                        <label for="exampleInputFile">File Attachment </label>
-                        <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
-                      </div>
-
-                      <style type="text/css">
-                        .optional_entry {
-                          color: red;
-                        }
-                      </style>
-                    </div>
-
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Add topic</button>
-                    </div>
-
-                    </form>
-                  </div>
-                  <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-              </div>
-
-
-
-              <div class="box-body table-responsive">
-                <table id="example1" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th style="width: 5%;"> SN </th>
-                    <th style="width: 40%;">Question</th>
-                    <th style="width: 40%;">Answer</th>
-                    <!-- <th>Date Registered</th>
-                    <th>Status</th> -->
-                    <th class="text-center" style="width: 15%;"> Change details </th>
-                  </tr>
-                  </thead>
-                  <tbody>
-
-                  {% for i in all_users %}
-                    <tr>
-                      <td> {{ forloop.counter }}  </td>
-                      <td> {{ i.first_name }} {{ i.last_name }} </td>
-                      <td> {{ i.email }} </td>
-                      <td> {{ i.date_of_registration }} </td>
-                      <td> 
-                        {% if i.status == 1 %}
-                          <span class="btn-round btn btn-success btn-xs"> Active </span>
-                        {% endif %}
-
-                        {% if i.status == 0 %}
-                          <span class="btn-round btn btn-warning btn-xs"> Disabled </span>
-                        {% endif %}
-
-                        {% if i.status == 2 %}
-                          <span class="btn-round btn btn-danger btn-xs"> Deleted </span>
-                        {% endif %}
-
-                        <style type="text/css">
-                          .btn-round{
-                            border-radius: 100px;
-                          }
-                        </style>
-                      </td>
-
-                      <td class="text-center"> 
-                        <div class="btn-group">
-                          <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-fw fa-pencil-square-o"></i>
-                          </button>
-                          <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                          </button>
-
-                          <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="#" data-toggle="modal" data-target="#modal-editUser{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li>
-                            <li><a data-toggle="modal" data-target="#modal-disableUser{{ i.id }}"><i class="fa fa-ban"></i> Enable/Disable </a></li>
-                            <li><a data-toggle="modal" data-target="#modal-permissions{{ i.id }}"><i class="fa fa-lock"></i> Roles/Permissions </a></li>
-
-                            {% if i.status == 2 %}
-                              <li><a data-toggle="modal" data-target="#modal-deleteUser{{ i.id }}"><i class="fa fa-fw fa-refresh" style="width:10%;"></i> Re-Activate </a></li>
-                            {% endif %}
-
-                            {% if i.status != 2 %}
-                              <li><a data-toggle="modal" data-target="#modal-deleteUser{{ i.id }}"><i class="fa fa-trash"></i> Delete </a></li>
-                            {% endif %}
-
-                            <!-- <li class="divider"></li>
-                            <li><a href="#">Separated link</a></li> -->
-                          </ul>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <!-- Modal Edit User Details  -->
-                    <div class="modal fade" id="modal-editUser{{ i.id }}" style="display: none;">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">×</span></button>
-                            <h4 class="modal-title"><i class="ion ion-person"></i> Edit User Details </h4>
-                          </div>
-
-                          <form role="form" action="/update_user/{{ i.id }}/" method="POST">
-                            {% csrf_token %}
-                          <div class="modal-body">
-                            <p>Change user details as required </p>
-
-                      <!-- form start -->
-                      
-                            <div class="form-group">
-                              <label for="exampleInputEmail1">First Name <span class="optional_entry"> * </span></label>
-                              <input type="text" class="form-control" placeholder="Enter First Name" name="first_name" value="{{ i.first_name }}">
-                            </div>
-
-                            <div class="form-group">
-                              <label for="exampleInputEmail1">Last Name <span class="optional_entry"> * </span></label>
-                              <input type="text" class="form-control" placeholder="Enter Last Name" name="last_name" value="{{ i.last_name }}">
-                            </div>
-
-                            <div class="form-group">
-                              <label for="exampleInputEmail1">Email address <span class="optional_entry"> * </span></label>
-                              <input type="email" class="form-control" placeholder="Enter email" name="email" value="{{ i.email }}">
-                            </div>
-
-                            <div class="form-group password-wrapper">
-                              <label for="exampleInputPassword1">Password <span class="optional_entry"> * </span></label>
-                              <input type="password" class="form-control" placeholder="Password" name="password" value="{{ i.password }}" id="password_input">
-                              <button id="toggle-password" type="button" aria-label="Toggle password visibility">
-                                <i class="fa fa-fw fa-eye"></i>
-                              </button>
-                            </div>
-
-                            <!-- <div class="form-group">
-                              <label for="exampleInputPassword1">Confirm Password <span class="optional_entry"> * </span></label>
-                              <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" value="">
-                            </div> -->
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
-                          </div>
-
-                          <style type="text/css">
-                            .optional_entry {
-                              color: red;
-                            }
-
-                            .password-wrapper {
-                              position: relative;
-                            }
-
-                            #toggle-password {
-                              position: absolute;
-                              top: 70%;
-                              right: 10px;
-                              transform: translateY(-50%);
-                              background-color: transparent;
-                              border: none;
-                              cursor: pointer;
-                            }
-
-                            #toggle-password:focus {
-                              outline: none;
-                            }
-
-                            #toggle-password i {
-                              color: #999;
-                            }
-
-                            #password:focus + #toggle-password i {
-                              color: #000;
-                            }
-
-                            }
-                          </style>
-
-                          <script type="text/javascript">
-                            const passwordInput = document.getElementById('password_input');
-                            const passwordInput2 = document.getElementById('password_input2');
-                            const togglePasswordButton = document.getElementById('toggle-password');
-
-                            togglePasswordButton.addEventListener('click', () => {
-                              const passwordType = passwordInput.getAttribute('type');
-                              passwordInput.setAttribute('type', passwordType === 'password' ? 'text' : 'password');
-                              
-                              const icon = togglePasswordButton.querySelector('i');
-                              icon.classList.toggle('fa-eye-slash');
-                            });
-
-                          </script>
-
-                          </form>
-                        </div>
-                        <!-- /.modal-content -->
-                      </div>
-                      <!-- /.modal-dialog -->
-                    </div>
-
-
-                    <!-- Modal Delete User  -->
-                    {% if i.status != 2 %}
-                      <div class="modal modal-danger fade" id="modal-deleteUser{{ i.id }}" style="display: none;">
+                      <!-- Modal Permissions -->
+                      <div class="modal fade" id="modal-permissions{{ i.id }}" style="display: none;">
                         <div class="modal-dialog">
                           <div class="modal-content">
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span></button>
-                              <h4 class="modal-title">Delete User </h4>
+                              <h4 class="modal-title"> Edit User Permissions </h4>
                             </div>
                             <div class="modal-body">
-                              <p> Are you sure you want to delete this user? </p>
-                              <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-                              <a href="/delete_user/{{ i.id }}" class="btn btn-outline">Confirm</a>
-                            </div>
-                          </div>
-                          <!-- /.modal-content -->
-                        </div>
-                        <!-- /.modal-dialog -->
-                    </div>
-                    {% endif %}
+                              <div class="row" style="padding-left: 10px"">
+                                <div class="col-lg-6" style="border-left: 3px solid #DD4B39;">
+                                  <p> Roles for user: <span class="btn-round btn btn-danger btn-xs"> {{ i.first_name }} {{ i.last_name }} </span></p>
+                                  <div class="form-group pb-5">
 
-                    {% if i.status == 2 %}
-                      <div class="modal modal-success fade" id="modal-deleteUser{{ i.id }}" style="display: none;">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span></button>
-                              <h4 class="modal-title">Re-Active User </h4>
-                            </div>
-                            <div class="modal-body">
-                              <p> Are you sure you want to Re-Activate this user? </p>
-                              <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-                              <a href="/delete_user/{{ i.id }}" class="btn btn-outline">Confirm</a>
-                            </div>
-                          </div>
-                          <!-- /.modal-content -->
-                        </div>
-                        <!-- /.modal-dialog -->
-                      </div>
-                      
-                    {% endif %}
+                                    <!-- {{ roles_for_each_user|get_item:forloop.counter0 }}
+                                    {{ forloop.counter0 }} -->
 
-                    <!-- Modal Disable User -->
-                    <div class="modal modal-warning fade" id="modal-disableUser{{ i.id }}" style="display: none;">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">×</span></button>
-                            <h4 class="modal-title">Enable/Disable User </h4>
-                          </div>
-                          <div class="modal-body">
-                            <p> Are you sure you want to enable/disable this user? </p>
-                            <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-                            <a href="/disable_user/{{ i.id }}" class="btn btn-outline">Confirm</a>
-                          </div>
-                        </div>
-                        <!-- /.modal-content -->
-                      </div>
-                      <!-- /.modal-dialog -->
-                    </div>
+                                    {% for i in user_roles %}
+                                      <!-- <div class="col-lg-12 col-12"> -->
+                                        {% if i.role_name in roles_for_each_user|get_item:forloop.parentloop.counter0 %}
+                                          <div class="checkbox">
+                                            <label>
+                                              <input type="checkbox" checked>
+                                              {{ i.role_name }}
+                                            </label>
+                                          </div>
+                                        {% endif %}
 
+                                        {% if i.role_name not in roles_for_each_user|get_item:forloop.parentloop.counter0 %}
+                                          <div class="checkbox">
+                                            <label>
+                                              <input type="checkbox">
+                                              {{ i.role_name }}
+                                            </label>
+                                          </div>
+                                        {% endif %}
 
-                    <!-- Modal Permissions -->
-                    <div class="modal fade" id="modal-permissions{{ i.id }}" style="display: none;">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">×</span></button>
-                            <h4 class="modal-title"> Edit User Permissions </h4>
-                          </div>
-                          <div class="modal-body">
-                            <div class="row" style="padding-left: 10px"">
-                              <div class="col-lg-6" style="border-left: 3px solid #DD4B39;">
-                                <p> Roles for user: <span class="btn-round btn btn-danger btn-xs"> {{ i.first_name }} {{ i.last_name }} </span></p>
-                                <div class="form-group pb-5">
+                                        
+                                      <!-- </div> -->
+                                    {% endfor %}
+                                    
+                                  </div>
+                                </div>
 
-                                  <!-- {{ roles_for_each_user|get_item:forloop.counter0 }}
-                                  {{ forloop.counter0 }} -->
+                                <div class="col-lg-6" style="border-left: 3px solid #DD4B39;">
+                                  <p> Permissions for user: <span class="btn-round btn btn-danger btn-xs"> {{ i.first_name }} {{ i.last_name }} </span></p>
+                                  <div class="form-group pb-5">
+                                    {% for i in user_permissions %}
+                                      <!-- <div class="col-lg-12 col-12"> -->
 
-                                  {% for i in user_roles %}
-                                    <!-- <div class="col-lg-12 col-12"> -->
-                                      {% if i.role_name in roles_for_each_user|get_item:forloop.parentloop.counter0 %}
-                                        <div class="checkbox">
-                                          <label>
-                                            <input type="checkbox" checked>
-                                            {{ i.role_name }}
-                                          </label>
-                                        </div>
-                                      {% endif %}
-
-                                      {% if i.role_name not in roles_for_each_user|get_item:forloop.parentloop.counter0 %}
                                         <div class="checkbox">
                                           <label>
                                             <input type="checkbox">
-                                            {{ i.role_name }}
+                                            {{ i.permission_action }}
                                           </label>
                                         </div>
-                                      {% endif %}
-
-                                      
-                                    <!-- </div> -->
-                                  {% endfor %}
-                                  
+                                      <!-- </div> -->
+                                    {% endfor %}
+                                    
+                                  </div>
                                 </div>
                               </div>
-
-                              <div class="col-lg-6" style="border-left: 3px solid #DD4B39;">
-                                <p> Permissions for user: <span class="btn-round btn btn-danger btn-xs"> {{ i.first_name }} {{ i.last_name }} </span></p>
-                                <div class="form-group pb-5">
-                                  {% for i in user_permissions %}
-                                    <!-- <div class="col-lg-12 col-12"> -->
-
-                                      <div class="checkbox">
-                                        <label>
-                                          <input type="checkbox">
-                                          {{ i.permission_action }}
-                                        </label>
-                                      </div>
-                                    <!-- </div> -->
-                                  {% endfor %}
-                                  
-                                </div>
-                              </div>
+                              
                             </div>
-                            
-                          </div>
 
-                          <div>
-                            <br/>
-                          </div>
-                          <div class="modal-footer" style="margin-top: 30px;">
-                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
-                          </div>
-                        </div>
-                        <!-- /.modal-content -->
-                      </div>
-                      <!-- /.modal-dialog -->
-                    </div>
-
-                  {% endfor %}
-                  
-                  </tbody>
-
-                  <tfoot>
-                  <tr>
-                    <th style="width: 5%;"> SN </th>
-                    <th style="width: 40%;">Question</th>
-                    <th style="width: 40%;">Answer</th>
-                    <!-- <th>Date Registered</th>
-                    <th>Status</th> -->
-                    <th class="text-center" style="width: 15%;"> Options </th>
-                  </tr>
-                  </tfoot>
-                </table>
-              </div>
-              <!-- /.box-body -->
-            </div>
-          </div>
-
-          <div class="tab-pane" id="tab_3">
-            <div class="box">
-              <div class="box-header">
-                <h3 class="box-title" style="color: #306FA0;">
-                <i class="fa fa-fw fa-folder-o"></i>
-                <strong> Quizzes Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC;"> Quizzes to test your knowledge </span> </h3>
-                <!-- label label-success -->
-
-                <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-createQuiz"> Create new Quiz </button>
-              </div>
-              <!-- /.box-header -->
-
-
-              <div class="modal fade" id="modal-createQuiz" style="display: none;">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span></button>
-                      <h4 class="modal-title"> Create New Quiz </h4>
-                    </div>
-                    <form role="form" action="/create_quiz/{{ topic_id }}/" method="POST" id="addUser" enctype="multipart/form-data">
-                      {% csrf_token %}
-
-                    <div class="modal-body">
-                      <p>Please fill in details of the quiz you want to create</p>
-
-                      <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
-                          <!-- <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">User Details <span class="optional_entry"> * </span></a></li> -->
-                          
-                        </ul>
-                      
-                          <div class="form-group">
-                            <label for="exampleInputEmail1"> Title <span class="optional_entry"> * </span></label>
-                            <input type="text" class="form-control" placeholder="Enter title of the quiz" name="quiz_title" required value="Software Engineering Q1">
-                          </div>
-
-                          <div class="form-group">
-                            <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
-                            <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the summary file" rows="10" style="resize: none;" name="quiz_description" required>SDLC Principles</textarea>
-                          </div>
-
-                          <!-- <div class="form-group">
-                            <label for="exampleInputFile">File Attachment </label>
-                            <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
-                          </div> -->
-
-                          <style type="text/css">
-                            .optional_entry {
-                              color: red;
-                            }
-                          </style>
-                      </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Add Quiz</button>
-                    </div>
-
-                    </form>
-                  </div>
-                  <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-              </div>
-
-
-
-              <div class="box-body table-responsive">
-                <table id="example2" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th style="width: 5%;"> SN </th>
-                    <th style="width: 20%;">Quiz ID</th>
-                    <th style="width: 20%;">Name</th>
-                    <th style="width: 30%;">Description</th>
-                    <th class="text-center" style="width: 25%;"> Options </th>
-                  </tr>
-                  </thead>
-
-                  <tbody>
-                    {% for quiz in get_all_quizzes %}
-                      <tr>
-                        <td>
-                          {{ forloop.counter }}
-                        </td>
-
-                        <td>
-                          {{ quiz.quiz_id }}
-                        </td>
-
-                        <td>
-                          {{ quiz.quiz_title }}
-                        </td>
-
-                        <td>
-                          {{ quiz.quiz_description }}
-                        </td>
-
-                        <td class="text-center"> 
-                          <div class="btn-group">
-                            <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                              <i class="fa fa-fw fa-pencil-square-o"></i>
-                            </button>
-                            <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                              <span class="caret"></span>
-                              <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-
-                            <ul class="dropdown-menu pull-right" role="menu">
-                              <!-- <li><a href="#" data-toggle="modal" data-target="#modal-editProject{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li> -->
-                              <li><a data-toggle="modal" data-target="#modal-deleteQuiz{{ quiz.id }}"><i class="fa fa-trash"></i> Delete </a></li>
-                            </ul>
-                          </div>
-                        </td>
-                      </tr>
-
-                      <div class="modal modal-danger fade" id="modal-deleteQuiz{{ quiz.id }}" style="display: none;">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span></button>
-                              <h4 class="modal-title">Delete Quiz </h4>
+                            <div>
+                              <br/>
                             </div>
-                            <div class="modal-body">
-                              <p> Are you sure you want to delete? </p>
-                              <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-                              <a href="/delete_quiz/{{ topic_id }}/{{ quiz.id }}/" class="btn btn-outline">Confirm</a>
+                            <div class="modal-footer" style="margin-top: 30px;">
+                              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary">Save changes</button>
                             </div>
                           </div>
                           <!-- /.modal-content -->
@@ -815,25 +654,186 @@
                         <!-- /.modal-dialog -->
                       </div>
 
-
                     {% endfor %}
-                  </tbody>
+                    
+                    </tbody>
 
-                  <tfoot>
-                  <tr>
-                    <th style="width: 5%;"> SN </th>
-                    <th style="width: 20%;">Quiz ID</th>
-                    <th style="width: 20%;">Name</th>
-                    <th style="width: 30%;">Description</th>
-                    <th class="text-center" style="width: 25%;"> Options </th>
-                  </tr>
-                  </tfoot>
-                </table>
+                    <tfoot>
+                    <tr>
+                      <th style="width: 5%;"> SN </th>
+                      <th style="width: 40%;">Question</th>
+                      <th style="width: 40%;">Answer</th>
+                      <!-- <th>Date Registered</th>
+                      <th>Status</th> -->
+                      <th class="text-center" style="width: 15%;"> Options </th>
+                    </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                <!-- /.box-body -->
               </div>
-              <!-- /.box-body -->
             </div>
-          </div>
 
+            <div class="tab-pane" id="tab_3">
+              <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title" style="color: #306FA0;">
+                  <i class="fa fa-fw fa-folder-o"></i>
+                  <strong> Quizzes Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC;"> Quizzes to test your knowledge </span> </h3>
+                  <!-- label label-success -->
+
+                  <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-createQuiz"> Create new Quiz </button>
+                </div>
+                <!-- /.box-header -->
+
+
+                <div class="modal fade" id="modal-createQuiz" style="display: none;">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title"> Create New Quiz </h4>
+                      </div>
+                      <form role="form" action="/create_quiz/{{ topic_id }}/" method="POST" id="addUser" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                      <div class="modal-body">
+                        <p>Please fill in details of the quiz you want to create</p>
+
+                        <div class="nav-tabs-custom">
+                          <ul class="nav nav-tabs">
+                            <!-- <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">User Details <span class="optional_entry"> * </span></a></li> -->
+                            
+                          </ul>
+                        
+                            <div class="form-group">
+                              <label for="exampleInputEmail1"> Title <span class="optional_entry"> * </span></label>
+                              <input type="text" class="form-control" placeholder="Enter title of the quiz" name="quiz_title" required value="Software Engineering Q1">
+                            </div>
+
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
+                              <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the summary file" rows="10" style="resize: none;" name="quiz_description" required>SDLC Principles</textarea>
+                            </div>
+
+                            <!-- <div class="form-group">
+                              <label for="exampleInputFile">File Attachment </label>
+                              <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
+                            </div> -->
+
+                            <style type="text/css">
+                              .optional_entry {
+                                color: red;
+                              }
+                            </style>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Quiz</button>
+                      </div>
+
+                      </form>
+                    </div>
+                    <!-- /.modal-content -->
+                  </div>
+                  <!-- /.modal-dialog -->
+                </div>
+
+
+
+                <div class="box-body table-responsive">
+                  <table id="example2" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                      <th style="width: 5%;"> SN </th>
+                      <th style="width: 20%;">Quiz ID</th>
+                      <th style="width: 20%;">Name</th>
+                      <th style="width: 30%;">Description</th>
+                      <th class="text-center" style="width: 25%;"> Options </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                      {% for quiz in get_all_quizzes %}
+                        <tr>
+                          <td>
+                            {{ forloop.counter }}
+                          </td>
+
+                          <td>
+                            {{ quiz.quiz_id }}
+                          </td>
+
+                          <td>
+                            {{ quiz.quiz_title }}
+                          </td>
+
+                          <td>
+                            {{ quiz.quiz_description }}
+                          </td>
+
+                          <td class="text-center"> 
+                            <div class="btn-group">
+                              <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-fw fa-pencil-square-o"></i>
+                              </button>
+                              <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                              </button>
+
+                              <ul class="dropdown-menu pull-right" role="menu">
+                                <!-- <li><a href="#" data-toggle="modal" data-target="#modal-editProject{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li> -->
+                                <li><a data-toggle="modal" data-target="#modal-deleteQuiz{{ quiz.id }}"><i class="fa fa-trash"></i> Delete </a></li>
+                              </ul>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <div class="modal modal-danger fade" id="modal-deleteQuiz{{ quiz.id }}" style="display: none;">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">×</span></button>
+                                <h4 class="modal-title">Delete Quiz </h4>
+                              </div>
+                              <div class="modal-body">
+                                <p> Are you sure you want to delete? </p>
+                                <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                                <a href="/delete_quiz/{{ topic_id }}/{{ quiz.id }}/" class="btn btn-outline">Confirm</a>
+                              </div>
+                            </div>
+                            <!-- /.modal-content -->
+                          </div>
+                          <!-- /.modal-dialog -->
+                        </div>
+
+
+                      {% endfor %}
+                    </tbody>
+
+                    <tfoot>
+                    <tr>
+                      <th style="width: 5%;"> SN </th>
+                      <th style="width: 20%;">Quiz ID</th>
+                      <th style="width: 20%;">Name</th>
+                      <th style="width: 30%;">Description</th>
+                      <th class="text-center" style="width: 25%;"> Options </th>
+                    </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                <!-- /.box-body -->
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
