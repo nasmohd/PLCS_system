@@ -2259,3 +2259,76 @@ def delete_quiz(request, topic_id, quiz_id):
 	return redirect (redir)
 
 
+def assign_task_to_user(request, user_id, task_id, project_id):
+	user_x = User.objects.get (id = user_id)
+	task_x = Collab_Task.objects.get (id = task_id)
+
+	task_x.assigned_to = user_x
+	task_x.save()
+
+	messages.success(request, 'Task has been assigned successfully', extra_tags='alert-success')
+
+	redir = "/project_collab_tasks/" + str(project_id)
+	return redirect (redir)
+
+
+
+def add_collab_task(request, project_id):
+	project_det = Project.objects.get (id = project_id)
+
+	task_deadlines = request.POST.getlist('task_deadline[]')
+	task_details = request.POST.getlist('task_details[]')
+	sub_tasks = []
+
+
+	for i in range(len(task_details)):
+		sub_task_key = f'sub_tasks[{i}][]'
+		sub_task_values = request.POST.getlist(sub_task_key)
+
+		# Convert the date string to a datetime object
+		task_deadline_str = datetime.strptime(task_deadlines[i], '%Y-%m-%d')
+
+		# Format the date as 'DD-MM-YYYY'
+		formatted_deadline_date = task_deadline_str.strftime('%d-%m-%Y')
+
+
+		task_data = [formatted_deadline_date, task_details[i], sub_task_values]
+
+		#Code to add each task based on user input
+		# new_tasks = Collab_Task()
+
+		new_collab_task = Collab_Task()
+		new_collab_task.task_x = task_details[i]
+		new_collab_task.project = project_det
+		new_collab_task.task_deadline = task_deadline_str
+		new_collab_task.task_deliverables = sub_task_values
+
+		new_collab_task.save()
+
+
+	# new_collab_task.project = project_det
+
+	messages.success(request, 'New Task(s) has been added successfully', extra_tags='alert-success')
+
+	redir = "/project_collab_tasks/" + str(project_id)
+	return redirect (redir)
+
+
+def delete_collab_task(request, project_id , collab_task_id):
+	collab_task = Collab_Task.objects.get(id = collab_task_id)
+	collab_task.delete()
+
+	messages.success(request, 'Task has been deleted', extra_tags='alert-danger')
+
+	redir = "/project_collab_tasks/" + str(project_id)
+	return redirect (redir)
+
+
+def remove_collaborator(request, project_id, approved_collab_id):
+	approved_collab = User_Project_Collabs_Approved.objects.get(id = approved_collab_id)
+	approved_collab.delete()
+
+	messages.success(request, 'Collaborator has been removed', extra_tags='alert-danger')
+
+	redir = "/project_collab_tasks/" + str(project_id)
+	return redirect (redir)

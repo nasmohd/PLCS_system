@@ -97,4 +97,8 @@ urlpatterns = [
 
     path("create_quiz/<int:topic_id>/", views.create_quiz),
     path("delete_quiz/<int:topic_id>/<int:quiz_id>/", views.delete_quiz),
+    path("assign_task_to_user/<int:user_id>/<int:task_id>/<int:project_id>/", views.assign_task_to_user),
+    path("add_collab_task/<int:project_id>/", views.add_collab_task),
+    path("delete_collab_task/<int:project_id>/<int:collab_task_id>/", views.delete_collab_task),
+    path("remove_collaborator/<int:approved_collab_id>/<int:project_id>/", views.remove_collaborator),
 ]

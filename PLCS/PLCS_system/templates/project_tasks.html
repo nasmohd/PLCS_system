@@ -64,7 +64,12 @@
         {% for message in messages %}
           <div class="alert alert-dismissible {{ message.tags }}">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color: white;">×</button>
-            <i class="icon fa fa-check"></i> {{ message }}
+
+            {% if message.tags == 'alert-danger' %}
+              <i class="icon fa fa-fw fa-close"></i> {{ message }}
+            {% else %}
+              <i class="icon fa fa-fw fa-check"></i> {{ message }}
+            {% endif %}
           </div>
           <script>
               // Automatically close the alert after 5 seconds
@@ -118,7 +123,7 @@
                           </button>
 
                           <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="#"> Item 1 Dropdown </a></li>
+                            <li><a href="/remove_collaborator/{{ i.id }}/{{ project_id }}/"> Remove </a></li>
                           </ul>
                         </div>
                       </td>
@@ -234,120 +239,121 @@
               {% endif %}
 
               <div class="modal fade" id="modal-addTask" style="display: none;">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title"> Add New Task </h4>
-                  </div>
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                      <h4 class="modal-title"> Add New Task </h4>
+                    </div>
 
-                  <form id="todo_form" role="form" action="/add_project" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
-                  <div class="modal-body">
-                    <p>Please fill in details for the task </p>
+                    <form id="todo_form" role="form" action="/add_collab_task/{{ project_id }}/" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+                      {% csrf_token %}
+                      <div class="modal-body">
+                        <p>Please fill in details for the task </p>
 
-                    <div class="tab-pane" id="tab_tasks">
-                        <p class="help-block">Tasks for this project</p>
-                        <button type="button" class="btn btn-sm btn-default" style="margin-bottom: 1.2rem;" title="Add New Task" id="add_task"><i class="fa fa-fw fa-plus"></i></button>
+                        <div class="tab-pane" id="tab_tasks">
+                            <p class="help-block">Tasks for this project</p>
+                            <button type="button" class="btn btn-sm btn-default" style="margin-bottom: 1.2rem;" title="Add New Task" id="add_task"><i class="fa fa-fw fa-plus"></i></button>
 
-                        <ul class="todo-list ui-sortable" id="task_list">
-                          <!-- <li id="original_li" style="display: none;">
-                            <span class="handle ui-sortable-handle">
-                                  <i class="fa fa-ellipsis-v"></i>
-                                  <i class="fa fa-ellipsis-v"></i>
-                                </span>
-                            <input type="checkbox" value="" disabled style="display: none;">
-                            <span class="text">Design a nice theme</span>
-                            <div class="tools">
-                              <i class="fa fa-trash-o"></i>
-                            </div>
-                          </li> -->
-                        </ul>
-
-                        <script>
-                          document.getElementById('add_task').addEventListener('click', function() {
-                            var taskList = document.getElementById('task_list');
-                            var newTask = document.createElement('li');
-                            newTask.style.marginBottom = '0.7rem';
-                            var taskDeadlineDiv = document.createElement('div');
-
-                            taskDeadlineDiv.classList.add('task-deadline');
-                            taskDeadlineDiv.innerHTML = `
-                              <label for="task_deadline">Task Deadline</label>
-                              <input type="date" name="task_deadline[]" required style="margin-bottom:0.3rem;">
-                            `;
-                            newTask.appendChild(taskDeadlineDiv);
-                            newTask.innerHTML += `
-                              <input type="text" class="text" contenteditable="true" name="task_details[]" required style="margin-bottom:0.3rem; width:inherit; display: inline-block; width: 80%;" placeholder="Task" autocomplete="off">
-                              <div class="tools">
-                                <i class="fa fa-plus add-sub-task"></i>
-                                <i class="fa fa-trash-o"></i>
-                              </div>
-                              <ul class="sub-tasks"></ul>
-                            `;
-                            taskList.appendChild(newTask);
-
-                            // Add event listener to the trash icon to remove the task
-                            var trashIcon = newTask.querySelector('.fa-trash-o');
-                            trashIcon.addEventListener('click', function() {
-                              newTask.remove();
-                            });
-
-                            // Add event listener to the add sub-task button
-                            var addSubTaskButton = newTask.querySelector('.add-sub-task');
-                            addSubTaskButton.addEventListener('click', function() {
-                              var subTaskList = newTask.querySelector('.sub-tasks');
-                              var newSubTask = document.createElement('li');
-                              newSubTask.innerHTML = `
-                                <input type="text" class="text" contenteditable="true" name="sub_tasks[${taskList.children.length - 1}][]" required style="display: inline-block; width: 75%; font-size: 12px;" placeholder="Deliverables" autocomplete="off">
+                            <ul class="todo-list ui-sortable" id="task_list">
+                              <!-- <li id="original_li" style="display: none;">
+                                <span class="handle ui-sortable-handle">
+                                      <i class="fa fa-ellipsis-v"></i>
+                                      <i class="fa fa-ellipsis-v"></i>
+                                    </span>
+                                <input type="checkbox" value="" disabled style="display: none;">
+                                <span class="text">Design a nice theme</span>
                                 <div class="tools">
                                   <i class="fa fa-trash-o"></i>
                                 </div>
-                              `;
-                              subTaskList.appendChild(newSubTask);
+                              </li> -->
+                            </ul>
 
-                              // Add event listener to the trash icon to remove the sub-task
-                              var subTrashIcon = newSubTask.querySelector('.fa-trash-o');
-                              subTrashIcon.addEventListener('click', function() {
-                                newSubTask.remove();
+                            <script>
+                              document.getElementById('add_task').addEventListener('click', function() {
+                                var taskList = document.getElementById('task_list');
+                                var newTask = document.createElement('li');
+                                newTask.style.marginBottom = '0.7rem';
+                                var taskDeadlineDiv = document.createElement('div');
+
+                                taskDeadlineDiv.classList.add('task-deadline');
+                                taskDeadlineDiv.innerHTML = `
+                                  <label for="task_deadline">Task Deadline</label>
+                                  <input type="date" name="task_deadline[]" required style="margin-bottom:0.3rem;">
+                                `;
+                                newTask.appendChild(taskDeadlineDiv);
+                                newTask.innerHTML += `
+                                  <input type="text" class="text" contenteditable="true" name="task_details[]" required style="margin-bottom:0.3rem; width:inherit; display: inline-block; width: 80%;" placeholder="Task" autocomplete="off">
+                                  <div class="tools">
+                                    <i class="fa fa-plus add-sub-task"></i>
+                                    <i class="fa fa-trash-o"></i>
+                                  </div>
+                                  <ul class="sub-tasks"></ul>
+                                `;
+                                taskList.appendChild(newTask);
+
+                                // Add event listener to the trash icon to remove the task
+                                var trashIcon = newTask.querySelector('.fa-trash-o');
+                                trashIcon.addEventListener('click', function() {
+                                  newTask.remove();
+                                });
+
+                                // Add event listener to the add sub-task button
+                                var addSubTaskButton = newTask.querySelector('.add-sub-task');
+                                addSubTaskButton.addEventListener('click', function() {
+                                  var subTaskList = newTask.querySelector('.sub-tasks');
+                                  var newSubTask = document.createElement('li');
+                                  newSubTask.innerHTML = `
+                                    <input type="text" class="text" contenteditable="true" name="sub_tasks[${taskList.children.length - 1}][]" required style="display: inline-block; width: 75%; font-size: 12px;" placeholder="Deliverables" autocomplete="off">
+                                    <div class="tools">
+                                      <i class="fa fa-trash-o"></i>
+                                    </div>
+                                  `;
+                                  subTaskList.appendChild(newSubTask);
+
+                                  // Add event listener to the trash icon to remove the sub-task
+                                  var subTrashIcon = newSubTask.querySelector('.fa-trash-o');
+                                  subTrashIcon.addEventListener('click', function() {
+                                    newSubTask.remove();
+                                  });
+                                });
                               });
-                            });
-                          });
-                        </script>
-                        
-                        <!-- <div class="form-group">
-                          <label for="exampleInputFile">File 1 <span class="optional_entry"> (optional) </span></label>
-                          <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
+                            </script>
+                            
+                            <!-- <div class="form-group">
+                              <label for="exampleInputFile">File 1 <span class="optional_entry"> (optional) </span></label>
+                              <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
 
-                          <p class="help-block">File 1 describing the project</p>
-                        </div> -->
+                              <p class="help-block">File 1 describing the project</p>
+                            </div> -->
 
-                        <style type="text/css">
-                          .optional_entry {
-                            color: red;
-                            font-weight: normal;
-                          }
+                            <style type="text/css">
+                              .optional_entry {
+                                color: red;
+                                font-weight: normal;
+                              }
 
-                          .tools{
-                            visibility: visible;
-                          }
-                        </style>
+                              .tools{
+                                visibility: visible;
+                              }
+                            </style>
+                          </div>
+                        <!-- form start -->
                       </div>
-                    <!-- form start -->
+
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Task</button>
+                      </div>
+
+                    </form>
                   </div>
-
-
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add Task</button>
-                  </div>
-
-                  </form>
+                  <!-- /.modal-content -->
                 </div>
-                <!-- /.modal-content -->
-              </div>
               <!-- /.modal-dialog -->
-            </div>
+              </div>
             </div>
 
             <div class="box-body table-responsive">
@@ -366,8 +372,8 @@
                 </thead>
                 <tbody>
 
-                {% for i in get_tasks_for_project %}
-                  {% if i.project.user_project.id == current_user %}
+                {% for t in get_tasks_for_project %}
+                  {% if t.project.user_project.id == current_user %}
                     <script type="text/javascript">
                       var t_th2 = document.querySelector (".table_th2");
                       t_th2.style.display = "inline";
@@ -376,18 +382,18 @@
 
                   <tr>
                     <td> {{ forloop.counter }} </td>
-                    <td> {{ i.task_x }} </td>
-                    <td class="description_column" id="deliverable{{ i.id }}"> {{ i.task_deliverables }} </td>
-                    <td class="description_column"> {{ i.task_deadline }} </td>
+                    <td> {{ t.task_x }} </td>
+                    <td class="description_column" id="deliverable{{ t.id }}"> {{ t.task_deliverables }} </td>
+                    <td class="description_column"> {{ t.task_deadline }} </td>
 
-                    {% if i.assigned_to.email|length == 0 %}
+                    {% if t.assigned_to.email|length == 0 %}
                       <td><p style="color: red;"> None </p></td>
                     {% else %}
 
-                      <td> {{ i.assigned_to.email }} </td>
+                      <td> {{ t.assigned_to.email }} </td>
                     {% endif %}
 
-                    {% if i.project.user_project.id == current_user %}
+                    {% if t.project.user_project.id == current_user %}
                       <td class="text-center"> 
                         <div class="btn-group">
                           <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
@@ -400,17 +406,81 @@
 
                           <ul class="dropdown-menu pull-right" role="menu">
                             {% for i in collaborators_for_project %}
-                              <li><a href="#"> {{ i.user.email }} </a></li>
+                              <li><a href="/assign_task_to_user/{{ i.user.id }}/{{ t.id }}/{{ project_id }}"> {{ i.user.email }} </a></li>
                             {% endfor %}
+
+                            <hr/>
+                            <li><a href="/delete_collab_task/{{ project_id }}/{{ t.id }}/"> Delete Task </a></li>
                           </ul>
+
+
                         </div>
                       </td>
 
                     {% else %}
-                      {% if user_collabs.email == i.assigned_to.email %}
-                        <td class="text-center">
-                          <div class="form-group">
-                            <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
+                      {% if user_collabs.email == t.assigned_to.email %}
+                        <td class="">
+                          <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addFiles"> Upload File(s) </button>
+                          <div class="modal fade" id="modal-addFiles" style="display: none;">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span></button>
+                                  <h4 class="modal-title"> Upload File(s) </h4>
+                                </div>
+
+                                <form id="todo_form" role="form" action="/add_collab_task/{{ project_id }}/" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+                                  {% csrf_token %}
+                                  <div class="modal-body">
+                                    <p>Please add file(s), deliverables for this task </p>
+
+                                    <div class="form-group">
+                                      <label for="exampleInputFile">File 1 </label>
+                                      <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
+
+                                      <p class="help-block">File 1 deliverable for the project</p>
+                                    </div>
+
+                                    <div class="form-group">
+                                      <label for="exampleInputFile">File 2 </label>
+                                      <input type="file" id="file2" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file2">
+
+                                      <p class="help-block">File 2 deliverable for the project</p>
+                                    </div>
+
+                                    <div class="form-group">
+                                      <label for="exampleInputFile">File 3 </label>
+                                      <input type="file" id="file3" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file3">
+
+                                      <p class="help-block">File 3 deliverable for the project</p>
+                                    </div>
+
+                                    <div class="form-group">
+                                      <label for="exampleInputFile">File 4 </label>
+                                      <input type="file" id="file4" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file4">
+
+                                      <p class="help-block">File 4 deliverable for the project</p>
+                                    </div>
+
+                                    <div class="form-group">
+                                      <label for="exampleInputFile">File 5 </label>
+                                      <input type="file" id="file5" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file5">
+
+                                      <p class="help-block">File 5 deliverable for the project</p>
+                                    </div>
+
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Upload File(s)</button>
+                                  </div>
+
+                                </form>
+                              </div>
+                              <!-- /.modal-content -->
+                            </div>
+                          <!-- /.modal-dialog -->
                           </div>
                         </td>
 
@@ -418,6 +488,9 @@
                           var t_th = document.querySelector (".table_th");
                           t_th.style.display = "inline";
                         </script>
+
+                      {% else %}
+                        <td><p style="color: red;"> Not assigned to you </p></td>
                       {% endif %}
                     {% endif %}
                   </tr>
