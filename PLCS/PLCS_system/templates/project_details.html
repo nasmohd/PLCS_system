@@ -214,7 +214,7 @@
 
                       <div class="col-md-12" style="margin-top: 2rem;">
                         {% if get_project_details.user_project.id != current_user %}
-                          <a class="btn btn-primary btn-sm" id="applyButton{{ get_project_details.id }}"> Contact this user </a>
+                          <!-- <a class="btn btn-primary btn-sm" id="applyButton{{ get_project_details.id }}"> Contact this user </a> -->
                           <a class="btn btn-info btn-sm" id="applyButton{{ get_project_details.id }}" data-project-id="{{ get_project_details.id }}" data-toggle="modal" data-target="#applyModal{{ get_project_details.id }}"> Apply Now </a>
                         {% endif %}
                       </div>

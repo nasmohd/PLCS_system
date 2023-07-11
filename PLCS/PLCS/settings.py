@@ -117,6 +117,7 @@ STATIC_URL = "static/"
 STATIC_ROOT = "PLCS_system\\static\\project_imgs"
 STATIC_ROOT2 = "PLCS_system\\static\\project_files"
 STATIC_ROOT3 = "PLCS_system\\static\\summary_files"
+STATIC_ROOT4 = "PLCS_system\\static\\deliverables_from_tasks"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

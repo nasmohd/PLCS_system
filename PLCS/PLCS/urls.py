@@ -94,6 +94,8 @@ urlpatterns = [
     path("unbookmark/", views.unbookmark),
     path("get_saved_projects/", views.get_saved_projects),
     path("update_user_details/<int:user_id>/", views.update_user),
+    # path("view_deliverables/<int:task_id>/<int:project_id>", views.view_deliverables),
+    path("add_deliverables_for_task/<int:task_id>/<int:project_id>/", views.add_deliverables_for_task),
 
 
     path("create_quiz/<int:topic_id>/", views.create_quiz),
@@ -102,4 +104,8 @@ urlpatterns = [
     path("add_collab_task/<int:project_id>/", views.add_collab_task),
     path("delete_collab_task/<int:project_id>/<int:collab_task_id>/", views.delete_collab_task),
     path("remove_collaborator/<int:approved_collab_id>/<int:project_id>/", views.remove_collaborator),
+
+
+    path("accept_deliverables/<int:task_id>/<int:project_id>/", views.accept_deliverables),
+    path("reject_deliverables/<int:task_id>/<int:project_id>/", views.reject_deliverables),
 ]

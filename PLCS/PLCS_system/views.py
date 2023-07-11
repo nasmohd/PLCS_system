@@ -688,7 +688,11 @@ def add_project(request):
 		appr_collab.save()
 
 		
-		
+		user_project_collabs = User_Project_Collabs_Approved()
+		user_project_collabs.user = user_proj
+		user_project_collabs.project = project
+		user_project_collabs.collab_status = 1
+		user_project_collabs.save()
 
 		# todo_items = request.POST.get('todo_items')
 		# if todo_items:
@@ -831,6 +835,20 @@ def user_management(request):
 	all_mod_otr = Learning_Module.objects.all().exclude(module_creator = user_x)
 	all_modules_count_rec = all_mod_otr.count()
 	rec_learning_content_details = []
+
+	learning_modules = Learning_Module.objects.all()
+
+	for module in learning_modules:
+		module_topics = module.module_topic_set.all()
+
+		# Concatenate all topics for the module into a string
+		topics = ', '.join(topic.topic_name for topic in module_topics)
+
+		# Add the 'topics_for_module' attribute to the module instance
+		module.topics_for_module = topics
+
+		# print("Module: {}, Topics: {}".format(module.module_title, module.topics_for_module))
+		module.save()
 
 	# Recommnend Learning Materials
 	if (all_modules_count_rec > 0):
@@ -1831,11 +1849,20 @@ def project_collab_tasks(request, project_id):
 	
 
 	# collaborators_for_project = User_Project_Collab.objects.filter(project__user_project = user_collabs).filter(project__id = project_id).exclude(status = 0)
-	collaborators_for_project = User_Project_Collabs_Approved.objects.filter(project = project_details).exclude(collab_status = 0)
+	collaborators_for_project = User_Project_Collabs_Approved.objects.filter(project = project_details).exclude(collab_status = 0).exclude(user = user_collabs)
 
 
 	get_tasks_for_project = Collab_Task.objects.filter(project__id = project_id)
-	get_tasks_for_project = Collab_Task.objects.filter(project__id = project_id)
+	# get_tasks_for_project = Collab_Task.objects.filter(project__id = project_id)
+
+
+	for obj in get_tasks_for_project:
+		column_value = obj.deliverables_from_user_assigned
+
+		if column_value:
+			list_value = literal_eval(column_value)
+			obj.deliverables_from_user_assigned = list_value
+			obj.save()
 
 
 	return render (request, "project_tasks.html", {'project_details': project_details, 'notifs': notifs, 
@@ -2433,3 +2460,258 @@ def update_user(request, user_id):
 
 		redir = "/profile/"
 		return redirect (redir)
+
+
+def add_deliverables_for_task(request, task_id, project_id):
+	if request.method == 'POST':
+		get_collab_task = Collab_Task.objects.get (id = task_id)
+
+		deliverables_list = []
+
+		# Get the files from the request.FILES dictionary
+		if 'file1' in request.FILES:
+			file1_file = request.FILES.get('file1')
+
+			file1 = request.FILES['file1']
+			file1_name = file1.name
+
+			destination_path = settings.STATIC_ROOT4
+			destination_fullpath = os.path.join(destination_path, file1_name)
+
+			with open(destination_fullpath, 'wb') as destination_file:
+				source_file = file1_file.file
+				copyfileobj(source_file, destination_file)
+				destination_file.close()
+
+				file_extension = os.path.splitext(file1_name)[1]
+
+				# Rename the file
+				img_count = 1
+				new_name = 'D' + str(img_count) + '#task_id' + str(task_id) + file_extension
+				deliverables_list.append (new_name)
+
+				# project_images[index] = new_name
+
+				# Construct the full path to the file
+				full_path = os.path.join(destination_path, file1_name)
+
+				# Rename the file
+				os.rename(full_path, os.path.join(destination_path, new_name))
+		
+			# return HttpResponse (destination_fullpath)
+
+
+		if 'file2' in request.FILES:
+			file2_file = request.FILES.get('file2')
+
+			file2 = request.FILES['file2']
+			file2_name = file2.name
+
+			destination_path = settings.STATIC_ROOT4
+			destination_fullpath = os.path.join(destination_path, file2_name)
+
+			with open(destination_fullpath, 'wb') as destination_file:
+				source_file = file2_file.file
+				copyfileobj(source_file, destination_file)
+				destination_file.close()
+
+				file_extension = os.path.splitext(file2_name)[1]
+
+				# Rename the file
+				img_count = 2
+				new_name = 'D' + str(img_count) + '#task_id' + str(task_id) + file_extension
+				deliverables_list.append (new_name)
+
+				# project_images[index] = new_name
+
+				# Construct the full path to the file
+				full_path = os.path.join(destination_path, file2_name)
+
+				# Rename the file
+				os.rename(full_path, os.path.join(destination_path, new_name))
+
+
+		if 'file3' in request.FILES:
+			file3_file = request.FILES.get('file3')
+
+			file3 = request.FILES['file3']
+			file3_name = file1.name
+
+			destination_path = settings.STATIC_ROOT4
+			destination_fullpath = os.path.join(destination_path, file3_name)
+
+			with open(destination_fullpath, 'wb') as destination_file:
+				source_file = file3_file.file
+				copyfileobj(source_file, destination_file)
+				destination_file.close()
+
+				file_extension = os.path.splitext(file3_name)[1]
+
+				# Rename the file
+				img_count = 3
+				new_name = 'D' + str(img_count) + '#task_id' + str(task_id) + file_extension
+				deliverables_list.append (new_name)
+
+				# project_images[index] = new_name
+
+				# Construct the full path to the file
+				full_path = os.path.join(destination_path, file3_name)
+
+				# Rename the file
+				os.rename(full_path, os.path.join(destination_path, new_name))
+
+
+		if 'file4' in request.FILES:
+			file4_file = request.FILES.get('file4')
+
+			file4 = request.FILES['file4']
+			file4_name = file1.name
+
+			destination_path = settings.STATIC_ROOT4
+			destination_fullpath = os.path.join(destination_path, file4_name)
+
+			with open(destination_fullpath, 'wb') as destination_file:
+				source_file = file4_file.file
+				copyfileobj(source_file, destination_file)
+				destination_file.close()
+
+				file_extension = os.path.splitext(file4_name)[1]
+
+				# Rename the file
+				img_count = 4
+				new_name = 'D' + str(img_count) + '#task_id' + str(task_id) + file_extension
+				deliverables_list.append (new_name)
+
+				# project_images[index] = new_name
+
+				# Construct the full path to the file
+				full_path = os.path.join(destination_path, file4_name)
+
+				# Rename the file
+				os.rename(full_path, os.path.join(destination_path, new_name))
+
+
+		if 'file5' in request.FILES:
+			file5_file = request.FILES.get('file5')
+
+			file5 = request.FILES['file5']
+			file5_name = file1.name
+
+			destination_path = settings.STATIC_ROOT4
+			destination_fullpath = os.path.join(destination_path, file5_name)
+
+			with open(destination_fullpath, 'wb') as destination_file:
+				source_file = file5_file.file
+				copyfileobj(source_file, destination_file)
+				destination_file.close()
+
+				file_extension = os.path.splitext(file5_name)[1]
+
+				# Rename the file
+				img_count = 5
+				new_name = 'D' + str(img_count) + '#task_id' + str(task_id) + file_extension
+				deliverables_list.append (new_name)
+
+				# project_images[index] = new_name
+
+				# Construct the full path to the file
+				full_path = os.path.join(destination_path, file5_name)
+
+				# Rename the file
+				os.rename(full_path, os.path.join(destination_path, new_name))
+
+
+		get_collab_task.deliverables_from_user_assigned = str(deliverables_list)
+		get_collab_task.task_status = 1
+		get_collab_task.save()
+
+		# file1 = request.FILES.get('file1')
+		# file2 = request.FILES.get('file2')
+		# file3 = request.FILES.get('file3')
+		# file4 = request.FILES.get('file4')
+		# file5 = request.FILES.get('file5')
+	
+		messages.success(request, 'Upload successful', extra_tags='alert-success')
+
+		redir = "/project_collab_tasks/" + str(project_id)
+		return redirect (redir)
+
+
+# def view_deliverables(request, task_id, project_id):
+# 	get_collab_task = Collab_Task.objects.get(id = task_id)
+
+
+
+	# messages.success(request, 'Upload successful', extra_tags='alert-success')
+
+	# redir = "/project_collab_tasks/" + str(project_id)
+	# return redirect (redir)
+
+
+def accept_deliverables(request, task_id, project_id):
+	if request.method == "POST":
+		button_clicked = request.POST.get("button_clicked", "")
+
+		if button_clicked == "reject":
+			get_collab_task = Collab_Task.objects.get (id = task_id)
+			get_collab_task.task_status = 2
+
+			column_value = get_collab_task.deliverables_from_user_assigned
+
+			if column_value:
+				list_value = literal_eval(column_value)
+				get_collab_task.deliverables_from_user_assigned = list_value
+				get_collab_task.save()
+
+			column_value = get_collab_task.deliverables_from_user_assigned
+
+			destination_path = settings.STATIC_ROOT4
+			for file_f in column_value:
+				file_path = os.path.join(destination_path, file_f)
+				os.remove(file_path)
+
+			get_feedback_msg = request.POST["feedback_details"]
+
+			get_collab_task.deliverables_from_user_feedback = get_feedback_msg
+			get_collab_task.save()
+
+			redir = "/project_collab_tasks/" + str(project_id)
+			return redirect (redir)
+			
+
+		elif button_clicked == "approve":
+			get_collab_task = Collab_Task.objects.get (id = task_id)
+			get_collab_task.op_status = 1
+			get_collab_task.save()
+
+
+			redir = "/project_collab_tasks/" + str(project_id)
+			return redirect (redir)
+
+		
+
+
+
+def reject_deliverables(request, task_id, project_id):
+	get_collab_task = Collab_Task.objects.get (id = task_id)
+	get_collab_task.task_status = 2
+
+	column_value = get_collab_task.deliverables_from_user_assigned
+
+	if column_value:
+		list_value = literal_eval(column_value)
+		get_collab_task.deliverables_from_user_assigned = list_value
+		get_collab_task.save()
+
+	column_value = get_collab_task.deliverables_from_user_assigned
+
+	destination_path = settings.STATIC_ROOT4
+	for file_f in column_value:
+		file_path = os.path.join(destination_path, file_f)
+		os.remove(file_path)
+
+	get_feedback_msg = request.POST["feedback_details"]
+
+	print (get_feedback_msg)
+
+

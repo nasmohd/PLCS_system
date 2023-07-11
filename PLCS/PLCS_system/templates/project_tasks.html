@@ -368,6 +368,7 @@
 
                   <th class="text-center table_th2" style="width: 10%; display: none;">Assign to</th>
                   <th class="text-center table_th" style="width: 10%; display: none;">Upload</th>
+                  <th class="text-center table_th" style="width: 10%; display: none;">Comments</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -394,7 +395,7 @@
                     {% endif %}
 
                     {% if t.project.user_project.id == current_user %}
-                      <td class="text-center"> 
+                      <td class=""> 
                         <div class="btn-group">
                           <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-fw fa-pencil-square-o"></i>
@@ -412,15 +413,117 @@
                             <hr/>
                             <li><a href="/delete_collab_task/{{ project_id }}/{{ t.id }}/"> Delete Task </a></li>
                           </ul>
-
-
                         </div>
+
+                        {% if t.task_status == 1 %}
+                          <div title="View Deliverables from collaborator"><a href="#" data-toggle="modal" data-target="#modal-viewFiles{{ t.id }}"><span class="label label-info"><i class="icon fa fa-fw fa-check"></i>View Deliverables</span> </a></div>
+
+                          <div class="modal fade" id="modal-viewFiles{{ t.id }}" style="display: none;">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span></button>
+                                  <h4 class="modal-title"> Upload File(s) </h4>
+                                </div>
+
+
+                                <form role="form" action="/accept_deliverables/{{ t.id }}/{{ project_id }}/" method="POST">
+                                  {% csrf_token %}
+                               
+                                  <div class="modal-body">
+                                    {% for file_deliverable in t.deliverables_from_user_assigned %}
+                                      <div class="form-group">
+                                        <label for="exampleInputFile">File </label>
+                                        <span> </span>
+                                        <a href="{% static 'deliverables_from_tasks/'|add:file_deliverable %}"><i class="fa fa-fw fa-download"></i> {{ file_deliverable }}</a>
+                                        
+                                      </div>
+                                    {% endfor %}
+
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Feedback to user <span class="optional_entry"> (optional) </span></label>
+                                    <div class="input-container">
+                                      <textarea class="form-control" id="project_description" placeholder="Describe the project" rows="10" style="resize: none;" name="feedback_details" required>Improve on 1</textarea>
+                                    </div>
+
+                                    <style type="text/css">
+                                      .optional_entry {
+                                        color: red;
+                                      }
+                                    </style>
+                                  </div>
+
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                    <button type="submit" name="action" value="reject" class="btn btn-danger" onclick="setButtonClicked('reject')">Reject</button>
+                                    <button type="submit" name="action" value="approve" class="btn btn-success" onclick="setButtonClicked('approve')">Approve</button>
+                                  </div>
+
+                                  <input type="hidden" name="button_clicked" value="" id="button_clicked_input{{ i.id }}">
+
+                                  <script>
+                                    function setButtonClicked(action) {
+                                      var buttonClickedInput{{ t.id }} = document.getElementById('button_clicked_input{{ i.id }}');
+                                      buttonClickedInput{{ t.id }}.value = action;
+                                    }
+                                  </script>
+                                </form>
+                              </div>
+                              <!-- /.modal-content -->
+                            </div>
+                          <!-- /.modal-dialog -->
+                          </div>
+                        {% endif %}
                       </td>
 
                     {% else %}
                       {% if user_collabs.email == t.assigned_to.email %}
                         <td class="">
-                          <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addFiles"> Upload File(s) </button>
+                          {% if t.task_status == 0 or t.task_status == 2 %}
+                            <button class="btn btn-default" data-toggle="modal" data-target="#modal-addFiles"> Upload File(s) </button>
+
+                          {% else %}
+                            <div class="label label-success" title="Upload complete, Project Uploader is reviewing"><i class="icon fa fa-fw fa-check"></i> Uploaded </div>
+                          {% endif %}
+
+                          {% if t.task_status == 2 %}
+                            <div title="View Feedback from Project Uploader"><a href="#" data-toggle="modal" data-target="#modal-viewfeedback{{ t.id }}"><span class="label label-info"><i class="fa fa-fw fa-commenting-o"></i>View Feedback</span> </a></div>
+
+                            <div class="modal fade" id="modal-viewfeedback{{ t.id }}" style="display: none;">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span></button>
+                                  <h4 class="modal-title"> Feedback from your deliverables </h4>
+                                </div>
+
+                                <div class="modal-body">
+                                  <div class="form-group">
+                                    <label for="exampleInputFile">Feedback on deliverables you uploaded: </label> <span style="color: red;">{{ t.deliverables_from_user_feedback }}</span>
+                                  </div>
+
+                                  <div class="form-group">
+                                    <label for="exampleInputFile">Files you uploaded for this task </label>
+                                  </div>
+                                  {% for file_deliverable in t.deliverables_from_user_assigned %}
+                                    <div class="form-group">
+                                      <label for="exampleInputFile">File </label>
+                                      <span> </span>
+                                      <a href="{% static 'deliverables_from_tasks/'|add:file_deliverable %}"><i class="fa fa-fw fa-download"></i> {{ file_deliverable }}</a>
+                                      
+                                    </div>
+                                  {% endfor %}
+                                </div>
+                              </div>
+                              <!-- /.modal-content -->
+                            </div>
+                          <!-- /.modal-dialog -->
+                          </div>
+                          {% endif %}
+
                           <div class="modal fade" id="modal-addFiles" style="display: none;">
                             <div class="modal-dialog">
                               <div class="modal-content">
@@ -430,7 +533,7 @@
                                   <h4 class="modal-title"> Upload File(s) </h4>
                                 </div>
 
-                                <form id="todo_form" role="form" action="/add_collab_task/{{ project_id }}/" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+                                <form id="todo_form" role="form" action="/add_deliverables_for_task/{{ t.id }}/{{ project_id }}/" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
                                   {% csrf_token %}
                                   <div class="modal-body">
                                     <p>Please add file(s), deliverables for this task </p>
@@ -484,13 +587,17 @@
                           </div>
                         </td>
 
+
+
                         <script type="text/javascript">
                           var t_th = document.querySelector (".table_th");
                           t_th.style.display = "inline";
                         </script>
 
                       {% else %}
-                        <td><p style="color: red;"> Not assigned to you </p></td>
+                        <td><div class="label label-danger"> Not assigned to you </div>
+                          <!-- <p style="color: red;"> Not assigned to you </p> -->
+                        </td>
                       {% endif %}
                     {% endif %}
                   </tr>
@@ -512,6 +619,7 @@
                     <th class="text-center table_th2" style="width: 10%; display: none;">Assign to</th>
                   
                     <th class="text-center table_th" style="width: 10%; display: none;">Upload</th>
+                    <th class="text-center table_th" style="width: 10%; display: none;">Comments</th>
                   
                 </tr>
                 </tfoot>

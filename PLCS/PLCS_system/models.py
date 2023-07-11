@@ -152,6 +152,9 @@ class Collab_Task (models.Model):
 	task_deadline = models.DateField(null=True)
 	task_deliverables = models.TextField(default = '')
 
+	deliverables_from_user_feedback = models.TextField(default = '')
+	deliverables_from_user_assigned = models.TextField(default = '')
+
 	task_status = models.IntegerField (default=0)
 	op_status = models.IntegerField (default=0)
 
