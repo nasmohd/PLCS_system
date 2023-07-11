@@ -298,78 +298,8 @@
                         {% if current_user in content_to_this_user_list %}
                           <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addFlashcard"> Add New Flashcards </button>
                         {% endif %}
-
-                          <button class="btn btn-primary" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-reviewFlashcard"> Test yourself </button>
                       </div>
                       <!-- /.box-header -->
-
-                      <div class="modal fade" id="modal-reviewFlashcard" style="display: none;">
-                        <div class="modal-dialog">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span></button>
-                              <h4 class="modal-title"> Review Flashcards </h4>
-                            </div>
-                            <form role="form" action="/add_new_flashcard/{{ topic_id }}/{{ module_id }}/" method="POST" id="addUser">
-                              {% csrf_token %}
-
-                            <div class="modal-body">
-                              <div class="form-group">
-                                <label for="exampleInputEmail1">Question <span class="optional_entry"> * </span></label>
-                                <textarea class="form-control" id="exampleInputEmail1" placeholder="Question" rows="5" style="resize: none;" name="flashcard_question_test" required></textarea>
-                              </div>
-
-                              <div class="form-group">
-                                <label for="exampleInputEmail1">Answer <span class="optional_entry"> * </span></label>
-                                <!-- <textarea class="form-control" id="exampleInputEmail1" placeholder="Answer" rows="5" style="resize: none;" name="flashcard_answer_test" required></textarea> -->
-
-                                <div class="input-group">
-                                  <textarea class="form-control" id="flashcard_answer" placeholder="Answer" rows="5" style="resize: none;" name="flashcard_answer_test" required></textarea>
-                                  <span class="input-group-addon reveal-icon" onclick="toggleAnswerVisibility()"><a> reveal answer </a>
-                                    <i id="eye-icon" class="fa fa-eye"></i>
-                                  </span>
-                                </div>
-                              </div>
-                              
-
-                              <script>
-                                function toggleAnswerVisibility() {
-                                  // alert ('yk');
-                                  var answerTextarea = document.getElementById("flashcard_answer");
-                                  var eyeIcon = document.getElementById("eye-icon");
-
-                                  if (answerTextarea.type === "password") {
-                                    answerTextarea.type = "text";
-                                    eyeIcon.classList.remove("fa-eye");
-                                    eyeIcon.classList.add("fa-eye-slash");
-                                  } else {
-                                    answerTextarea.type = "password";
-                                    eyeIcon.classList.remove("fa-eye-slash");
-                                    eyeIcon.classList.add("fa-eye");
-                                  }
-                                }
-                              </script>
-
-                              <style type="text/css">
-                                .optional_entry {
-                                  color: red;
-                                }
-                              </style>
-                            </div>
-
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                              <button type="submit" class="btn btn-danger"><i class="icon fa fa-fw fa-close"></i> Wrong</button>
-                              <button type="submit" class="btn btn-success"><i class="icon fa fa-fw fa-check"></i> Correct</button>
-                            </div>
-
-                            </form>
-                          </div>
-                          <!-- /.modal-content -->
-                        </div>
-                        <!-- /.modal-dialog -->
-                      </div>
 
 
                       <div class="modal fade" id="modal-addFlashcard" style="display: none;">
@@ -598,7 +528,174 @@
                     </div>
                   </div>
 
-                  
+                  <div class="tab-pane" id="tab_3">
+                    <div class="box">
+                      <div class="box-header">
+                        <h3 class="box-title" style="color: #306FA0;">
+                        <i class="fa fa-fw fa-folder-o"></i>
+                        <strong> Quizzes Management </strong> <br/> <span class="type_of_project_view" id="type_of_user_view" style="font-size:13px; color: #3C8DBC;"> Quizzes to test your knowledge </span> </h3>
+                        <!-- label label-success -->
+
+                        {% if current_user in content_to_this_user_list %}
+                          <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-createQuiz"> Create new Quiz </button>
+                        {% endif %}
+                      </div>
+                      <!-- /.box-header -->
+
+
+                      <div class="modal fade" id="modal-createQuiz" style="display: none;">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+                              <h4 class="modal-title"> Create New Quiz </h4>
+                            </div>
+                            <form role="form" action="/create_quiz/{{ topic_id }}/" method="POST" id="addUser" enctype="multipart/form-data">
+                              {% csrf_token %}
+
+                            <div class="modal-body">
+                              <p>Please fill in details of the quiz you want to create</p>
+
+                              <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                  <!-- <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">User Details <span class="optional_entry"> * </span></a></li> -->
+                                  
+                                </ul>
+                              
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1"> Title <span class="optional_entry"> * </span></label>
+                                    <input type="text" class="form-control" placeholder="Enter title of the quiz" name="quiz_title" required value="Software Engineering Q1">
+                                  </div>
+
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Description <span class="optional_entry"> * </span></label>
+                                    <textarea class="form-control" id="exampleInputEmail1" placeholder="Describe the summary file" rows="10" style="resize: none;" name="quiz_description" required>SDLC Principles</textarea>
+                                  </div>
+
+                                  <!-- <div class="form-group">
+                                    <label for="exampleInputFile">File Attachment </label>
+                                    <input type="file" id="file1" accept=".pdf,.doc,.docx,application/msword,application/pdf" name="file1">
+                                  </div> -->
+
+                                  <style type="text/css">
+                                    .optional_entry {
+                                      color: red;
+                                    }
+                                  </style>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary">Add Quiz</button>
+                            </div>
+
+                            </form>
+                          </div>
+                          <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                      </div>
+
+
+
+                      <div class="box-body table-responsive">
+                        <table id="example2" class="table table-bordered table-striped">
+                          <thead>
+                          <tr>
+                            <th style="width: 5%;"> SN </th>
+                            <th style="width: 20%;">Quiz ID</th>
+                            <th style="width: 20%;">Name</th>
+                            <th style="width: 30%;">Description</th>
+
+                            {% if current_user in content_to_this_user_list %}
+                              <th class="text-center" style="width: 25%;"> Options </th>
+                            {% endif %}
+                          </tr>
+                          </thead>
+
+                          <tbody>
+                            {% for quiz in get_all_quizzes %}
+                              <tr>
+                                <td>
+                                  {{ forloop.counter }}
+                                </td>
+
+                                <td>
+                                  {{ quiz.quiz_id }}
+                                </td>
+
+                                <td>
+                                  {{ quiz.quiz_title }}
+                                </td>
+
+                                <td>
+                                  {{ quiz.quiz_description }}
+                                </td>
+
+                                {% if current_user in content_to_this_user_list %}
+                                  <td class="text-center"> 
+                                    <div class="btn-group">
+                                      <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-fw fa-pencil-square-o"></i>
+                                      </button>
+                                      <button type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                                        <span class="caret"></span>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                      </button>
+
+                                      <ul class="dropdown-menu pull-right" role="menu">
+                                        <!-- <li><a href="#" data-toggle="modal" data-target="#modal-editProject{{ i.id }}"><i class="fa fa-pencil"></i> Edit details </a></li> -->
+                                        <li><a data-toggle="modal" data-target="#modal-deleteQuiz{{ quiz.id }}"><i class="fa fa-trash"></i> Delete </a></li>
+                                      </ul>
+                                    </div>
+                                  </td>
+                                {% endif %}
+                              </tr>
+
+                              <div class="modal modal-danger fade" id="modal-deleteQuiz{{ quiz.id }}" style="display: none;">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span></button>
+                                      <h4 class="modal-title">Delete Quiz </h4>
+                                    </div>
+                                    <div class="modal-body">
+                                      <p> Are you sure you want to delete? </p>
+                                      <!-- <p> {{ i.first_name }} {{ i.last_name }} </p> -->
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                                      <a href="/delete_quiz/{{ topic_id }}/{{ quiz.id }}/" class="btn btn-outline">Confirm</a>
+                                    </div>
+                                  </div>
+                                  <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                              </div>
+
+
+                            {% endfor %}
+                          </tbody>
+
+                          <tfoot>
+                          <tr>
+                            <th style="width: 5%;"> SN </th>
+                            <th style="width: 20%;">Quiz ID</th>
+                            <th style="width: 20%;">Name</th>
+                            <th style="width: 30%;">Description</th>
+
+                            {% if current_user in content_to_this_user_list %}
+                              <th class="text-center" style="width: 25%;"> Options </th>
+                            {% endif %}
+                          </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                      <!-- /.box-body -->
+                    </div>
+                  </div>
 
                 </div>
               </div>

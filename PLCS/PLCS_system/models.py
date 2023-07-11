@@ -211,6 +211,14 @@ class Saved_Project (models.Model):
 		return "id = {}, user = {}".format(self.id, self.user)
 
 
+class Saved_Learning_content (models.Model):	
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	learning_module = models.ForeignKey(Learning_Module, on_delete=models.CASCADE)
+	
+	def __str__(self):
+		return "id = {}, user = {}".format(self.id, self.user)
+
+
 class Quiz (models.Model):
 	quiz_id = models.CharField (max_length=15)
 	quiz_title = models.CharField (max_length=300)

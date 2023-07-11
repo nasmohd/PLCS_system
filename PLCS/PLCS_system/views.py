@@ -1221,6 +1221,7 @@ def get_roles_permissions(request, user_id):
 
 # def get_permissions(request, user_id):
 # 	user_to_get_permissions = User.objects.get (id = user_id)
+import random
 
 def learning_content(request, topic_id, module_id):
 	current_user = request.session['user_id']
@@ -1242,6 +1243,9 @@ def learning_content(request, topic_id, module_id):
 
 	get_module_topic = Module_Topic.objects.get(id = topic_id)
 	get_flashcards = Topic_Flashcards.objects.filter(flashcards_belongs_to = get_module_topic)
+
+	get_random_flashcards = Topic_Flashcards.objects.filter(flashcards_belongs_to=get_module_topic).order_by('?')
+
 
 	# Recommnend Learning Materials
 	if (all_modules_count_rec > 0):
