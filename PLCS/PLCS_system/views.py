@@ -1223,17 +1223,39 @@ def get_roles_permissions(request, user_id):
 # 	user_to_get_permissions = User.objects.get (id = user_id)
 
 def learning_content(request, topic_id, module_id):
+	current_user = request.session['user_id']
+	user_x = User.objects.get (id = current_user)
+
 	all_modules = Learning_Module.objects.all().order_by('-module_DOR')
 	all_modules_count = Learning_Module.objects.all().count()
+
+	all_mod_otr = Learning_Module.objects.all().exclude(module_creator = user_x)
 
 	get_all_summaries = Summary.objects.all()
 
 	learning_topic = Module_Topic.objects.get (id = topic_id)
 
+	all_modules_count = all_modules.count()
+	all_modules_count_rec = all_mod_otr.count()
+	# current_user = request.session['user_id']
+	rec_projects_details = []
+
+	get_module_topic = Module_Topic.objects.get(id = topic_id)
+	get_flashcards = Topic_Flashcards.objects.filter(flashcards_belongs_to = get_module_topic)
+
+	# Recommnend Learning Materials
+	if (all_modules_count_rec > 0):
+		rec_proj = recommend_learning_material(current_user)
+		rec_proj = rec_proj[0]
+
+		for id in rec_proj:
+			project_detail = Learning_Module.objects.get(id=id)
+			rec_projects_details.append(project_detail)
+
+	else:
+		rec_projects_details.append('None')
 
 
-	current_user = request.session['user_id']
-	user_x = User.objects.get (id = current_user)
 
 	get_all_summaries = Summary.objects.all()
 
@@ -1259,7 +1281,7 @@ def learning_content(request, topic_id, module_id):
 	return render (request, "learning_content_management.html", {'roles_n_permissions': roles_n_permissions, 'user_names': user_names,
 		'all_modules': all_modules, 'all_modules_count': all_modules_count, 'topic_id': topic_id, 'get_all_summaries': get_all_summaries,
 		'get_all_quizzes': get_all_quizzes, 'learning_topic': learning_topic, 'content_to_this_user_list': content_to_this_user_list,
-		'current_user': current_user})
+		'current_user': current_user, 'rec_projects_details': rec_projects_details, 'topic_id': topic_id, 'module_id': module_id, 'get_flashcards': get_flashcards})
 
 
 
@@ -1374,6 +1396,33 @@ def delete_module (request, module_id):
 	module_to_delete.delete()
 
 	return redirect ('/learning_content_modules')
+
+
+# path("delete_flashcard/<int:flashcard_id>/", views.delete_flashcard),
+def delete_flashcard (request, flashcard_id):
+	flashcard_to_delete = Topic_Flashcards.objects.get(id = flashcard_id)
+	flashcard_to_delete.delete()
+
+	messages.success(request, 'Flashcard has been deleted successfully', extra_tags='alert-danger')
+	return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+
+def update_flashcard (request, flashcard_id, module_id, topic_id):
+	flashcard_to_update = Topic_Flashcards.objects.get(id = flashcard_id)
+
+	flashcard_question_update = request.POST["flashcard_question_update"]
+	flashcard_answer_update = request.POST["flashcard_answer_update"]
+
+	flashcard_to_update.flashcard_question = flashcard_question_update
+	flashcard_to_update.flashcard_answer = flashcard_answer_update
+	get_module_topic = Module_Topic.objects.get (id = topic_id)
+
+	flashcard_to_update.flashcards_belongs_to = get_module_topic
+	flashcard_to_update.save()
+
+	messages.success(request, 'Flashcard has been updated', extra_tags='alert-success')
+	return redirect(request.META.get('HTTP_REFERER', '/'))
 
 
 
@@ -1849,7 +1898,9 @@ def project_collab_tasks(request, project_id):
 	
 
 	# collaborators_for_project = User_Project_Collab.objects.filter(project__user_project = user_collabs).filter(project__id = project_id).exclude(status = 0)
-	collaborators_for_project = User_Project_Collabs_Approved.objects.filter(project = project_details).exclude(collab_status = 0).exclude(user = user_collabs)
+	# creator_of_project = Project.objects.get (id = project_id)
+	# creator_of_project = creator_of_project.user_project
+	collaborators_for_project = User_Project_Collabs_Approved.objects.filter(project = project_details).exclude(collab_status = 0)
 
 
 	get_tasks_for_project = Collab_Task.objects.filter(project__id = project_id)
@@ -2690,8 +2741,6 @@ def accept_deliverables(request, task_id, project_id):
 
 		
 
-
-
 def reject_deliverables(request, task_id, project_id):
 	get_collab_task = Collab_Task.objects.get (id = task_id)
 	get_collab_task.task_status = 2
@@ -2715,3 +2764,22 @@ def reject_deliverables(request, task_id, project_id):
 	print (get_feedback_msg)
 
 
+
+def add_new_flashcard(request, topic_id, module_id):
+	current_user = request.session['user_id']
+	user_x = User.objects.get (id = current_user)
+
+	if request.method == "POST":
+		flashcard_question = request.POST["flashcard_question"]
+		flashcard_answer = request.POST["flashcard_answer"]
+
+		new_flashcard = Topic_Flashcards()
+		new_flashcard.flashcard_question = flashcard_question
+		new_flashcard.flashcard_answer = flashcard_answer
+		get_module_topic = Module_Topic.objects.get (id = topic_id)
+
+		new_flashcard.flashcards_belongs_to = get_module_topic
+		new_flashcard.save()
+
+		messages.success(request, 'Flashcard has been added successfully', extra_tags='alert-success')
+		return redirect(request.META.get('HTTP_REFERER', '/'))

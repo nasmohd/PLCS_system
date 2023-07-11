@@ -271,7 +271,7 @@
                     <div class="modal fade" id="applyModal{{ get_project_details.id }}" style="display: none;">
                       <div class="modal-dialog">
                         <div class="modal-content">
-                          <form method="POST" action="apply_to_project/{{ get_project_details.id }}/{{ get_project_details.user_project.id }}">
+                          <form method="POST" action="/apply_to_project/{{ get_project_details.id }}/{{ get_project_details.user_project.id }}">
                             {% csrf_token %}
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -537,50 +537,7 @@
               <!-- /.box -->
             </div>
 
-            <div class="col-md-12" style="margin-top: 0rem;">
-              <div class="box box-solid">
-                <div class="box-header with-border">
-                  <div class="box-title" style="display: flex; flex-wrap: wrap; gap: 10px;">
-                    <i class="fa fa-file"></i>
-                    <h4 style="margin-top: -0.5rem;"> Recommended Projects <br/> based on your Activity </h4>
-                  </div>
-
-                  <!-- <i class="fa fa-file "></i> -->
-                </div>
-
-
-                <!-- /.box-header -->
-                <div class="box-body">
-                  <div class="col-md-12">
-                    <dt>Web Development</dt>
-                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
-                  </div>
-
-                  <div class="col-md-12 mt">
-                    <dt>Mobile App Development</dt>
-                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
-                  </div>
-
-                  <div class="col-md-12 mt">
-                    <dt>UI/UX Design</dt>
-                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
-                  </div>
-
-                  <div class="col-md-12 mt">
-                    <dt>Web Development</dt>
-                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
-                  </div>
-
-                  <div class="col-md-12 mt">
-                    <dt>Mobile App Development</dt>
-                    <dd>A description list is perfect for defining terms. <a href="#"> Read more </a> </dd>
-                  </div>
-
-                </div>
-                <!-- /.box-body -->
-              </div>
-              <!-- /.box -->
-            </div>
+            
           </div>
         </div>
 

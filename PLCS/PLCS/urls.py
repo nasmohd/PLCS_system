@@ -108,4 +108,9 @@ urlpatterns = [
 
     path("accept_deliverables/<int:task_id>/<int:project_id>/", views.accept_deliverables),
     path("reject_deliverables/<int:task_id>/<int:project_id>/", views.reject_deliverables),
+    path("add_new_flashcard/<int:topic_id>/<int:module_id>/", views.add_new_flashcard),
+
+
+    path("delete_flashcard/<int:flashcard_id>/", views.delete_flashcard),
+    path("update_flashcard/<int:flashcard_id>/<int:topic_id>/<int:module_id>/", views.update_flashcard),
 ]

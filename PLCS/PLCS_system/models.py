@@ -172,6 +172,15 @@ class Module_Topic (models.Model):
 		return "module = {}, topic = {}".format(self.module_belongs_to, self.topic_name)
 
 
+class Topic_Flashcards (models.Model):
+	flashcards_belongs_to = models.ForeignKey(Module_Topic, on_delete=models.CASCADE, null=True)
+	flashcard_question = models.TextField(default='')
+	flashcard_answer = models.TextField(default='')
+	
+	def __str__(self):
+		return "module = {}, topic = {}".format(self.flashcards_belongs_to, self.flashcard_question)
+
+
 class Summary (models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	module_topic = models.ForeignKey(Module_Topic, on_delete=models.CASCADE)
@@ -191,7 +200,7 @@ class User_Project_Collabs_Approved (models.Model):
 	collab_status = models.IntegerField (default=0)
 
 	def __str__(self):
-		return "id = {}".format(self.id)
+		return "user = {}, project = {}".format(self.user, self.project)
 
 
 class Saved_Project (models.Model):	
