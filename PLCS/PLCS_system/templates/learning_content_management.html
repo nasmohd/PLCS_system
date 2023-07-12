@@ -299,7 +299,8 @@
                           <button class="btn btn-default" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-addFlashcard"> Add New Flashcards </button>
                         {% endif %}
 
-                          <button class="btn btn-primary" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-reviewFlashcard"> Test yourself </button>
+                          <!-- <button class="btn btn-primary" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-reviewFlashcard"> Test yourself </button> -->
+                          <button class="btn btn-primary" style="margin-left: 3rem;" data-toggle="modal" data-target="#modal-reviewFlashcard" onclick="downloadFlashcards()"><i class="fa fa-fw fa-download"></i> Download </button>
                       </div>
                       <!-- /.box-header -->
 
@@ -331,6 +332,42 @@
                                   </span>
                                 </div>
                               </div>
+
+                              <script>
+                                var flashcards = [];
+
+                                // Get the flashcards data from Django template and store them in the "flashcards" array
+                                {% for flashcard in get_random_flashcards %}
+                                  flashcards.push({
+                                    question: "{{ flashcard.flashcard_question }}",
+                                    answer: "{{ flashcard.flashcard_answer }}"
+                                  });
+                                {% endfor %}
+
+                                var currentFlashcardIndex = 0;
+
+                                function displayFlashcard() {
+                                  // Get the question and answer elements in the modal
+                                  var questionElement = document.getElementById("flashcard-question");
+                                  var answerElement = document.getElementById("flashcard-answer");
+
+                                  // Display the current flashcard
+                                  questionElement.textContent = flashcards[currentFlashcardIndex].question;
+                                  answerElement.textContent = flashcards[currentFlashcardIndex].answer;
+                                }
+
+                                function goToNextFlashcard() {
+                                  currentFlashcardIndex++;
+
+                                  // If there are no more flashcards, close the modal
+                                  if (currentFlashcardIndex >= flashcards.length) {
+                                    $('#modal-reviewFlashcard').modal('hide');
+                                  } else {
+                                    displayFlashcard();
+                                  }
+                                }
+                              </script>
+
                               
 
                               <script>

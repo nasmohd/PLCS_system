@@ -1285,7 +1285,8 @@ def learning_content(request, topic_id, module_id):
 	return render (request, "learning_content_management.html", {'roles_n_permissions': roles_n_permissions, 'user_names': user_names,
 		'all_modules': all_modules, 'all_modules_count': all_modules_count, 'topic_id': topic_id, 'get_all_summaries': get_all_summaries,
 		'get_all_quizzes': get_all_quizzes, 'learning_topic': learning_topic, 'content_to_this_user_list': content_to_this_user_list,
-		'current_user': current_user, 'rec_projects_details': rec_projects_details, 'topic_id': topic_id, 'module_id': module_id, 'get_flashcards': get_flashcards})
+		'current_user': current_user, 'rec_projects_details': rec_projects_details, 'topic_id': topic_id, 'module_id': module_id, 'get_flashcards': get_flashcards,
+		'get_random_flashcards': get_random_flashcards})
 
 
 
